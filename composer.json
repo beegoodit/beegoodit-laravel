@@ -12,9 +12,29 @@
         "pestphp/pest-plugin-laravel": "^3.0",
         "laravel/pint": "^1.0"
     },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\EloquentUserstamps\\": "packages/eloquent-userstamps/src/",
+            "BeeGoodIT\\LaravelFileStorage\\": "packages/laravel-file-storage/src/",
+            "BeeGoodIT\\LaravelCookieConsent\\": "packages/laravel-cookie-consent/src/",
+            "BeeGoodIT\\FilamentI18n\\": "packages/filament-i18n/src/",
+            "BeeGoodIT\\FilamentUserAvatar\\": "packages/filament-user-avatar/src/",
+            "BeeGoodIT\\FilamentOAuth\\": "packages/filament-oauth/src/",
+            "BeeGoodIT\\FilamentTeamBranding\\": "packages/filament-team-branding/src/",
+            "BeeGoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "BeeGoodIT\\EloquentUserstamps\\Tests\\": "packages/eloquent-userstamps/tests/",
+            "BeeGoodIT\\LaravelFileStorage\\Tests\\": "packages/laravel-file-storage/tests/",
+            "BeeGoodIT\\LaravelCookieConsent\\Tests\\": "packages/laravel-cookie-consent/tests/",
+            "BeeGoodIT\\FilamentI18n\\Tests\\": "packages/filament-i18n/tests/",
+            "BeeGoodIT\\FilamentUserAvatar\\Tests\\": "packages/filament-user-avatar/tests/",
+            "BeeGoodIT\\FilamentOAuth\\Tests\\": "packages/filament-oauth/tests/",
+            "BeeGoodIT\\FilamentTeamBranding\\Tests\\": "packages/filament-team-branding/tests/",
+            "BeeGoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/"
         }
     },
     "scripts": {

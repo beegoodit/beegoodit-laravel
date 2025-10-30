@@ -1,12 +1,21 @@
 <?php
 
-namespace BeeGoodIT\EloquentUserstamps\Tests;
+namespace BeeGoodIT\FilamentUserAvatar\Tests;
 
-use Illuminate\Foundation\Auth\User;
+use BeeGoodIT\FilamentUserAvatar\FilamentUserAvatarServiceProvider;
+use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
+    protected function getPackageProviders($app): array
+    {
+        return [
+            LaravelFileStorageServiceProvider::class,
+            FilamentUserAvatarServiceProvider::class,
+        ];
+    }
+
     protected function getEnvironmentSetUp($app): void
     {
         $app['config']->set('database.default', 'testing');
@@ -14,8 +23,6 @@ abstract class TestCase extends Orchestra
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
-        
-        $app['config']->set('auth.providers.users.model', User::class);
     }
 
     protected function defineDatabaseMigrations(): void

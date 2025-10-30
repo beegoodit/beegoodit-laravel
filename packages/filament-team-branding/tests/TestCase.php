@@ -1,7 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelFileStorage\Tests;
+namespace BeeGoodIT\FilamentTeamBranding\Tests;
 
+use BeeGoodIT\FilamentTeamBranding\FilamentTeamBrandingServiceProvider;
 use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -11,6 +12,7 @@ abstract class TestCase extends Orchestra
     {
         return [
             LaravelFileStorageServiceProvider::class,
+            FilamentTeamBrandingServiceProvider::class,
         ];
     }
 
@@ -21,13 +23,6 @@ abstract class TestCase extends Orchestra
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
-        
-        $app['config']->set('filesystems.default', 'public');
-    }
-
-    protected function defineDatabaseMigrations(): void
-    {
-        $this->loadLaravelMigrations();
     }
 }
 
