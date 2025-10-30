@@ -8,13 +8,33 @@ use Illuminate\Support\Facades\Schema;
 
 uses(RefreshDatabase::class);
 
+// Define test model
+class TestModel extends Model
+{
+    use HasUserStamps;
+    
+    protected $connection = 'testing';
+    protected $guarded = [];
+}
+
 it('sets created_by_id when creating a model', function () {
-    $user = Authenticatable::forceCreate([
+    // Ensure database is ready
+    if (! $this->app->bound('db')) {
+        $this->fail('Database not bound in app container');
+    }
+    
+    Model::unguard();
+    
+    // Use DB facade to insert user directly to avoid model issues
+    $userId = \Illuminate\Support\Facades\DB::table('users')->insertGetId([
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => 'password',
+        'created_at' => now(),
+        'updated_at' => now(),
     ]);
     
+    $user = Authenticatable::find($userId);
     $this->actingAs($user);
     
     $model = TestModel::create(['name' => 'Test']);
@@ -82,12 +102,4 @@ it('provides updatedBy relationship', function () {
     expect($model->updatedBy)->toBeInstanceOf(Authenticatable::class);
     expect($model->updatedBy->id)->toBe($user->id);
 });
-
-class TestModel extends Model
-{
-    use HasUserStamps;
-    
-    protected $connection = 'testing';
-    protected $guarded = [];
-}
 

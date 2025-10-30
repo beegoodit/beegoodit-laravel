@@ -14,8 +14,12 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
         
-        // Ensure database connection is set up before running migrations
-        $this->setUpDatabase();
+        // The parent setUp should have initialized the database
+        // Double-check and set up Model if needed
+        if ($this->app->bound('db')) {
+            Model::setConnectionResolver($this->app['db']);
+            Model::setEventDispatcher($this->app['events']);
+        }
     }
 
     protected function getEnvironmentSetUp($app): void
@@ -32,10 +36,7 @@ abstract class TestCase extends Orchestra
     protected function defineDatabaseMigrations(): void
     {
         $this->loadLaravelMigrations();
-    }
-    
-    protected function setUpDatabase(): void
-    {
+        
         // Create test table for userstamps testing
         Schema::create('test_models', function (Blueprint $table) {
             $table->id();
@@ -46,4 +47,3 @@ abstract class TestCase extends Orchestra
         });
     }
 }
-
