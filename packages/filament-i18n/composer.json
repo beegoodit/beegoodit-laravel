@@ -1,0 +1,51 @@
+{
+    "name": "beegoodit/filament-i18n",
+    "description": "User internationalization preferences (locale, timezone, time format) for Filament applications",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "filament", "i18n", "locale", "timezone", "beegoodit"],
+    "authors": [
+        {
+            "name": "BeeGoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0",
+        "filament/filament": "^4.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentI18n\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentI18n\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\FilamentI18n\\FilamentI18nServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

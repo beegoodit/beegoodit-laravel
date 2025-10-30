@@ -1,0 +1,43 @@
+{
+    "name": "beegoodit/laravel-file-storage",
+    "description": "Unified file storage with automatic S3/local disk selection and URL generation",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "storage", "s3", "files", "beegoodit"],
+    "authors": [
+        {
+            "name": "BeeGoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/filesystem": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\LaravelFileStorage\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeeGoodIT\\LaravelFileStorage\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

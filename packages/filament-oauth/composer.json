@@ -1,0 +1,55 @@
+{
+    "name": "beegoodit/filament-oauth",
+    "description": "OAuth2 authentication with automatic team assignment for Filament applications",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "filament", "oauth", "microsoft", "teams", "beegoodit"],
+    "authors": [
+        {
+            "name": "BeeGoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0",
+        "filament/filament": "^4.0",
+        "dutchcodingcompany/filament-socialite": "^3.0",
+        "laravel/socialite": "^5.23",
+        "socialiteproviders/microsoft": "^4.7",
+        "beegoodit/filament-user-avatar": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentOAuth\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentOAuth\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\FilamentOAuth\\FilamentOAuthServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

@@ -1,0 +1,52 @@
+{
+    "name": "beegoodit/filament-user-avatar",
+    "description": "User avatar upload and display with S3 support for Filament applications",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "filament", "avatar", "upload", "s3", "beegoodit"],
+    "authors": [
+        {
+            "name": "BeeGoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/filesystem": "^11.0|^12.0",
+        "filament/filament": "^4.0",
+        "beegoodit/laravel-file-storage": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentUserAvatar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentUserAvatar\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\FilamentUserAvatar\\FilamentUserAvatarServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

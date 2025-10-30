@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('your_table_name', function (Blueprint $table) {
+            // For UUID-based user IDs
+            $table->uuid('created_by_id')->nullable()->after('id');
+            $table->uuid('updated_by_id')->nullable()->after('created_by_id');
+            
+            // Or for integer-based user IDs, use:
+            // $table->foreignId('created_by_id')->nullable()->constrained('users')->after('id');
+            // $table->foreignId('updated_by_id')->nullable()->constrained('users')->after('created_by_id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('your_table_name', function (Blueprint $table) {
+            $table->dropColumn(['created_by_id', 'updated_by_id']);
+        });
+    }
+};
+

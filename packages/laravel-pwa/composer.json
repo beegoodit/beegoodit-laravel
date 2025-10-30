@@ -1,0 +1,48 @@
+{
+    "name": "beegoodit/laravel-pwa",
+    "description": "Progressive Web App support for Laravel applications",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "pwa", "progressive-web-app", "service-worker", "manifest", "beegoodit"],
+    "authors": [
+        {
+            "name": "BeeGoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\LaravelPwa\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeeGoodIT\\LaravelPwa\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\LaravelPwa\\LaravelPwaServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+
