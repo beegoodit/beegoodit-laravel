@@ -16,7 +16,7 @@
          role="dialog" 
          aria-labelledby="cookie-banner-title" 
          aria-describedby="cookie-banner-desc"
-         class="fixed bottom-0 left-0 right-0 z-50 mx-4 mb-0 sm:mx-4 sm:mb-4 max-w-4xl sm:mx-auto rounded-t-lg sm:rounded-lg border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+         class="fixed bottom-0 left-0 right-0 z-50 mx-auto mb-0 sm:mb-4 max-w-4xl px-4 sm:px-0 rounded-t-lg sm:rounded-lg border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
         
         <div class="p-4 sm:p-6">
             {{-- Title with Cookie Icon --}}
@@ -76,7 +76,7 @@
          aria-describedby="cookie-settings-desc"
          class="fixed inset-0 z-50 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="relative w-full max-w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+            <div class="relative w-full max-w-full sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
                 
                 {{-- Close Button --}}
                 <button wire:click="closeSettings" 
