@@ -18,10 +18,10 @@ abstract class TestCase extends Orchestra
 
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('view.paths', [
-            __DIR__.'/../resources/views',
-            resource_path('views'),
-        ]);
+        $app['config']->set('cookie-consent.enabled', true);
+        $app['config']->set('cookie-consent.cookie_name', '__cookie_consent');
+        $app['config']->set('cookie-consent.cookie_lifetime', 365);
+        $app['config']->set('cookie-consent.position', 'bottom');
     }
 }
 

@@ -7,6 +7,13 @@ use Livewire\Component;
 class CookieConsent extends Component
 {
     public bool $show = true;
+    public bool $showSettings = false;
+    
+    // Cookie categories
+    public bool $essential = true;
+    public bool $functional = true;
+    public bool $analytics = false;
+    public bool $marketing = false;
 
     public function mount(): void
     {
@@ -16,16 +23,49 @@ class CookieConsent extends Component
         }
     }
 
-    public function accept(): void
+    public function acceptAll(): void
     {
-        $this->setConsent(true);
+        $this->setConsent('all');
         $this->show = false;
+        $this->showSettings = false;
     }
 
-    public function decline(): void
+    public function acceptEssential(): void
     {
-        $this->setConsent(false);
+        $this->setConsent('essential');
         $this->show = false;
+        $this->showSettings = false;
+    }
+
+    public function openSettings(): void
+    {
+        $this->showSettings = true;
+    }
+
+    public function closeSettings(): void
+    {
+        $this->showSettings = false;
+    }
+
+    public function saveSettings(): void
+    {
+        $value = $this->buildConsentValue();
+        $this->setConsent($value);
+        $this->show = false;
+        $this->showSettings = false;
+    }
+
+    protected function buildConsentValue(): string
+    {
+        if ($this->analytics && $this->marketing) {
+            return 'all';
+        } elseif ($this->analytics) {
+            return 'analytics';
+        } elseif ($this->marketing) {
+            return 'marketing';
+        }
+        
+        return 'essential';
     }
 
     protected function hasConsented(): bool
@@ -33,11 +73,11 @@ class CookieConsent extends Component
         return request()->cookie(config('cookie-consent.cookie_name')) !== null;
     }
 
-    protected function setConsent(bool $accepted): void
+    protected function setConsent(string $value): void
     {
         cookie()->queue(
             config('cookie-consent.cookie_name'),
-            $accepted ? 'accepted' : 'declined',
+            $value,
             config('cookie-consent.cookie_lifetime') * 24 * 60 // Convert days to minutes
         );
     }

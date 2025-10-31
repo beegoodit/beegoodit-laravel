@@ -33,6 +33,14 @@ class LaravelCookieConsentServiceProvider extends ServiceProvider
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'cookie-consent');
+
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'cookie-consent');
+
+        // Publish translations
+        $this->publishes([
+            __DIR__.'/../resources/lang' => lang_path('vendor/cookie-consent'),
+        ], 'cookie-consent-lang');
     }
 }
 

@@ -9,7 +9,7 @@ return [
     /*
      * Cookie name for storing user's consent
      */
-    'cookie_name' => 'cookie_consent',
+    'cookie_name' => '__cookie_consent',
 
     /*
      * Cookie lifetime in days
@@ -22,13 +22,24 @@ return [
     'position' => 'bottom',
 
     /*
-     * Enable analytics cookies
+     * Cookie policy URLs (per locale)
      */
-    'analytics_enabled' => env('ANALYTICS_ENABLED', false),
+    'policy_url_en' => env('COOKIE_POLICY_URL_EN', '/cookie-policy'),
+    'policy_url_de' => env('COOKIE_POLICY_URL_DE', '/cookie-policy'),
 
     /*
-     * Analytics tracking code (Google Analytics, etc.)
+     * GTM event name triggered when consent changes
      */
-    'analytics_code' => env('ANALYTICS_CODE'),
+    'gtm_event' => 'cookie_refresh',
+
+    /*
+     * Paths to ignore (banner won't show)
+     */
+    'ignored_paths' => [],
+
+    /*
+     * Secure cookie setting (HTTPS only)
+     */
+    'cookie_secure' => env('COOKIE_CONSENT_SECURE', true),
 ];
 
