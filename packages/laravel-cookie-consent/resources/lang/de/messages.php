@@ -4,9 +4,10 @@ return [
     // Alert banner
     'alert_title' => 'Wir verwenden Cookies',
     'alert_text' => 'Wir verwenden Cookies, um Ihre Erfahrung zu verbessern. Durch Klicken auf "Alle Cookies akzeptieren" stimmen Sie der Speicherung von Cookies auf Ihrem Gerät zu.',
-    'alert_accept' => 'Alle Cookies akzeptieren',
-    'alert_essential_only' => 'Nur notwendige Cookies akzeptieren',
-    'alert_settings' => 'Einstellungen anpassen',
+    'alert_accept' => 'Alle akzeptieren',
+    'alert_essential_only' => 'Nur notwendige',
+    'alert_settings' => 'Anpassen',
+    'learn_more' => 'Mehr erfahren',
     
     // Settings modal
     'settings_title' => 'Cookie-Einstellungen',

@@ -5,8 +5,9 @@ return [
     'alert_title' => 'We use cookies',
     'alert_text' => 'We use cookies to improve your experience. By clicking "Accept all cookies", you agree to the storing of cookies on your device.',
     'alert_accept' => 'Accept all cookies',
-    'alert_essential_only' => 'Accept only necessary cookies',
-    'alert_settings' => 'Adjust your preferences',
+    'alert_essential_only' => 'Only necessary',
+    'alert_settings' => 'Customize',
+    'learn_more' => 'Learn more',
     
     // Settings modal
     'settings_title' => 'Cookie Preferences',
