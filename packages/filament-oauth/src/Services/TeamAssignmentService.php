@@ -18,7 +18,7 @@ class TeamAssignmentService
             return;
         }
 
-        $teamModel = config('auth.team_model', \App\Models\Team::class);
+        $teamModel = config('filament-oauth.team_model', \App\Models\Team::class);
 
         // Try to find existing team with this OAuth tenant
         $team = $teamModel::query()

@@ -44,7 +44,14 @@
     },
     "scripts": {
         "test": "pest",
-        "format": "pint"
+        "format": "pint",
+        "post-install-cmd": [
+            "@php -r \"echo '\\n\\033[1;33m📦 FilamentOAuth installed!\\033[0m\\n';\"",
+            "@php -r \"echo '\\033[0;33mDon\\'t forget to publish migrations:\\033[0m\\n';\"",
+            "@php -r \"echo '  php artisan vendor:publish --tag=filament-socialite-migrations\\n';\"",
+            "@php -r \"echo '  php artisan vendor:publish --tag=filament-oauth-migrations\\n';\"",
+            "@php -r \"echo '  php artisan migrate\\n\\n';\""
+        ]
     },
     "config": {
         "sort-packages": true
