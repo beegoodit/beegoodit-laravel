@@ -8,6 +8,7 @@ class CookieConsent extends Component
 {
     public bool $show = true;
     public bool $showSettings = false;
+    public bool $consentGiven = false; // Track if consent was just given in this session
     
     // Cookie categories
     public bool $essential = true;
@@ -20,6 +21,7 @@ class CookieConsent extends Component
         // Check if user has already consented
         if ($this->hasConsented()) {
             $this->show = false;
+            $this->consentGiven = true;
         }
     }
 
@@ -28,6 +30,7 @@ class CookieConsent extends Component
         $this->setConsent('all');
         $this->show = false;
         $this->showSettings = false;
+        $this->consentGiven = true;
     }
 
     public function acceptEssential(): void
@@ -35,6 +38,7 @@ class CookieConsent extends Component
         $this->setConsent('essential');
         $this->show = false;
         $this->showSettings = false;
+        $this->consentGiven = true;
     }
 
     public function openSettings(): void
@@ -53,6 +57,7 @@ class CookieConsent extends Component
         $this->setConsent($value);
         $this->show = false;
         $this->showSettings = false;
+        $this->consentGiven = true;
     }
 
     protected function buildConsentValue(): string
@@ -84,8 +89,11 @@ class CookieConsent extends Component
 
     public function render()
     {
-        if (! config('cookie-consent.enabled') || ! $this->show) {
-            return '';
+        // Don't render anything if consent already given or disabled
+        if (! config('cookie-consent.enabled') || $this->consentGiven) {
+            return <<<'HTML'
+            <div></div>
+            HTML;
         }
 
         return view('cookie-consent::livewire.cookie-consent');

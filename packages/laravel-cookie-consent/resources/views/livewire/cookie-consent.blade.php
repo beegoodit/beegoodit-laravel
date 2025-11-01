@@ -1,9 +1,9 @@
-@php
-    $locale = app()->getLocale();
-    $policyUrl = config("cookie-consent.policy_url_{$locale}", config('cookie-consent.policy_url_en'));
-@endphp
-
 <div>
+    @php
+        $locale = app()->getLocale();
+        $policyUrl = config("cookie-consent.policy_url_{$locale}", config('cookie-consent.policy_url_en'));
+    @endphp
+
     {{-- Main Alert Banner --}}
     <div x-data="{ show: @entangle('show') }" 
          x-show="show" 
@@ -13,12 +13,14 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="transform translate-y-0"
          x-transition:leave-end="transform translate-y-full"
-         role="dialog" 
-         aria-labelledby="cookie-banner-title" 
-         aria-describedby="cookie-banner-desc"
-         class="fixed bottom-0 left-0 right-0 z-50 mx-auto mb-0 sm:mb-4 max-w-4xl px-4 sm:px-0 rounded-t-lg sm:rounded-lg border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+         class="fixed bottom-0 left-0 right-0 z-50 px-4 mb-0 sm:mb-4">
         
-        <div class="p-4 sm:p-6">
+        <div role="dialog" 
+             aria-labelledby="cookie-banner-title" 
+             aria-describedby="cookie-banner-desc"
+             class="mx-auto max-w-4xl rounded-t-2xl sm:rounded-2xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900 overflow-hidden">
+        
+            <div class="p-4 sm:p-6">
             {{-- Title with Cookie Icon --}}
             <div class="flex items-center gap-3 mb-4">
                 <div class="flex-shrink-0">
@@ -59,6 +61,7 @@
                     {{ __('cookie-consent::messages.alert_settings') }}
                 </button>
             </div>
+            </div>
         </div>
     </div>
 
@@ -74,9 +77,9 @@
          role="dialog" 
          aria-labelledby="cookie-settings-title" 
          aria-describedby="cookie-settings-desc"
-         class="fixed inset-0 z-50 overflow-y-auto">
+         class="fixed inset-0 z-[100] overflow-y-auto bg-black/50 backdrop-blur-sm">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="relative w-full max-w-full sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
+            <div class="relative w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
                 
                 {{-- Close Button --}}
                 <button wire:click="closeSettings" 
