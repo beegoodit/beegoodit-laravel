@@ -29,6 +29,13 @@
             "BeeGoodIT\\EloquentUserstamps\\Tests\\": "tests/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\EloquentUserstamps\\EloquentUserstampsServiceProvider"
+            ]
+        }
+    },
     "scripts": {
         "test": "pest",
         "format": "pint"

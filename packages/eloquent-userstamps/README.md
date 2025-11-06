@@ -12,6 +12,18 @@ composer require beegoodit/eloquent-userstamps
 
 ### 1. Add Migration
 
+You can either publish the migration stub or create your own migration:
+
+#### Option 1: Publish Migration Stub (Recommended)
+
+```bash
+php artisan vendor:publish --tag=eloquent-userstamps-migrations
+```
+
+This will publish a migration stub to `database/migrations/`. Edit the stub to replace `your_table_name` with your actual table name.
+
+#### Option 2: Create Migration Manually
+
 Create a migration to add the columns:
 
 ```php

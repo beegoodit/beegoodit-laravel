@@ -16,6 +16,10 @@ return new class extends Migration
             $table->uuid('created_by_id')->nullable()->after('id');
             $table->uuid('updated_by_id')->nullable()->after('created_by_id');
             
+            // Add foreign keys if needed:
+            // $table->foreign('created_by_id')->references('id')->on('users')->nullOnDelete();
+            // $table->foreign('updated_by_id')->references('id')->on('users')->nullOnDelete();
+            
             // Or for integer-based user IDs, use:
             // $table->foreignId('created_by_id')->nullable()->constrained('users')->after('id');
             // $table->foreignId('updated_by_id')->nullable()->constrained('users')->after('created_by_id');
@@ -28,6 +32,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('your_table_name', function (Blueprint $table) {
+            // Drop foreign keys first if they were added
+            // $table->dropForeign(['created_by_id']);
+            // $table->dropForeign(['updated_by_id']);
+            
             $table->dropColumn(['created_by_id', 'updated_by_id']);
         });
     }
