@@ -63,32 +63,37 @@ class FilamentOAuthServiceProvider extends ServiceProvider
 
         // Handle new user registration via OAuth
         Event::listen(Registered::class, function ($event) use ($teamAssignmentService) {
-            $user = $event->getUser();
-            $socialiteUser = $event->socialiteUser;
+            $user = $event->socialiteUser->getUser();
             $provider = $event->provider;
 
-            // Extract tenant ID from OAuth data (Microsoft specific)
+            // Verify email automatically (OAuth providers verify emails)
+            if (! $user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+            }
+
+            // Extract tenant ID and access token from OAuth data (Microsoft specific)
             if ($provider === 'microsoft') {
-                $tenantId = $this->extractMicrosoftTenantId($socialiteUser);
+                $tenantId = $this->extractMicrosoftTenantId($event->oauthUser);
+                $accessToken = $event->oauthUser->token ?? null;
                 
                 if ($tenantId) {
-                    $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId);
+                    $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
                 }
             }
         });
 
         // Handle existing user connecting OAuth account
         Event::listen(SocialiteUserConnected::class, function ($event) use ($teamAssignmentService) {
-            $user = $event->getUser();
-            $socialiteUser = $event->socialiteUser;
+            $user = $event->socialiteUser->getUser();
             $provider = $event->provider;
 
-            // Extract tenant ID from OAuth data (Microsoft specific)
+            // Extract tenant ID and access token from OAuth data (Microsoft specific)
             if ($provider === 'microsoft') {
-                $tenantId = $this->extractMicrosoftTenantId($socialiteUser);
+                $tenantId = $this->extractMicrosoftTenantId($event->oauthUser);
+                $accessToken = $event->oauthUser->token ?? null;
                 
                 if ($tenantId) {
-                    $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId);
+                    $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
                 }
             }
         });

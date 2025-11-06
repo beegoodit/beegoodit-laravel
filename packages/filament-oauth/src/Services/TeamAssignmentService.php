@@ -8,10 +8,14 @@ use Illuminate\Support\Str;
 
 class TeamAssignmentService
 {
+    public function __construct(
+        protected MicrosoftGraphService $graphService
+    ) {}
+
     /**
      * Assign a user to a team based on their OAuth tenant ID.
      */
-    public function assignUserToTeam(Model $user, ?string $provider = null, ?string $tenantId = null): void
+    public function assignUserToTeam(Model $user, ?string $provider = null, ?string $tenantId = null, ?string $accessToken = null): void
     {
         if (! $tenantId) {
             Log::info('No tenant ID provided for team assignment', ['user_id' => $user->id]);
@@ -29,8 +33,8 @@ class TeamAssignmentService
         // If no team exists, create one
         if (! $team) {
             $team = $teamModel::create([
-                'name' => $this->generateTeamName($provider, $tenantId),
-                'slug' => Str::slug($this->generateTeamName($provider, $tenantId)),
+                'name' => $this->generateTeamName($provider, $tenantId, $accessToken),
+                'slug' => Str::slug($this->generateTeamName($provider, $tenantId, $accessToken)),
                 'oauth_provider' => $provider,
                 'oauth_tenant_id' => $tenantId,
             ]);
@@ -56,8 +60,14 @@ class TeamAssignmentService
     /**
      * Generate a team name from OAuth tenant information.
      */
-    protected function generateTeamName(string $provider, string $tenantId): string
+    protected function generateTeamName(string $provider, string $tenantId, ?string $accessToken = null): string
     {
+        // For Microsoft providers, try to fetch organization name from Graph API
+        if ($provider === 'microsoft' && $accessToken) {
+            return $this->graphService->getOrganizationName($accessToken, $tenantId);
+        }
+
+        // Fallback to generic name generation
         return ucfirst($provider) . ' Organization ' . substr($tenantId, 0, 8);
     }
 }

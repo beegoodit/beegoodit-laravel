@@ -74,16 +74,14 @@ The package automatically configures Microsoft OAuth. You can customize settings
 ### 4. Configure Filament Panel
 
 ```php
-use BeeGoodIT\FilamentOAuth\Models\SocialiteUser;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use BeeGoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
 use DutchCodingCompany\FilamentSocialite\Provider;
 
 public function panel(Panel $panel): Panel
 {
     return $panel
         ->plugin(
-            FilamentSocialitePlugin::make()
-                ->socialiteUserModelClass(SocialiteUser::class)
+            FilamentSocialitePluginHelper::make()
                 ->providers([
                     Provider::make('microsoft')
                         ->label('Sign in with Microsoft 365')
@@ -94,10 +92,15 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+**Using the Helper:**
+- `FilamentSocialitePluginHelper::make()` - Automatically configures:
+  - ✅ `SocialiteUser` model with UUID support
+  - ✅ Email verification for OAuth users (OAuth providers verify emails)
+  - ✅ Proper user creation callback
+
 **Important Configuration Options:**
 
 - `->registration(true)` - **Required** to allow new users to register via OAuth. Set to `false` if you only want existing users to connect OAuth accounts.
-- `->socialiteUserModelClass()` - Use `BeeGoodIT\FilamentOAuth\Models\SocialiteUser` which has UUID support.
 - `->stateless(false)` - Can be set per provider if needed (default is stateful).
 
 ## Features
