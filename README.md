@@ -81,6 +81,47 @@ class User extends Authenticatable {
 $table->uuid('id')->primary();
 ```
 
+### Customize Filament Logout Redirect
+
+By default, Filament redirects users to the login page after logout. To redirect to the home page instead:
+
+**1. Create a Custom LogoutResponse Class**
+
+Create `app/Http/Responses/LogoutResponse.php`:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
+use Illuminate\Http\RedirectResponse;
+
+class LogoutResponse implements LogoutResponseContract
+{
+    public function toResponse($request): RedirectResponse
+    {
+        return redirect('/');
+    }
+}
+```
+
+**2. Bind the Custom LogoutResponse in AppServiceProvider**
+
+Add to `app/Providers/AppServiceProvider.php`:
+
+```php
+use App\Http\Responses\LogoutResponse;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
+
+public function register(): void
+{
+    $this->app->singleton(LogoutResponseContract::class, LogoutResponse::class);
+}
+```
+
+This ensures users are redirected to the home page (`/`) after logging out from Filament panels, showing the landing page with "Dashboard" and "Get Started" buttons.
+
 ## License
 
 All packages are open-sourced software licensed under the [MIT license](LICENSE).
