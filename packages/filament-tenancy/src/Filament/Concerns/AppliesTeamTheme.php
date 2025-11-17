@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentTeamBranding\Filament\Concerns;
+namespace BeeGoodIT\FilamentTenancy\Filament\Concerns;
 
-use BeeGoodIT\FilamentTeamBranding\Filament\ThemeRenderer;
+use BeeGoodIT\FilamentTenancy\Filament\ThemeRenderer;
 use Filament\Panel;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;

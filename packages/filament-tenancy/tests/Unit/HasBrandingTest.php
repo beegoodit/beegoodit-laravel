@@ -1,6 +1,6 @@
 <?php
 
-use BeeGoodIT\FilamentTeamBranding\Models\Concerns\HasBranding;
+use BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 

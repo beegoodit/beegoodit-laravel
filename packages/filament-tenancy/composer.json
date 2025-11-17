@@ -1,9 +1,9 @@
 {
-    "name": "beegoodit/filament-team-branding",
-    "description": "Team logo and color customization for Filament applications",
+    "name": "beegoodit/filament-tenancy",
+    "description": "Multi-tenancy support for Filament applications with team branding and management",
     "type": "library",
     "license": "MIT",
-    "keywords": ["laravel", "filament", "team", "branding", "logo", "colors", "beegoodit"],
+    "keywords": ["laravel", "filament", "tenancy", "multi-tenant", "team", "branding", "logo", "colors", "beegoodit"],
     "authors": [
         {
             "name": "BeeGoodIT",
@@ -23,18 +23,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\FilamentTeamBranding\\": "src/"
+            "BeeGoodIT\\FilamentTenancy\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\FilamentTeamBranding\\Tests\\": "tests/"
+            "BeeGoodIT\\FilamentTenancy\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\FilamentTeamBranding\\FilamentTeamBrandingServiceProvider"
+                "BeeGoodIT\\FilamentTenancy\\FilamentTenancyServiceProvider"
             ]
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentTeamBranding\Models\Concerns;
+namespace BeeGoodIT\FilamentTenancy\Models\Concerns;
 
 use BeeGoodIT\LaravelFileStorage\Models\Concerns\HasStoredFiles;
 use Filament\Support\Colors\Color;

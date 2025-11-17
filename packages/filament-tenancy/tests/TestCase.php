@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentTeamBranding\Tests;
+namespace BeeGoodIT\FilamentTenancy\Tests;
 
-use BeeGoodIT\FilamentTeamBranding\FilamentTeamBrandingServiceProvider;
+use BeeGoodIT\FilamentTenancy\FilamentTenancyServiceProvider;
 use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -12,7 +12,7 @@ abstract class TestCase extends Orchestra
     {
         return [
             LaravelFileStorageServiceProvider::class,
-            FilamentTeamBrandingServiceProvider::class,
+            FilamentTenancyServiceProvider::class,
         ];
     }
 

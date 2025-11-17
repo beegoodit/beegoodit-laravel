@@ -1,11 +1,11 @@
-# BeeGoodIT Filament Team Branding
+# BeeGoodIT Filament Tenancy
 
-Team logo and color customization for Filament multi-tenant applications.
+Multi-tenancy support for Filament applications with team branding, management pages, and dynamic theming.
 
 ## Installation
 
 ```bash
-composer require beegoodit/filament-team-branding
+composer require beegoodit/filament-tenancy
 ```
 
 **Dependencies**: Requires `beegoodit/laravel-file-storage`.
@@ -15,7 +15,7 @@ composer require beegoodit/filament-team-branding
 ### 1. Publish Migration
 
 ```bash
-php artisan vendor:publish --tag=team-branding-migrations
+php artisan vendor:publish --tag=tenancy-migrations
 php artisan migrate
 ```
 
@@ -30,7 +30,7 @@ This adds to the `teams` table:
 ### 2. Add Trait to Team Model
 
 ```php
-use BeeGoodIT\FilamentTeamBranding\Models\Concerns\HasBranding;
+use BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding;
 
 class Team extends Model
 {
@@ -71,9 +71,47 @@ $team->getLogoUrl();          // Automatic S3 signed URL or public URL
 $team->getFilamentLogoUrl();  // For Filament navbar
 ```
 
-### Team Settings Page
+### Team Registration and Profile Pages
 
-The package provides a `BrandingSchema` helper to easily create team profile forms with consistent branding fields.
+The package provides ready-to-use pages for team registration and profile management:
+
+```php
+use BeeGoodIT\FilamentTenancy\Filament\Pages\RegisterTeam;
+use BeeGoodIT\FilamentTenancy\Filament\Pages\EditTeamProfile;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->tenant(Team::class)
+        ->tenantRegistration(RegisterTeam::class)
+        ->tenantProfile(EditTeamProfile::class)
+        ->pages([
+            RegisterTeam::class,
+            EditTeamProfile::class,
+        ]);
+}
+```
+
+These pages automatically:
+- Use `BrandingSchema` for consistent form fields
+- Handle team creation with user attachment
+- Support both `users()` and `members()` relationship methods
+- Use configurable team model (defaults to `App\Models\Team`)
+
+**Configuration:**
+
+You can customize the team model class via config:
+
+```php
+// config/filament-tenancy.php
+return [
+    'team_model' => \App\Models\Team::class,
+];
+```
+
+### Team Settings Page (Custom)
+
+If you need custom pages, the package provides a `BrandingSchema` helper to easily create team profile forms with consistent branding fields.
 
 #### Option 1: Using the Complete Base Schema (Recommended)
 
@@ -81,7 +119,7 @@ For a complete team profile page with name, slug, and branding fields:
 
 ```php
 use App\Models\Team;
-use BeeGoodIT\FilamentTeamBranding\Filament\Schemas\BrandingSchema;
+use BeeGoodIT\FilamentTenancy\Filament\Schemas\BrandingSchema;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use Filament\Schemas\Schema;
 
@@ -107,7 +145,7 @@ This includes:
 If you need to add custom fields or sections, you can use just the branding section:
 
 ```php
-use BeeGoodIT\FilamentTeamBranding\Filament\Schemas\BrandingSchema;
+use BeeGoodIT\FilamentTenancy\Filament\Schemas\BrandingSchema;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use Filament\Schemas\Components\Section;
@@ -167,7 +205,7 @@ The package provides a helper for applying dynamic team colors via CSS variables
 #### Option 1: Using the Helper Trait (Recommended)
 
 ```php
-use BeeGoodIT\FilamentTeamBranding\Filament\Concerns\AppliesTeamTheme;
+use BeeGoodIT\FilamentTenancy\Filament\Concerns\AppliesTeamTheme;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -201,7 +239,7 @@ With optional secondary color:
 If you need more control, you can use the `ThemeRenderer` directly:
 
 ```php
-use BeeGoodIT\FilamentTeamBranding\Filament\ThemeRenderer;
+use BeeGoodIT\FilamentTenancy\Filament\ThemeRenderer;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
 
