@@ -144,6 +144,52 @@ OAUTH_AUTO_ASSIGN_TEAMS=false
 
 You can then implement custom team assignment logic using the `Registered` and `SocialiteUserConnected` events from `dutchcodingcompany/filament-socialite`.
 
+### Artisan Commands
+
+#### Create Team with User
+
+The package includes an artisan command to create teams and optionally attach users:
+
+```bash
+php artisan team:create
+```
+
+**Interactive Mode:**
+```bash
+php artisan team:create
+# Prompts for: team name, user email, user name, password
+```
+
+**Non-Interactive Mode:**
+```bash
+# Create team with new user
+php artisan team:create --name="Acme Corp" --user-email="admin@acme.com" --user-name="Admin User" --user-password="secret"
+
+# Create team and attach existing user
+php artisan team:create --name="Acme Corp" --user-email="admin@acme.com"
+
+# Create team with OAuth configuration
+php artisan team:create --name="Acme Corp" --oauth-provider="microsoft" --oauth-tenant-id="tenant-123"
+
+# Create team with branding
+php artisan team:create --name="Acme Corp" --primary-color="#ff0000" --secondary-color="#00ff00"
+
+# Create team without user
+php artisan team:create --name="Acme Corp" --no-user
+```
+
+**Options:**
+- `--name` - Team name (required if non-interactive)
+- `--slug` - Team slug (auto-generated if not provided)
+- `--user-email` - Email of user to attach (creates new user if not exists)
+- `--user-name` - Name of user (only used when creating new user)
+- `--user-password` - Password for new user (auto-generated if not provided)
+- `--oauth-provider` - OAuth provider (e.g., microsoft)
+- `--oauth-tenant-id` - OAuth tenant ID
+- `--primary-color` - Primary branding color (hex)
+- `--secondary-color` - Secondary branding color (hex)
+- `--no-user` - Create team without attaching a user
+
 ## Requirements
 
 - PHP 8.2+
