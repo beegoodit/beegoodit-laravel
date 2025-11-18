@@ -2,11 +2,13 @@
 
 namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,9 +26,20 @@ class TwoFactor extends Page implements HasForms
 
     protected static ?int $navigationSort = 4;
 
+    // This page is in a non-tenant panel, so isTenanted() is not needed
+
     public static function getSlug(?Panel $panel = null): string
     {
         return 'two-factor';
+    }
+
+    // Routes are registered by the UserProfilePanelProvider
+
+    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
+    {
+        // Use the user-profile panel (no tenant)
+        $panel = $panel ?? 'user-profile';
+        return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 
     public function getHeading(): string
@@ -57,9 +70,6 @@ class TwoFactor extends Page implements HasForms
         // Placeholder - will be implemented in Phase 5
     }
 
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false; // Hidden from navigation, accessible via user menu only
-    }
+    // Navigation is enabled for the settings panel
 }
 

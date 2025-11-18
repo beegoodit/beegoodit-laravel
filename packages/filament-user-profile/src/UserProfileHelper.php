@@ -13,57 +13,20 @@ use Laravel\Fortify\Features;
 class UserProfileHelper
 {
     /**
-     * Get user menu items for all profile pages.
+     * Get user menu items for the main panel.
+     * Only Profile is shown here - other items (Password, Appearance, 2FA) are in the settings panel navigation.
      *
      * @return array<string, MenuItem>
      */
     public function getUserMenuItems(): array
     {
-        $items = [
+        return [
             'profile' => MenuItem::make()
                 ->label(__('Profile'))
                 ->icon('heroicon-o-user-circle')
-                ->url(function () {
-                    $panel = Filament::getCurrentPanel();
-                    $panelId = $panel?->getId() ?? 'admin';
-                    $tenant = Filament::getTenant();
-                    // Profile uses a different route name pattern (filament.portal.profile instead of filament.portal.pages.profile)
-                    return route("filament.{$panelId}.profile", ['tenant' => $tenant?->id]);
-                })
+                ->url(fn () => Profile::getUrl())
                 ->sort(0),
-
-            'password' => MenuItem::make()
-                ->label(__('Password'))
-                ->icon('heroicon-o-key')
-                ->url(function () {
-                    $tenant = Filament::getTenant();
-                    return Password::getUrl(['tenant' => $tenant?->id]);
-                })
-                ->sort(1),
-
-            'appearance' => MenuItem::make()
-                ->label(__('Appearance'))
-                ->icon('heroicon-o-paint-brush')
-                ->url(function () {
-                    $tenant = Filament::getTenant();
-                    return Appearance::getUrl(['tenant' => $tenant?->id]);
-                })
-                ->sort(2),
         ];
-
-        // Add two-factor menu item only if Fortify 2FA is enabled
-        if (Features::canManageTwoFactorAuthentication()) {
-            $items['two-factor'] = MenuItem::make()
-                ->label(__('Two-Factor Authentication'))
-                ->icon('heroicon-o-shield-check')
-                ->url(function () {
-                    $tenant = Filament::getTenant();
-                    return TwoFactor::getUrl(['tenant' => $tenant?->id]);
-                })
-                ->sort(3);
-        }
-
-        return $items;
     }
 }
 
