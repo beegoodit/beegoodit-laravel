@@ -96,6 +96,8 @@ BLADE;
             $secondarySection = "\n        }";
         }
 
+        $avatarFixScript = self::getAvatarUrlFixScript();
+        
         $template = <<<BLADE
 @php
     try {
@@ -138,6 +140,7 @@ BLADE;
         @endforeach
     }
 </style>
+{$avatarFixScript}
 BLADE;
 
         return $template;
@@ -193,7 +196,8 @@ BLADE;
     
     // Fix avatar URLs on page load
     function fixAvatarUrls() {
-        document.querySelectorAll('img[src*="ui-avatars.com"], img.fi-tenant-avatar').forEach(img => {
+        // Fix all ui-avatars.com URLs (both tenant and user avatars)
+        document.querySelectorAll('img[src*="ui-avatars.com"]').forEach(img => {
             const src = img.src;
             if (src.includes('background=oklch')) {
                 const match = src.match(/background=([^&]+)/);
