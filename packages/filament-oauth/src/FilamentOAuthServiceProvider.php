@@ -23,6 +23,9 @@ class FilamentOAuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Automatically configure Microsoft in services.php
+        $this->configureMicrosoftService();
+
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -31,8 +34,10 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         }
 
         // Publish migrations
+        $timestamp = date('Y_m_d_His');
         $this->publishes([
-            __DIR__.'/../database/migrations/create_oauth_accounts_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_oauth_accounts_table.php'),
+            __DIR__.'/../database/migrations/create_oauth_accounts_table.php.stub' => database_path('migrations/'.$timestamp.'_create_oauth_accounts_table.php'),
+            __DIR__.'/../database/migrations/make_password_nullable_in_users_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time() + 1).'_make_password_nullable_in_users_table.php'),
         ], 'oauth-migrations');
 
         // Publish config
@@ -136,6 +141,42 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         }
 
         return $tenantId;
+    }
+
+    /**
+     * Automatically configure Microsoft OAuth in config/services.php.
+     * This merges the Microsoft configuration into the services config at runtime.
+     */
+    protected function configureMicrosoftService(): void
+    {
+        // Only configure if Microsoft is enabled
+        if (! config('filament-oauth.providers.microsoft.enabled', true)) {
+            return;
+        }
+
+        // Get the current services config
+        $services = config('services', []);
+
+        // Build Microsoft configuration from filament-oauth config or env
+        $microsoftConfig = [
+            'client_id' => config('filament-oauth.providers.microsoft.client_id', env('MICROSOFT_CLIENT_ID')),
+            'client_secret' => config('filament-oauth.providers.microsoft.client_secret', env('MICROSOFT_CLIENT_SECRET')),
+            'redirect' => config('filament-oauth.providers.microsoft.redirect', env('APP_URL').'/portal/oauth/callback/microsoft'),
+            'tenant' => config('filament-oauth.providers.microsoft.tenant_id', env('MICROSOFT_TENANT_ID', 'common')),
+        ];
+
+        // Filter out empty values
+        $microsoftConfig = array_filter($microsoftConfig, fn($value) => ! empty($value));
+
+        // Only merge if not already configured or if existing config is incomplete
+        if (! isset($services['microsoft']) || empty($services['microsoft']['client_id'])) {
+            config(['services.microsoft' => $microsoftConfig]);
+        } else {
+            // Merge missing keys into existing config (existing values take precedence)
+            $existing = $services['microsoft'];
+            $merged = array_merge($microsoftConfig, array_filter($existing, fn($value) => ! empty($value)));
+            config(['services.microsoft' => $merged]);
+        }
     }
 
     /**

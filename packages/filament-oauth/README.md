@@ -29,6 +29,8 @@ php artisan migrate
 
 **Note for UUID users**: If your User model uses UUIDs, you'll need to modify the published `socialite_users` migration to use `uuid` instead of `id`.
 
+**Note for OAuth users**: The package includes a migration to make the `password` field nullable in the `users` table. This is required for OAuth-only users who don't have passwords. The migration will be published automatically when you run `php artisan vendor:publish --tag=filament-oauth-migrations`.
+
 ### 1b. Publish Configuration (Optional)
 
 ```bash
@@ -50,7 +52,7 @@ class User extends Authenticatable implements HasTenants
 
 ### 3. Configure OAuth
 
-Add to `.env`:
+**Step 1: Add environment variables to `.env`:**
 ```env
 MICROSOFT_CLIENT_ID=your_client_id
 MICROSOFT_CLIENT_SECRET=your_secret
@@ -59,17 +61,27 @@ OAUTH_MICROSOFT_ENABLED=true
 OAUTH_AUTO_ASSIGN_TEAMS=true
 ```
 
-The package automatically configures Microsoft OAuth. You can customize settings in `config/filament-oauth.php` if needed.
+**Step 2: Configure `config/services.php` (REQUIRED)**
 
-**Note:** If you want to use `config/services.php` for OAuth configuration (legacy approach), add:
+⚠️ **Important**: Laravel Socialite requires the Microsoft provider to be configured in `config/services.php`. 
+
+The package **automatically configures** this at runtime, but it's **recommended** to add it manually to `config/services.php` for clarity and to ensure it works with config caching:
+
+Add to `config/services.php`:
 ```php
 'microsoft' => [
     'client_id' => env('MICROSOFT_CLIENT_ID'),
     'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
-    'tenant_id' => env('MICROSOFT_TENANT_ID', 'common'),
     'redirect' => env('APP_URL') . '/portal/oauth/callback/microsoft',
+    'tenant' => env('MICROSOFT_TENANT_ID', 'common'),
 ],
 ```
+
+**Note:** 
+- The package automatically merges this configuration on boot if not already present
+- The package's `config/filament-oauth.php` is for package-specific features (team assignment, etc.)
+- `config/services.php` is required by Laravel Socialite for OAuth credentials
+- If you manually configure it in `config/services.php`, those values will take precedence
 
 ### 4. Configure Filament Panel
 
@@ -227,6 +239,39 @@ php artisan vendor:publish --tag=filament-socialite-migrations
 php artisan vendor:publish --tag=filament-oauth-migrations
 php artisan migrate
 ```
+
+### "Provider 'microsoft' is not configured"
+
+This error occurs when the Microsoft provider is not configured in `config/services.php`. 
+
+**Solution:** Add the Microsoft configuration to `config/services.php`:
+
+```php
+'microsoft' => [
+    'client_id' => env('MICROSOFT_CLIENT_ID'),
+    'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
+    'redirect' => env('APP_URL') . '/portal/oauth/callback/microsoft',
+    'tenant' => env('MICROSOFT_TENANT_ID', 'common'),
+],
+```
+
+Make sure:
+1. The configuration exists in `config/services.php`
+2. Your `.env` file has `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` set
+3. Run `php artisan config:clear` after making changes
+
+### "null value in column 'password' violates not-null constraint"
+
+This error occurs when trying to create an OAuth user but the `password` column in the `users` table is not nullable.
+
+**Solution:** Make sure you've published and run all migrations:
+
+```bash
+php artisan vendor:publish --tag=filament-oauth-migrations
+php artisan migrate
+```
+
+The package includes a migration (`make_password_nullable_in_users_table.php`) that makes the password field nullable, which is required for OAuth-only users who don't have passwords.
 
 ## License
 
