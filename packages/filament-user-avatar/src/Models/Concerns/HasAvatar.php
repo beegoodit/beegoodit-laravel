@@ -19,10 +19,82 @@ trait HasAvatar
 
     /**
      * Get the avatar URL for Filament (used in portal navbar).
+     * If no avatar exists, generates a fallback ui-avatars.com URL with hex color.
+     * This ensures hex colors are used (not oklch) to prevent avatar URL issues.
      */
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->getAvatarUrl();
+        // If user has an avatar, return it
+        $avatarUrl = $this->getAvatarUrl();
+        if ($avatarUrl) {
+            return $avatarUrl;
+        }
+
+        // Generate fallback ui-avatars.com URL with hex color
+        // Use initials format (no spaces) - ui-avatars.com works better with concatenated initials
+        $name = $this->initials();
+        
+        // Fallback if no initials (shouldn't happen, but be safe)
+        if (empty($name)) {
+            $name = 'U'; // Single letter fallback
+        }
+
+        // Get primary color as hex (ensures hex format, not oklch)
+        $primaryColor = $this->getPrimaryColorForAvatar();
+        
+        // If no primary color, use default amber hex
+        if (empty($primaryColor)) {
+            $primaryColor = '#f59e0b';
+        }
+
+        // Ensure hex format (remove # for URL)
+        $hexColor = ltrim($primaryColor, '#');
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) 
+            . '&color=FFFFFF&background=' . $hexColor;
+    }
+
+    /**
+     * Get the primary color for avatar URLs.
+     * Tries to get color from tenant (if filament-tenancy is used), then falls back to panel default.
+     * Always returns hex format (never oklch) to prevent avatar URL issues.
+     *
+     * @return string|null Hex color string (e.g., '#f59e0b') or null
+     */
+    protected function getPrimaryColorForAvatar(): ?string
+    {
+        // Try to get color from tenant (if filament-tenancy is used)
+        try {
+            $tenant = filament()->getTenant();
+            if ($tenant) {
+                // Try to use the accessor first (if HasBranding trait is used)
+                // The accessor will convert oklch to hex automatically
+                if (method_exists($tenant, 'getPrimaryColorAttribute') || 
+                    in_array(\BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding::class, class_uses_recursive($tenant))) {
+                    $color = $tenant->primary_color;
+                    if (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
+                        return $color;
+                    }
+                }
+                
+                // Fallback: check raw attribute and convert if needed
+                if (isset($tenant->attributes['primary_color'])) {
+                    $rawColor = $tenant->attributes['primary_color'];
+                    if (!empty($rawColor)) {
+                        // If already hex, return it
+                        if (preg_match('/^#[0-9A-Fa-f]{6}$/', $rawColor)) {
+                            return $rawColor;
+                        }
+                        // If oklch, we can't easily convert here without the HasBranding method
+                        // So return null to use default
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // If filament() is not available or tenant doesn't exist, continue to fallback
+        }
+
+        return null; // Will use default amber
     }
 
     /**
