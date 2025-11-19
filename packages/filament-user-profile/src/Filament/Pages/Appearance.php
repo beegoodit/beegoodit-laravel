@@ -21,6 +21,12 @@ class Appearance extends Page implements HasForms
 {
     use InteractsWithForms;
 
+    public ?string $timezone = null;
+
+    public ?string $locale = null;
+
+    public ?string $time_format = null;
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-paint-brush';
 
     protected string $view = 'filament-user-profile::pages.appearance';
@@ -63,11 +69,25 @@ class Appearance extends Page implements HasForms
     {
         $user = Auth::user();
 
+        // Set public properties that Filament Forms will automatically bind to
+        $this->locale = $user->locale ?? config('app.locale', 'en');
+        $this->timezone = $user->timezone ?? config('app.timezone', 'UTC');
+        $this->time_format = $user->time_format ?? '24h';
+
+        // Also fill the form to ensure state is properly initialized
         $this->form->fill([
-            'locale' => $user->locale ?? config('app.locale', 'en'),
-            'timezone' => $user->timezone ?? config('app.timezone', 'UTC'),
-            'time_format' => $user->time_format ?? '24h',
+            'locale' => $this->locale,
+            'timezone' => $this->timezone,
+            'time_format' => $this->time_format,
         ]);
+    }
+
+    public function updatedTimezone($value): void
+    {
+        // Merge timezone with existing form state instead of replacing it
+        $currentState = $this->form->getState();
+        $mergedState = array_merge($currentState, ['timezone' => $value]);
+        $this->form->fill($mergedState);
     }
 
     public function form(Schema $schema): Schema
@@ -80,7 +100,6 @@ class Appearance extends Page implements HasForms
                         'en' => __('English'),
                         'de' => __('Deutsch'),
                     ])
-                    ->default('en')
                     ->inline()
                     ->required(),
 
@@ -94,7 +113,6 @@ class Appearance extends Page implements HasForms
                         '12h' => __('12-hour (3:45 PM)'),
                         '24h' => __('24-hour (15:45)'),
                     ])
-                    ->default('24h')
                     ->inline()
                     ->required(),
             ]);

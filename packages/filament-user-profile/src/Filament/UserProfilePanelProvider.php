@@ -5,7 +5,6 @@ namespace BeeGoodIT\FilamentUserProfile\Filament;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Test;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -41,7 +40,6 @@ class UserProfilePanelProvider extends PanelProvider
                 Password::class,
                 Appearance::class,
                 TwoFactor::class,
-                Test::class,
             ])
             ->navigationItems([
                 NavigationItem::make()
