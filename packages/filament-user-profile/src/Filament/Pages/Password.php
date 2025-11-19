@@ -3,11 +3,17 @@
 namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 
 use Filament\Facades\Filament;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Panel;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class Password extends Page implements HasForms
 {
@@ -55,13 +61,49 @@ class Password extends Page implements HasForms
     {
         return $schema
             ->components([
-                // Placeholder - will be implemented in Phase 3
+                Section::make(__('Update Password'))
+                    ->schema([
+                        TextInput::make('current_password')
+                            ->label(__('Current Password'))
+                            ->password()
+                            ->revealable()
+                            ->required()
+                            ->autocomplete('current-password')
+                            ->rules(['current_password']),
+
+                        TextInput::make('password')
+                            ->label(__('New Password'))
+                            ->password()
+                            ->revealable()
+                            ->required()
+                            ->autocomplete('new-password')
+                            ->rules([PasswordRule::defaults(), 'confirmed']),
+
+                        TextInput::make('password_confirmation')
+                            ->label(__('Confirm Password'))
+                            ->password()
+                            ->revealable()
+                            ->required()
+                            ->autocomplete('new-password'),
+                    ]),
             ]);
     }
 
     public function submit(): void
     {
-        // Placeholder - will be implemented in Phase 3
+        $data = $this->form->getState();
+
+        Auth::user()->update([
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $this->form->fill([]);
+
+        Notification::make()
+            ->success()
+            ->title(__('Password updated'))
+            ->body(__('Your password has been updated successfully.'))
+            ->send();
     }
 }
 

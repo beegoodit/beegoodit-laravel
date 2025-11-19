@@ -1,12 +1,5 @@
-@php
-    $id = $getId();
-    $statePath = $getStatePath();
-    $timezone = $getState() ?? '';
-    $mapId = 'timezone-map-' . $id;
-@endphp
-
 <div 
-    x-data="timezoneSelector(@js($timezone), '{{ $statePath }}', '{{ $mapId }}')"
+    x-data="timezoneSelector(@js($getState() ?? ''), '{{ $getStatePath() }}')"
     class="w-full"
     wire:ignore.self
 >
@@ -27,7 +20,7 @@
     }
     </style>
     @endonce
-
+    
     <div class="space-y-2">
         @if ($getLabel())
             <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -37,9 +30,9 @@
 
         <!-- Interactive Leaflet Map -->
         <div class="hidden md:block" wire:ignore>
-            <div class="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <div class="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <div class="mb-4 rounded-lg bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 p-4">
+                <div class="flex items-center gap-2 text-sm text-primary-700 dark:text-primary-400">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style="width: 1rem; height: 1rem;">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
                     <span>{{ __('Click on a timezone region to select it') }}</span>
@@ -47,7 +40,7 @@
             </div>
             
             <div class="relative">
-                <div id="{{ $mapId }}" class="w-full rounded-lg" style="aspect-ratio: 16 / 9; min-height: 400px; background: #f0f0f0; border: 1px solid #ccc;">
+                <div id="timezone-map" class="w-full rounded-t-lg" style="aspect-ratio: 16 / 9; min-height: 400px; background: #f0f0f0; border: 1px solid #ccc; border-bottom: none;">
                     <div class="flex items-center justify-center h-full text-gray-500">
                         <div class="text-center">
                             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
@@ -55,28 +48,20 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Disabled Input Field for Selected Timezone -->
-        <div class="mt-4">
-            <div class="relative">
-                <input 
-                    type="text"
-                    x-model="selectedTimezone"
-                    placeholder="{{ __('No timezone selected') }}"
-                    disabled
-                    readonly
-                    class="w-full rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2"
-                />
-                <div 
-                    x-show="selectedTimezone" 
-                    x-cloak
-                    class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-                >
-                    <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-zinc-300">
+                
+                <!-- Dark Footer Bar -->
+                <div class="bg-gray-700 dark:bg-gray-800 text-white rounded-b-lg px-4 py-3 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span x-show="selectedTimezone" x-text="selectedTimezone" class="text-base font-medium"></span>
+                        <span x-show="!selectedTimezone" class="text-base font-medium">{{ __('No timezone selected') }}</span>
+                    </div>
+                    <div 
+                        x-show="selectedTimezone" 
+                        x-cloak
+                        class="flex items-center gap-2 text-sm"
+                    >
                         <span x-text="currentTime" class="font-mono font-medium"></span>
-                        <span class="text-gray-400 dark:text-zinc-500">|</span>
+                        <span>|</span>
                         <span x-text="utcOffset" class="font-medium"></span>
                     </div>
                 </div>
@@ -107,17 +92,11 @@
 </div>
 
 @once
-<!-- Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
-      crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-@endonce
-
+@push('scripts')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
 <script>
-function timezoneSelector(initialTimezone, statePath, mapId) {
+function timezoneSelector(initialTimezone, statePath) {
     return {
         selectedTimezone: initialTimezone || '',
         map: null,
@@ -126,7 +105,7 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
         currentTime: '',
         utcOffset: '',
         timeInterval: null,
-        mapId: mapId,
+        statePath: statePath,
         
         init() {
             console.log('TimezoneSelector initialized with timezone:', this.selectedTimezone);
@@ -184,17 +163,9 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
         },
         
         showMapError() {
-            const mapContainer = document.getElementById(this.mapId);
+            const mapContainer = document.getElementById('timezone-map');
             if (mapContainer) {
-                mapContainer.innerHTML = `
-                    <div class="flex items-center justify-center h-full text-gray-500">
-                        <div class="text-center">
-                            <div class="text-gray-400 mb-2">🗺️</div>
-                            <div class="font-medium">Interactive Map</div>
-                            <div class="text-sm text-gray-400 mt-1">Click on timezone regions below to select</div>
-                        </div>
-                    </div>
-                `;
+                mapContainer.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500"><div class="text-center"><div class="text-gray-400 mb-2">🗺️</div><div class="font-medium">Interactive Map</div><div class="text-sm text-gray-400 mt-1">Click on timezone regions below to select</div></div></div>';
             }
         },
         
@@ -208,7 +179,7 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
                 this.map = null;
             }
             
-            const mapContainer = document.getElementById(this.mapId);
+            const mapContainer = document.getElementById('timezone-map');
             if (!mapContainer) {
                 console.error('Map container not found');
                 this.showMapError();
@@ -221,16 +192,20 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
             mapContainer.style.display = 'block';
             mapContainer.style.position = 'relative';
             
+            // Create unique ID to avoid conflicts
+            const mapId = 'timezone-map-' + Date.now();
+            mapContainer.id = mapId;
+            
             this.$nextTick(() => {
                 setTimeout(() => {
-                    this.createMapInstance(mapContainer);
+                    this.createMapInstance(mapContainer, mapId);
                 }, 200);
             });
         },
         
-        createMapInstance(mapContainer) {
+        createMapInstance(mapContainer, mapId) {
             try {
-                this.map = L.map(this.mapId, {
+                this.map = L.map(mapId, {
                     preferCanvas: true,
                     zoomControl: false,
                     attributionControl: true,
@@ -282,11 +257,13 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
         
         async addTimezoneLayer() {
             try {
+                console.log('Loading timezone GeoJSON data...');
                 const response = await fetch('/data/timezones-tiny.geojson');
                 if (!response.ok) {
                     throw new Error(`Failed to load timezone data: ${response.status}`);
                 }
                 const timezoneData = await response.json();
+                console.log(`Loaded ${timezoneData.features.length} timezone regions`);
                 
                 this.timezoneLayer = L.geoJSON(timezoneData, {
                     style: (feature) => {
@@ -304,6 +281,7 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
                         
                         if (this.selectedTimezone === tzid) {
                             this.selectedLayer = layer;
+                            console.log('Initial timezone highlighted:', tzid);
                         }
                         
                         layer.bindTooltip(tzid, {
@@ -314,6 +292,7 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
                         });
                         
                         layer.on('click', (e) => {
+                            console.log('Layer clicked:', tzid);
                             L.DomEvent.stopPropagation(e);
                             
                             this.map.eachLayer((l) => {
@@ -363,15 +342,16 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
                         });
                     }
                 }).addTo(this.map);
+                console.log('Timezone layer added successfully');
             } catch (error) {
                 console.error('Error loading timezone layer:', error);
             }
         },
         
         selectTimezone(timezone) {
+            console.log('Selecting timezone:', timezone);
             this.selectedTimezone = timezone;
-            // Update Filament form state using Livewire
-            @this.set(statePath, timezone);
+            @this.set(this.statePath, timezone);
         },
         
         getCurrentTime() {
@@ -423,4 +403,5 @@ function timezoneSelector(initialTimezone, statePath, mapId) {
     };
 }
 </script>
-
+@endpush
+@endonce

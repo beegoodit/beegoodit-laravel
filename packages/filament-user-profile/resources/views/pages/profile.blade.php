@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <form wire:submit="submit" class="space-y-6">
+    <form wire:submit="submit" class="space-y-8">
         {{ $this->form }}
 
         @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
@@ -19,7 +19,7 @@
             </div>
         @endif
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 mt-4">
             <x-filament::button type="submit">
                 {{ __('Save') }}
             </x-filament::button>

@@ -10,7 +10,78 @@ composer require beegoodit/filament-user-profile
 
 ## Setup
 
-### 1. Publish Timezone Data (Optional but Recommended)
+### 1. Configure Tailwind CSS (Required)
+
+If you're using Tailwind CSS v4, you need to ensure Tailwind can scan the package's Blade templates for classes. The setup depends on whether you're using Filament panels.
+
+#### Option A: Using Filament Panels (Recommended)
+
+If your package views are rendered through Filament panels, you need to:
+
+1. **Create or update your Filament theme CSS file** (e.g., `resources/css/filament/portal/theme.css`):
+
+```css
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../vendor/beegoodit/filament-user-profile/resources/views/**/*.blade.php';
+```
+
+**Note**: If you're using a local path repository, also add the absolute path:
+```css
+@source '../../../../../../../composer/beegoodit-laravel/packages/filament-user-profile/resources/views/**/*.blade.php';
+```
+
+2. **Register the theme in your panel provider**:
+
+```php
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->viteTheme('resources/css/filament/portal/theme.css') // ← Must include this
+        ->pages([
+            // ... your pages
+        ]);
+}
+```
+
+3. **Include the theme in Vite** (`vite.config.js`):
+
+```javascript
+input: [
+    'resources/css/app.css',
+    'resources/js/app.js',
+    'resources/css/filament/portal/theme.css', // ← Must be here
+],
+```
+
+#### Option B: Not Using Filament Panels
+
+If you're not using Filament panels, add the `@source` directive to your main CSS file:
+
+```css
+@import 'tailwindcss';
+
+@source '../../vendor/beegoodit/filament-user-profile/resources/views/**/*.blade.php';
+```
+
+#### After Configuration
+
+Rebuild your CSS assets:
+```bash
+npm run build
+# or for development:
+npm run dev
+```
+
+**Important**: If Tailwind classes don't work in your package views, check:
+- ✅ The panel provider uses `->viteTheme()` pointing to your theme CSS
+- ✅ The theme CSS file includes `@source` directives for the package views
+- ✅ The theme CSS is included in Vite's `input` array
+- ✅ CSS assets have been rebuilt after changes
+
+### 2. Publish Timezone Data (Optional but Recommended)
 
 For the interactive timezone map to work, publish the GeoJSON data:
 
@@ -18,7 +89,7 @@ For the interactive timezone map to work, publish the GeoJSON data:
 php artisan vendor:publish --tag=filament-user-profile-timezone-data
 ```
 
-### 2. Register Pages in Your Panel Provider
+### 3. Register Pages in Your Panel Provider
 
 Add the profile pages to your Filament panel:
 
@@ -44,7 +115,7 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-### 3. URLs
+### 4. URLs
 
 Pages will be automatically available at:
 - `/portal/profile` (or your panel path + `/profile`)

@@ -5,6 +5,7 @@ namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 use BeeGoodIT\FilamentUserProfile\Filament\Forms\Components\TimezonePicker;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
@@ -73,33 +74,29 @@ class Appearance extends Page implements HasForms
     {
         return $schema
             ->components([
-                Section::make(__('Localization'))
-                    ->description(__('Configure your language, timezone, and time format preferences'))
-                    ->schema([
-                        Radio::make('locale')
-                            ->label(__('Language'))
-                            ->options([
-                                'en' => __('English'),
-                                'de' => __('Deutsch'),
-                            ])
-                            ->default('en')
-                            ->inline()
-                            ->required(),
+                Radio::make('locale')
+                    ->label(__('Language'))
+                    ->options([
+                        'en' => __('English'),
+                        'de' => __('Deutsch'),
+                    ])
+                    ->default('en')
+                    ->inline()
+                    ->required(),
 
-                        TimezonePicker::make('timezone')
-                            ->label(__('Timezone'))
-                            ->required(),
+                TimezonePicker::make('timezone')
+                    ->label(__('Timezone'))
+                    ->required(),
 
-                        Radio::make('time_format')
-                            ->label(__('Time Format'))
-                            ->options([
-                                '12h' => __('12-hour (3:45 PM)'),
-                                '24h' => __('24-hour (15:45)'),
-                            ])
-                            ->default('24h')
-                            ->inline()
-                            ->required(),
-                    ]),
+                Radio::make('time_format')
+                    ->label(__('Time Format'))
+                    ->options([
+                        '12h' => __('12-hour (3:45 PM)'),
+                        '24h' => __('24-hour (15:45)'),
+                    ])
+                    ->default('24h')
+                    ->inline()
+                    ->required(),
             ]);
     }
 
