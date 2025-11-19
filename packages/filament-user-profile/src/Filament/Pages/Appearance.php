@@ -8,6 +8,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Components\Section;
@@ -26,6 +27,12 @@ class Appearance extends Page implements HasForms
     public ?string $locale = null;
 
     public ?string $time_format = null;
+
+    protected $localeField = null;
+
+    protected $timezoneField = null;
+
+    protected $timeFormatField = null;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-paint-brush';
 
@@ -92,30 +99,59 @@ class Appearance extends Page implements HasForms
 
     public function form(Schema $schema): Schema
     {
+        // Store component references for later use
+        $this->localeField = Radio::make('locale')
+            ->label(__('Language'))
+            ->options([
+                'en' => __('English'),
+                'de' => __('Deutsch'),
+            ])
+            ->inline()
+            ->required();
+
+        $this->timezoneField = TimezonePicker::make('timezone')
+            ->label(__('Timezone'))
+            ->required();
+
+        $this->timeFormatField = Radio::make('time_format')
+            ->label(__('Time Format'))
+            ->options([
+                '12h' => __('12-hour (3:45 PM)'),
+                '24h' => __('24-hour (15:45)'),
+            ])
+            ->inline()
+            ->required();
+
         return $schema
             ->components([
-                Radio::make('locale')
-                    ->label(__('Language'))
-                    ->options([
-                        'en' => __('English'),
-                        'de' => __('Deutsch'),
-                    ])
-                    ->inline()
-                    ->required(),
-
-                TimezonePicker::make('timezone')
-                    ->label(__('Timezone'))
-                    ->required(),
-
-                Radio::make('time_format')
-                    ->label(__('Time Format'))
-                    ->options([
-                        '12h' => __('12-hour (3:45 PM)'),
-                        '24h' => __('24-hour (15:45)'),
-                    ])
-                    ->inline()
-                    ->required(),
+                $this->localeField,
+                $this->timezoneField,
+                $this->timeFormatField,
             ]);
+    }
+
+    /**
+     * Get the locale field component for rendering separately.
+     */
+    public function getLocaleField()
+    {
+        return $this->localeField;
+    }
+
+    /**
+     * Get the timezone field component for rendering separately.
+     */
+    public function getTimezoneField()
+    {
+        return $this->timezoneField;
+    }
+
+    /**
+     * Get the time format field component for rendering separately.
+     */
+    public function getTimeFormatField()
+    {
+        return $this->timeFormatField;
     }
 
     public function submit(): void

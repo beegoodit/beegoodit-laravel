@@ -89,7 +89,22 @@ For the interactive timezone map to work, publish the GeoJSON data:
 php artisan vendor:publish --tag=filament-user-profile-timezone-data
 ```
 
-### 3. Register Pages in Your Panel Provider
+### 3. Publish Two-Factor Authentication Migration (Required for 2FA)
+
+If you want to use the Two-Factor Authentication page, you need to publish and run the migration:
+
+```bash
+php artisan vendor:publish --tag=filament-user-profile-migrations
+php artisan migrate
+```
+
+**Note**: The Two-Factor Authentication page will only appear in navigation if:
+- Laravel Fortify's two-factor authentication feature is enabled
+- The required database columns exist (`two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`)
+
+If the columns are missing, a warning will be logged and the page will be hidden from navigation.
+
+### 4. Register Pages in Your Panel Provider
 
 Add the profile pages to your Filament panel:
 
@@ -115,7 +130,7 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-### 4. URLs
+### 5. URLs
 
 Pages will be automatically available at:
 - `/portal/profile` (or your panel path + `/profile`)

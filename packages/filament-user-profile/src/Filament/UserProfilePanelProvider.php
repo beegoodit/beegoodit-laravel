@@ -6,7 +6,9 @@ use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
+use BeeGoodIT\FilamentUserProfile\UserProfileHelper;
 use Filament\Facades\Filament;
+use Laravel\Fortify\Features;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -35,12 +37,7 @@ class UserProfilePanelProvider extends PanelProvider
                 'primary' => \Filament\Support\Colors\Color::Amber,
             ])
             ->brandName('User Settings')
-            ->pages([
-                Profile::class,
-                Password::class,
-                Appearance::class,
-                TwoFactor::class,
-            ])
+            ->pages($this->getPages())
             ->navigationItems([
                 NavigationItem::make()
                     ->label(__('Back to Portal'))
@@ -108,6 +105,43 @@ class UserProfilePanelProvider extends PanelProvider
         
         // Fallback: return base portal URL (will redirect to team selection if needed)
         return $portalPanel->getUrl();
+    }
+
+    /**
+     * Get the list of pages to register.
+     * 
+     * @return array
+     */
+    protected function getPages(): array
+    {
+        $pages = [
+            Profile::class,
+            Password::class,
+            Appearance::class,
+        ];
+
+        // Only register TwoFactor page if Fortify 2FA is enabled AND database columns exist
+        if ($this->shouldRegisterTwoFactorPage()) {
+            $pages[] = TwoFactor::class;
+        }
+
+        return $pages;
+    }
+
+    /**
+     * Determine if the TwoFactor page should be registered.
+     * 
+     * @return bool
+     */
+    protected function shouldRegisterTwoFactorPage(): bool
+    {
+        // Check if Fortify 2FA feature is enabled
+        if (!Features::enabled(Features::twoFactorAuthentication())) {
+            return false;
+        }
+
+        // Check if required database columns exist
+        return UserProfileHelper::hasTwoFactorColumns();
     }
 }
 

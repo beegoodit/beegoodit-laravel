@@ -18,6 +18,67 @@
     .timezone-tooltip::before {
         border-top-color: rgba(0, 0, 0, 0.8) !important;
     }
+    
+    /* Force timezone map container and all Leaflet elements to stay below Filament navbar */
+    /* Filament navbar is typically z-30 or z-40, so we cap everything at z-20 */
+    .timezone-map-container,
+    [id^="timezone-map"] {
+        position: relative !important;
+        z-index: 1 !important;
+        isolation: isolate !important;
+    }
+    
+    /* Override all Leaflet z-index values - cap them at 20 to stay below navbar */
+    .timezone-map-container .leaflet-container,
+    .timezone-map-container .leaflet-pane,
+    .timezone-map-container .leaflet-map-pane,
+    .timezone-map-container .leaflet-tile-pane,
+    .timezone-map-container .leaflet-overlay-pane,
+    .timezone-map-container .leaflet-shadow-pane,
+    .timezone-map-container .leaflet-marker-pane,
+    .timezone-map-container .leaflet-tooltip-pane,
+    .timezone-map-container .leaflet-popup-pane,
+    .timezone-map-container .leaflet-control-container,
+    .timezone-map-container .leaflet-control,
+    .timezone-map-container .leaflet-popup,
+    .timezone-map-container .leaflet-popup-content-wrapper,
+    .timezone-map-container .leaflet-tooltip,
+    .timezone-map-container .leaflet-zoom-box,
+    .timezone-map-container .leaflet-image-layer,
+    .timezone-map-container .leaflet-layer,
+    .timezone-map-container .leaflet-tile-container,
+    .timezone-map-container .leaflet-tile,
+    .timezone-map-container .leaflet-objects-pane,
+    .timezone-map-container .leaflet-shadow-pane img,
+    .timezone-map-container .leaflet-marker-icon,
+    .timezone-map-container .leaflet-marker-shadow,
+    .timezone-map-container [class*="leaflet"],
+    [id^="timezone-map"] .leaflet-container,
+    [id^="timezone-map"] .leaflet-pane,
+    [id^="timezone-map"] .leaflet-map-pane,
+    [id^="timezone-map"] .leaflet-tile-pane,
+    [id^="timezone-map"] .leaflet-overlay-pane,
+    [id^="timezone-map"] .leaflet-shadow-pane,
+    [id^="timezone-map"] .leaflet-marker-pane,
+    [id^="timezone-map"] .leaflet-tooltip-pane,
+    [id^="timezone-map"] .leaflet-popup-pane,
+    [id^="timezone-map"] .leaflet-control-container,
+    [id^="timezone-map"] .leaflet-control,
+    [id^="timezone-map"] .leaflet-popup,
+    [id^="timezone-map"] .leaflet-popup-content-wrapper,
+    [id^="timezone-map"] .leaflet-tooltip,
+    [id^="timezone-map"] .leaflet-zoom-box,
+    [id^="timezone-map"] .leaflet-image-layer,
+    [id^="timezone-map"] .leaflet-layer,
+    [id^="timezone-map"] .leaflet-tile-container,
+    [id^="timezone-map"] .leaflet-tile,
+    [id^="timezone-map"] .leaflet-objects-pane,
+    [id^="timezone-map"] .leaflet-shadow-pane img,
+    [id^="timezone-map"] .leaflet-marker-icon,
+    [id^="timezone-map"] .leaflet-marker-shadow,
+    [id^="timezone-map"] [class*="leaflet"] {
+        z-index: 20 !important;
+    }
     </style>
     @endonce
     
@@ -40,7 +101,7 @@
             </div>
             
             <div class="relative">
-                <div id="timezone-map" class="w-full rounded-t-lg" style="aspect-ratio: 16 / 9; min-height: 400px; background: #f0f0f0; border: 1px solid #ccc; border-bottom: none;">
+                <div id="timezone-map" class="timezone-map-container w-full rounded-t-lg" style="aspect-ratio: 16 / 9; min-height: 400px; background: #f0f0f0; border: 1px solid #ccc; border-bottom: none;">
                     <div class="flex items-center justify-center h-full text-gray-500">
                         <div class="text-center">
                             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
@@ -126,6 +187,10 @@ function timezoneSelector(initialTimezone, statePath) {
             if (this.timeInterval) {
                 clearInterval(this.timeInterval);
             }
+            if (this.zIndexObserver) {
+                this.zIndexObserver.disconnect();
+                this.zIndexObserver = null;
+            }
             if (this.map) {
                 this.map.remove();
                 this.map = null;
@@ -191,6 +256,8 @@ function timezoneSelector(initialTimezone, statePath) {
             mapContainer.style.width = '100%';
             mapContainer.style.display = 'block';
             mapContainer.style.position = 'relative';
+            // Ensure the class is maintained for CSS targeting
+            mapContainer.classList.add('timezone-map-container');
             
             // Create unique ID to avoid conflicts
             const mapId = 'timezone-map-' + Date.now();
@@ -251,8 +318,58 @@ function timezoneSelector(initialTimezone, statePath) {
             setTimeout(() => {
                 if (this.map) {
                     this.map.invalidateSize();
+                    // Force z-index override after map is fully initialized
+                    this.overrideLeafletZIndex();
+                    
+                    // Set up observer to catch dynamically created elements
+                    this.setupZIndexObserver();
                 }
             }, 200);
+        },
+        
+        overrideLeafletZIndex() {
+            // Override any inline z-index styles that Leaflet sets
+            const mapContainer = document.getElementById(this.map.getContainer().id)?.closest('.timezone-map-container') || 
+                                 document.querySelector('.timezone-map-container');
+            if (mapContainer) {
+                const allElements = mapContainer.querySelectorAll('*');
+                allElements.forEach((el) => {
+                    const zIndex = parseInt(el.style.zIndex || window.getComputedStyle(el).zIndex || '0');
+                    if (zIndex > 20) {
+                        el.style.setProperty('z-index', '20', 'important');
+                    }
+                });
+                
+                // Also check for Leaflet panes that might be direct children
+                const leafletPanes = document.querySelectorAll('.leaflet-pane, .leaflet-container, .leaflet-control-container');
+                leafletPanes.forEach((pane) => {
+                    if (mapContainer.contains(pane)) {
+                        const zIndex = parseInt(pane.style.zIndex || window.getComputedStyle(pane).zIndex || '0');
+                        if (zIndex > 20) {
+                            pane.style.setProperty('z-index', '20', 'important');
+                        }
+                    }
+                });
+            }
+        },
+        
+        setupZIndexObserver() {
+            const mapContainer = document.querySelector('.timezone-map-container');
+            if (!mapContainer || !window.MutationObserver) return;
+            
+            const observer = new MutationObserver(() => {
+                this.overrideLeafletZIndex();
+            });
+            
+            observer.observe(mapContainer, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+            
+            // Store observer for cleanup
+            this.zIndexObserver = observer;
         },
         
         async addTimezoneLayer() {

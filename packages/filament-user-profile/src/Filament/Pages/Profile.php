@@ -19,6 +19,10 @@ class Profile extends Page implements HasForms
 {
     use InteractsWithForms;
 
+    public ?string $name = null;
+
+    public ?string $email = null;
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-user-circle';
 
     protected string $view = 'filament-user-profile::pages.profile';
@@ -49,9 +53,16 @@ class Profile extends Page implements HasForms
 
     public function mount(): void
     {
+        $user = Auth::user();
+
+        // Set public properties that Filament Forms will automatically bind to
+        $this->name = $user->name;
+        $this->email = $user->email;
+
+        // Also fill the form to ensure state is properly initialized
         $this->form->fill([
-            'name' => Auth::user()->name,
-            'email' => Auth::user()->email,
+            'name' => $this->name,
+            'email' => $this->email,
         ]);
     }
 

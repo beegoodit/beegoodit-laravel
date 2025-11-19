@@ -40,10 +40,6 @@
     class="w-full"
 >
     <div class="space-y-2">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {{ __('Theme') }}
-        </label>
-        
         <div class="inline-flex rounded-lg border border-gray-200 bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-800" role="group">
             <button
                 type="button"
