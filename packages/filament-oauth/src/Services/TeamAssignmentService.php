@@ -48,7 +48,9 @@ class TeamAssignmentService
         }
 
         // Attach user to team if not already attached
-        if (! $user->teams()->where('team_id', $team->id)->exists()) {
+        $wasAttached = $user->teams()->where('team_id', $team->id)->exists();
+
+        if (! $wasAttached) {
             $user->teams()->attach($team->id);
 
             Log::info('Assigned user to team', [
@@ -56,6 +58,16 @@ class TeamAssignmentService
                 'team_id' => $team->id,
             ]);
         }
+
+        // Always refresh the user model and load teams relationship
+        // This is critical for Filament's getTenants() method which is called
+        // immediately after OAuth registration to determine redirect.
+        // Even if the user was already attached, we need to ensure the relationship
+        // is loaded on the user instance that will be used in the redirect callback.
+        // Clear the relationship cache first to ensure we get fresh data
+        $user->unsetRelation('teams');
+        $user->refresh();
+        $user->load('teams');
     }
 
     /**

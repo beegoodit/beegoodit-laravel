@@ -68,29 +68,22 @@ class FilamentOAuthServiceProvider extends ServiceProvider
 
     /**
      * Register event listeners for automatic team assignment.
+     * Note: Team assignment for new users is now handled in createUserUsing callback (inside transaction).
+     * This method handles email verification for new users and team assignment for existing users connecting OAuth.
      */
     protected function registerTeamAssignmentListeners(): void
     {
         $teamAssignmentService = $this->app->make(TeamAssignmentService::class);
 
         // Handle new user registration via OAuth
-        Event::listen(Registered::class, function ($event) use ($teamAssignmentService) {
+        // Note: Team assignment is now handled in createUserUsing callback (inside transaction)
+        // This listener only handles email verification
+        Event::listen(Registered::class, function ($event) {
             $user = $event->socialiteUser->getUser();
-            $provider = $event->provider;
 
             // Verify email automatically (OAuth providers verify emails)
             if (! $user->hasVerifiedEmail()) {
                 $user->markEmailAsVerified();
-            }
-
-            // Extract tenant ID and access token from OAuth data (Microsoft specific)
-            if ($provider === 'microsoft') {
-                $tenantId = $this->extractMicrosoftTenantId($event->oauthUser);
-                $accessToken = $event->oauthUser->token ?? null;
-
-                if ($tenantId) {
-                    $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
-                }
             }
         });
 
