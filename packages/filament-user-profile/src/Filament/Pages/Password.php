@@ -66,7 +66,6 @@ class Password extends Page implements HasForms
                         TextInput::make('current_password')
                             ->label(__('Current Password'))
                             ->password()
-                            ->revealable()
                             ->required()
                             ->autocomplete('current-password')
                             ->rules(['current_password']),

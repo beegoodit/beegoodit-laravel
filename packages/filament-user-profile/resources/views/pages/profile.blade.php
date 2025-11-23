@@ -136,5 +136,109 @@
             </x-filament::button>
         </div>
     </form>
+
+    {{-- Delete User Account Section --}}
+    <div class="mt-10 space-y-6 border-t border-gray-200 dark:border-gray-700 pt-8">
+        <div class="relative mb-5">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Delete account') }}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Delete your account and all of its resources') }}</p>
+        </div>
+
+        <x-filament::button
+            type="button"
+            color="danger"
+            wire:click="openDeleteModal"
+        >
+            {{ __('Delete account') }}
+        </x-filament::button>
+
+        {{-- Delete User Modal --}}
+        <div
+            x-data="{ showModal: @entangle('showDeleteModal') }"
+            x-show="showModal"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            x-cloak
+            class="fixed inset-0 z-50 overflow-y-auto"
+            style="display: none;"
+            wire:ignore.self
+        >
+            <div class="flex items-center justify-center min-h-screen p-4">
+                {{-- Backdrop --}}
+                <div
+                    class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                    @click="showModal = false; $wire.closeDeleteModal()"
+                ></div>
+
+                {{-- Modal Content --}}
+                <div
+                    class="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700"
+                    @click.stop
+                >
+                    {{-- Close Button --}}
+                    <button
+                        type="button"
+                        @click="showModal = false; $wire.closeDeleteModal()"
+                        class="absolute top-4 right-4 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 transition-all"
+                        aria-label="{{ __('Close') }}"
+                    >
+                        <x-filament::icon icon="heroicon-o-x-mark" class="h-5 w-5" />
+                    </button>
+
+                    <form wire:submit="deleteUser" class="p-6 space-y-6">
+                        {{-- Header --}}
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                {{ __('Are you sure you want to delete your account?') }}
+                            </h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                            </p>
+                        </div>
+
+                        {{-- Password Input --}}
+                        <div>
+                            <label for="delete-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ __('Password') }}
+                            </label>
+                            <input
+                                id="delete-password"
+                                type="password"
+                                wire:model="deletePassword"
+                                required
+                                autocomplete="current-password"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-400 dark:focus:ring-primary-400"
+                            />
+                            @error('deletePassword')
+                                <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Actions --}}
+                        <div class="flex justify-end space-x-2 rtl:space-x-reverse">
+                            <x-filament::button
+                                type="button"
+                                color="gray"
+                                @click="showModal = false; $wire.closeDeleteModal()"
+                            >
+                                {{ __('Cancel') }}
+                            </x-filament::button>
+
+                            <x-filament::button
+                                type="submit"
+                                color="danger"
+                            >
+                                {{ __('Delete account') }}
+                            </x-filament::button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-filament-panels::page>
 

@@ -26,6 +26,10 @@ class Profile extends Page implements HasForms
 
     public $avatarUpload = null;
 
+    public string $deletePassword = '';
+
+    public bool $showDeleteModal = false;
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-user-circle';
 
     protected string $view = 'filament-user-profile::pages.profile';
@@ -51,7 +55,21 @@ class Profile extends Page implements HasForms
     {
         // Use the user-profile panel (no tenant)
         $panel = $panel ?? 'user-profile';
-
+        
+        $panelInstance = Filament::getPanel($panel);
+        
+        if ($panelInstance) {
+            // Construct URL using panel path and page slug
+            $url = $panelInstance->getPath() . '/' . static::getSlug($panelInstance);
+            
+            if ($isAbsolute) {
+                return url($url);
+            }
+            
+            return '/' . ltrim($url, '/');
+        }
+        
+        // Fallback to parent method
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 
@@ -99,6 +117,7 @@ class Profile extends Page implements HasForms
                             ->required()
                             ->maxLength(255)
                             ->autocomplete('email')
+                            ->rules(['lowercase'])
                             ->unique(
                                 table: config('auth.providers.users.model'),
                                 column: 'email',
@@ -139,8 +158,11 @@ class Profile extends Page implements HasForms
 
         $user->name = $validated['name'];
 
-        if ($user->email !== $validated['email']) {
-            $user->email = $validated['email'];
+        // Lowercase email to match eveant's behavior
+        $email = strtolower($validated['email']);
+
+        if ($user->email !== $email) {
+            $user->email = $email;
             if ($user instanceof MustVerifyEmail) {
                 $user->email_verified_at = null;
             }
@@ -245,5 +267,48 @@ class Profile extends Page implements HasForms
             Session::flash('status', 'avatar-remove-failed');
             \Illuminate\Support\Facades\Log::error('Avatar removal failed: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Open the delete user account modal.
+     */
+    public function openDeleteModal(): void
+    {
+        $this->showDeleteModal = true;
+        $this->deletePassword = '';
+    }
+
+    /**
+     * Close the delete user account modal.
+     */
+    public function closeDeleteModal(): void
+    {
+        $this->showDeleteModal = false;
+        $this->deletePassword = '';
+    }
+
+    /**
+     * Delete the user account.
+     */
+    public function deleteUser(): void
+    {
+        $this->validate([
+            'deletePassword' => ['required', 'string', 'current_password'],
+        ]);
+
+        $user = Auth::user();
+
+        // Delete the user
+        $user->delete();
+
+        // Log out the user
+        Auth::guard('web')->logout();
+
+        // Invalidate session
+        Session::invalidate();
+        Session::regenerateToken();
+
+        // Redirect to home page
+        $this->redirect('/', navigate: false);
     }
 }
