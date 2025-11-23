@@ -28,6 +28,13 @@
             "BeeGoodIT\\LaravelFileStorage\\Tests\\": "tests/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\LaravelFileStorage\\LaravelFileStorageServiceProvider"
+            ]
+        }
+    },
     "scripts": {
         "test": "phpunit",
         "format": "pint"
