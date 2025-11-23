@@ -78,6 +78,38 @@ class HasUserStampsPhpUnitTest extends TestCase
         $this->assertNull($model->created_by_id);
         $this->assertNull($model->updated_by_id);
     }
+
+    public function test_it_provides_created_by_relationship()
+    {
+        $user = Authenticatable::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ]);
+
+        $this->actingAs($user);
+
+        $model = TestModelPhpUnit::create(['name' => 'Test']);
+
+        $this->assertInstanceOf(Authenticatable::class, $model->createdBy);
+        $this->assertEquals($user->id, $model->createdBy->id);
+    }
+
+    public function test_it_provides_updated_by_relationship()
+    {
+        $user = Authenticatable::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ]);
+
+        $this->actingAs($user);
+
+        $model = TestModelPhpUnit::create(['name' => 'Test']);
+
+        $this->assertInstanceOf(Authenticatable::class, $model->updatedBy);
+        $this->assertEquals($user->id, $model->updatedBy->id);
+    }
 }
 
 class TestModelPhpUnit extends Model

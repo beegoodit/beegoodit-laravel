@@ -16,10 +16,7 @@
         "livewire/livewire": "^3.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^9.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "pestphp/pest-plugin-livewire": "^3.0"
+        "orchestra/testbench": "^9.0"
     },
     "autoload": {
         "psr-4": {
@@ -39,7 +36,7 @@
         }
     },
     "scripts": {
-        "test": "pest",
+        "test": "phpunit",
         "format": "pint"
     },
     "config": {

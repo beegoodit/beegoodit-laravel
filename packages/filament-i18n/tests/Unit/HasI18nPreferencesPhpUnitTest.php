@@ -69,5 +69,19 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
         $this->assertEquals(config('app.timezone', 'UTC'), $user->getTimezone());
     }
+
+    public function test_it_formats_datetime_with_user_preferences()
+    {
+        $user = new class extends Model {
+            use HasI18nPreferences;
+            public $time_format = '12h';
+        };
+
+        $dateTime = new \DateTime('2025-10-30 15:30:00');
+        $formatted = $user->formatDateTime($dateTime);
+
+        $this->assertStringContainsString('2025-10-30', $formatted);
+        $this->assertStringContainsString('3:30 PM', $formatted);
+    }
 }
 

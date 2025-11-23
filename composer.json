@@ -8,8 +8,6 @@
     },
     "require-dev": {
         "orchestra/testbench": "^9.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
         "laravel/pint": "^1.0"
     },
     "autoload": {
@@ -40,15 +38,12 @@
         }
     },
     "scripts": {
-        "test": "pest",
-        "test:coverage": "pest --coverage",
+        "test": "phpunit",
+        "test:coverage": "phpunit --coverage-text",
         "format": "pint"
     },
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
+        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true
