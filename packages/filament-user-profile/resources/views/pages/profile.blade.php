@@ -29,7 +29,9 @@
                         :class="isDragging ? 'ring-2 ring-primary-500' : ''"
                     >
                         <span class="relative flex h-24 w-24 shrink-0 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 transition-colors hover:border-gray-400 dark:hover:border-gray-500">
-                            @php($avatarUrl = $user->getAvatarUrl())
+                            @php
+                                $avatarUrl = $user->getAvatarUrl();
+                            @endphp
                             @if ($avatarUrl)
                                 <img src="{{ $avatarUrl }}" alt="{{ __('Avatar') }}" class="h-full w-full object-cover" wire:loading.remove wire:target="avatarUpload" />
                             @else
@@ -189,56 +191,156 @@
                         <x-filament::icon icon="heroicon-o-x-mark" class="h-5 w-5" />
                     </button>
 
-                    <form wire:submit="deleteUser" class="p-6 space-y-6">
-                        {{-- Header --}}
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                {{ __('Are you sure you want to delete your account?') }}
-                            </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-                            </p>
-                        </div>
+                    @php
+                        $user = auth()->user();
+                        $isOAuthOnly = method_exists($user, 'isOAuthOnly') ? $user->isOAuthOnly() : is_null($user->password);
+                        // Check for OAuth accounts directly
+                        $hasOAuthAccounts = false;
+                        if (method_exists($user, 'oauthAccounts')) {
+                            try {
+                                $hasOAuthAccounts = $user->oauthAccounts()->exists();
+                            } catch (\Exception $e) {
+                                // Fall through
+                            }
+                        }
+                        // Also check socialite_users table
+                        if (!$hasOAuthAccounts && \Illuminate\Support\Facades\Schema::hasTable('socialite_users')) {
+                            $hasOAuthAccounts = \Illuminate\Support\Facades\DB::table('socialite_users')
+                                ->where('user_id', $user->id)
+                                ->exists();
+                        }
+                        // Only show OAuth UI if user is OAuth-only AND has OAuth accounts
+                        $showOAuthUI = $isOAuthOnly && $hasOAuthAccounts;
+                    @endphp
 
-                        {{-- Password Input --}}
-                        <div>
-                            <label for="delete-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ __('Password') }}
-                            </label>
-                            <input
-                                id="delete-password"
-                                type="password"
-                                wire:model="deletePassword"
-                                required
-                                autocomplete="current-password"
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-400 dark:focus:ring-primary-400"
-                            />
-                            @error('deletePassword')
-                                <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    @if($showOAuthUI)
+                        {{-- OAuth User: Confirmation Checkbox --}}
+                        <form wire:submit="initiateDeleteAccount" class="p-6 space-y-6">
+                            {{-- Header --}}
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                    {{ __('Are you sure you want to delete your account?') }}
+                                </h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. This action cannot be undone.') }}
+                                </p>
+                                <div class="rounded-lg bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 p-4">
+                                    <p class="text-sm font-medium text-danger-800 dark:text-danger-200">
+                                        {{ __('You will be redirected to re-authenticate with your OAuth provider to confirm this action.') }}
+                                    </p>
+                                </div>
+                            </div>
 
-                        {{-- Actions --}}
-                        <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-                            <x-filament::button
-                                type="button"
-                                color="gray"
-                                @click="showModal = false; $wire.closeDeleteModal()"
-                            >
-                                {{ __('Cancel') }}
-                            </x-filament::button>
+                            {{-- Confirmation Checkbox --}}
+                            <div>
+                                <label class="flex items-start gap-3 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        wire:model="confirmDelete"
+                                        required
+                                        class="mt-0.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
+                                    />
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('I understand that this action cannot be undone and all my data will be permanently deleted.') }}
+                                    </span>
+                                </label>
+                                @error('confirmDelete')
+                                    <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                            <x-filament::button
-                                type="submit"
-                                color="danger"
-                            >
-                                {{ __('Delete account') }}
-                            </x-filament::button>
+                            {{-- Actions --}}
+                            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
+                                <x-filament::button
+                                    type="button"
+                                    color="gray"
+                                    @click="showModal = false; $wire.closeDeleteModal()"
+                                >
+                                    {{ __('Cancel') }}
+                                </x-filament::button>
+
+                                <x-filament::button
+                                    type="submit"
+                                    color="danger"
+                                >
+                                    {{ __('Continue to Delete') }}
+                                </x-filament::button>
+                                </div>
+                        </form>
+                    @elseif(!$isOAuthOnly)
+                        {{-- Password User: Password Field --}}
+                        <form wire:submit="deleteUser" class="p-6 space-y-6">
+                            {{-- Header --}}
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                    {{ __('Are you sure you want to delete your account?') }}
+                                </h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                                </p>
+                            </div>
+
+                            {{-- Password Input --}}
+                            <div>
+                                <label for="delete-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Password') }}
+                                </label>
+                                <input
+                                    id="delete-password"
+                                    type="password"
+                                    wire:model="deletePassword"
+                                    required
+                                    autocomplete="current-password"
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-400 dark:focus:ring-primary-400"
+                                />
+                                @error('deletePassword')
+                                    <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Actions --}}
+                            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
+                                <x-filament::button
+                                    type="button"
+                                    color="gray"
+                                    @click="showModal = false; $wire.closeDeleteModal()"
+                                >
+                                    {{ __('Cancel') }}
+                                </x-filament::button>
+
+                                <x-filament::button
+                                    type="submit"
+                                    color="danger"
+                                >
+                                    {{ __('Delete account') }}
+                                </x-filament::button>
+                                </div>
+                        </form>
+                    @else
+                        {{-- Fallback: Should not happen, but show error message --}}
+                        <div class="p-6 space-y-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                    {{ __('Error') }}
+                                </h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __('Unable to determine account type. Please refresh the page and try again.') }}
+                                </p>
+                            </div>
+                            <div class="flex justify-end">
+                                <x-filament::button
+                                    type="button"
+                                    color="gray"
+                                    @click="showModal = false; $wire.closeDeleteModal()"
+                                >
+                                    {{ __('Close') }}
+                                </x-filament::button>
+                            </div>
                         </div>
-                    </form>
+                    @endif
+                </div>
                 </div>
             </div>
         </div>
-    </div>
 </x-filament-panels::page>
 

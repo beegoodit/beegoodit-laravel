@@ -25,7 +25,7 @@ class ProfilePageTest extends TestCase
         // This test verifies that the lowercase rule is applied
         // In a real Filament test, we'd test the form validation
         $rules = ['lowercase'];
-        
+
         $this->assertContains('lowercase', $rules);
     }
 
@@ -43,12 +43,12 @@ class ProfilePageTest extends TestCase
     public function test_delete_user_method_exists()
     {
         // Test that the Profile class file exists and contains the delete methods
-        $profileFile = __DIR__ . '/../../src/Filament/Pages/Profile.php';
-        
+        $profileFile = __DIR__.'/../../src/Filament/Pages/Profile.php';
+
         $this->assertFileExists($profileFile);
-        
+
         $content = file_get_contents($profileFile);
-        
+
         $this->assertStringContainsString('public function deleteUser()', $content);
         $this->assertStringContainsString('public function openDeleteModal()', $content);
         $this->assertStringContainsString('public function closeDeleteModal()', $content);
@@ -57,12 +57,12 @@ class ProfilePageTest extends TestCase
     public function test_delete_user_properties_exist()
     {
         // Test that the Profile class file contains the delete properties
-        $profileFile = __DIR__ . '/../../src/Filament/Pages/Profile.php';
-        
+        $profileFile = __DIR__.'/../../src/Filament/Pages/Profile.php';
+
         $this->assertFileExists($profileFile);
-        
+
         $content = file_get_contents($profileFile);
-        
+
         $this->assertStringContainsString('public string $deletePassword', $content);
         $this->assertStringContainsString('public bool $showDeleteModal', $content);
     }
@@ -70,25 +70,24 @@ class ProfilePageTest extends TestCase
     public function test_email_lowercase_rule_in_form_schema()
     {
         // Test that the email field has lowercase rule in the form schema
-        $profileFile = __DIR__ . '/../../src/Filament/Pages/Profile.php';
-        
+        $profileFile = __DIR__.'/../../src/Filament/Pages/Profile.php';
+
         $this->assertFileExists($profileFile);
-        
+
         $content = file_get_contents($profileFile);
-        
+
         $this->assertStringContainsString("->rules(['lowercase'])", $content);
     }
 
     public function test_email_lowercase_in_submit_method()
     {
         // Test that submit method lowercases email
-        $profileFile = __DIR__ . '/../../src/Filament/Pages/Profile.php';
-        
+        $profileFile = __DIR__.'/../../src/Filament/Pages/Profile.php';
+
         $this->assertFileExists($profileFile);
-        
+
         $content = file_get_contents($profileFile);
-        
+
         $this->assertStringContainsString('strtolower($validated[\'email\'])', $content);
     }
 }
-
