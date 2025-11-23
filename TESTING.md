@@ -2,7 +2,7 @@
 
 ## Current Status
 
-✅ **Test structure created** for all 8 packages  
+✅ **Test structure created** for all 9 packages  
 ⚠️ **Tests need refinement** - Orchestra Testbench setup needs tuning  
 📋 **TODO**: Complete test implementation with proper mocking
 
@@ -59,7 +59,7 @@ The packages need test refinement:
 - ⚠️ `laravel-cookie-consent` - Needs Livewire setup
 - ⚠️ `filament-user-avatar` - Needs storage mocking
 - ⚠️ `filament-oauth` - Needs database setup
-- ⚠️ `filament-team-branding` - Needs storage mocking
+- ⚠️ `filament-tenancy` - Needs storage mocking
 
 ## Next Steps
 

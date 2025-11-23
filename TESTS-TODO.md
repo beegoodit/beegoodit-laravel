@@ -38,7 +38,7 @@ All packages are extracted from **working production code**:
 - filament-i18n → timesloth ✅
 - filament-user-avatar → timesloth ✅
 - filament-oauth → cargonauten ✅
-- filament-team-branding → timesloth ✅
+- filament-tenancy → timesloth ✅
 
 **Conclusion**: Code is proven, tests just need proper setup.
 

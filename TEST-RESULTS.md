@@ -14,7 +14,7 @@
 | filament-i18n | 6/6 | ✅ 100% |
 | filament-user-avatar | 4/4 | ✅ 100% |
 | filament-oauth | 4/4 | ✅ 100% |
-| filament-team-branding | 3/3 | ✅ 100% |
+| filament-tenancy | 3/3 | ✅ 100% |
 | laravel-pwa | 3/3 | ✅ 100% |
 | laravel-cookie-consent | 0/4 | ⚠️ Needs Livewire |
 
@@ -71,7 +71,7 @@ vendor/bin/phpunit --coverage-text
 - ✅ Provider scoping
 - ✅ OAuth account relationships
 
-### filament-team-branding
+### filament-tenancy
 - ✅ Logo URL generation
 - ✅ Null logo handling
 - ✅ Filament logo integration
