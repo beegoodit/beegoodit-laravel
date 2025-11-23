@@ -14,4 +14,3 @@ class FilamentTenancyServiceProvider extends ServiceProvider
         ], 'tenancy-migrations');
     }
 }
-

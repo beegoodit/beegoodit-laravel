@@ -53,8 +53,7 @@ trait HasI18nPreferences
     {
         $dateFormat = 'Y-m-d';
         $timeFormat = $this->prefers12HourFormat() ? 'g:i A' : 'H:i';
-        
-        return $dateTime->format($dateFormat . ' ' . $timeFormat);
+
+        return $dateTime->format($dateFormat.' '.$timeFormat);
     }
 }
-

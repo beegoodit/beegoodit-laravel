@@ -19,4 +19,3 @@ class FilamentUserAvatarServiceProvider extends ServiceProvider
         ], 'user-avatar-migrations');
     }
 }
-

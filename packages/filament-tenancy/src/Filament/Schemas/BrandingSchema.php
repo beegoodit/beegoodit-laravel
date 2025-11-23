@@ -13,8 +13,6 @@ class BrandingSchema
 {
     /**
      * Get the branding section schema with logo, primary_color, and secondary_color fields.
-     *
-     * @return Section
      */
     public static function getBrandingSection(): Section
     {
@@ -45,8 +43,7 @@ class BrandingSchema
     /**
      * Get the base schema with name, slug, and branding section.
      *
-     * @param string $teamModelClass The Team model class name for unique validation
-     * @return array
+     * @param  string  $teamModelClass  The Team model class name for unique validation
      */
     public static function getBaseSchema(string $teamModelClass): array
     {
@@ -67,4 +64,3 @@ class BrandingSchema
         ];
     }
 }
-

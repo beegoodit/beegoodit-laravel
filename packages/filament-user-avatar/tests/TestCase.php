@@ -30,4 +30,3 @@ abstract class TestCase extends Orchestra
         $this->loadLaravelMigrations();
     }
 }
-

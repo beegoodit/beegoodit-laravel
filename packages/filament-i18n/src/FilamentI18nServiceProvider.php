@@ -22,4 +22,3 @@ class FilamentI18nServiceProvider extends ServiceProvider
         ], 'filament-i18n-lang');
     }
 }
-

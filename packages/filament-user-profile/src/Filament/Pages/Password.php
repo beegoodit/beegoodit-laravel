@@ -2,7 +2,6 @@
 
 namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 
-use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -44,6 +43,7 @@ class Password extends Page implements HasForms
     {
         // Use the user-profile panel (no tenant)
         $panel = $panel ?? 'user-profile';
+
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 
@@ -106,4 +106,3 @@ class Password extends Page implements HasForms
             ->send();
     }
 }
-

@@ -14,4 +14,3 @@ class EloquentUserstampsServiceProvider extends ServiceProvider
         ], 'eloquent-userstamps-migrations');
     }
 }
-

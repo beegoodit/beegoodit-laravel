@@ -57,4 +57,3 @@ class RegisterTeam extends RegisterTenant
         return false;
     }
 }
-

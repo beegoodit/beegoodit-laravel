@@ -17,7 +17,7 @@ class OAuthAccountPhpUnitTest extends TestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
-        
+
         Schema::create('oauth_accounts', function ($table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id');
@@ -96,4 +96,3 @@ class OAuthAccountPhpUnitTest extends TestCase
         $this->assertEquals('microsoft', $microsoftAccounts->first()->provider);
     }
 }
-

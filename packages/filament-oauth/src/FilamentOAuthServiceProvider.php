@@ -87,7 +87,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
             if ($provider === 'microsoft') {
                 $tenantId = $this->extractMicrosoftTenantId($event->oauthUser);
                 $accessToken = $event->oauthUser->token ?? null;
-                
+
                 if ($tenantId) {
                     $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
                 }
@@ -103,7 +103,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
             if ($provider === 'microsoft') {
                 $tenantId = $this->extractMicrosoftTenantId($event->oauthUser);
                 $accessToken = $event->oauthUser->token ?? null;
-                
+
                 if ($tenantId) {
                     $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
                 }
@@ -166,7 +166,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         ];
 
         // Filter out empty values
-        $microsoftConfig = array_filter($microsoftConfig, fn($value) => ! empty($value));
+        $microsoftConfig = array_filter($microsoftConfig, fn ($value) => ! empty($value));
 
         // Only merge if not already configured or if existing config is incomplete
         if (! isset($services['microsoft']) || empty($services['microsoft']['client_id'])) {
@@ -174,7 +174,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         } else {
             // Merge missing keys into existing config (existing values take precedence)
             $existing = $services['microsoft'];
-            $merged = array_merge($microsoftConfig, array_filter($existing, fn($value) => ! empty($value)));
+            $merged = array_merge($microsoftConfig, array_filter($existing, fn ($value) => ! empty($value)));
             config(['services.microsoft' => $merged]);
         }
     }
@@ -191,4 +191,3 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         }
     }
 }
-

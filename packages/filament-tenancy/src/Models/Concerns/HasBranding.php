@@ -48,7 +48,7 @@ trait HasBranding
 
         // Get primary color as hex (accessor ensures hex format)
         $primaryColor = $this->primary_color;
-        
+
         // If no primary color, use default amber hex
         if (empty($primaryColor)) {
             $primaryColor = '#f59e0b';
@@ -57,8 +57,8 @@ trait HasBranding
         // Ensure hex format (remove # for URL)
         $hexColor = ltrim($primaryColor, '#');
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($name) 
-            . '&color=FFFFFF&background=' . $hexColor;
+        return 'https://ui-avatars.com/api/?name='.urlencode($name)
+            .'&color=FFFFFF&background='.$hexColor;
     }
 
     /**
@@ -66,7 +66,7 @@ trait HasBranding
      * Ensures oklch colors are converted to hex for avatar URLs and other uses.
      * Always returns hex (never oklch) to prevent avatar URL issues.
      *
-     * @param mixed $value The raw value from the database
+     * @param  mixed  $value  The raw value from the database
      * @return string|null Hex color string (e.g., '#f59e0b') or null
      */
     public function getPrimaryColorAttribute($value)
@@ -97,6 +97,7 @@ trait HasBranding
                 // Convert oklch to rgb, then to hex
                 try {
                     $rgb = $this->oklchToRgb($l, $c, $h);
+
                     return sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
                 } catch (\Exception $e) {
                     // If conversion fails, return null
@@ -112,12 +113,13 @@ trait HasBranding
     /**
      * Set the primary color, ensuring it's stored as hex.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setPrimaryColorAttribute($value)
     {
         if (empty($value)) {
             $this->attributes['primary_color'] = null;
+
             return;
         }
 
@@ -126,6 +128,7 @@ trait HasBranding
         // If already hex, store as-is
         if (preg_match('/^#[0-9A-Fa-f]{6}$/', $value)) {
             $this->attributes['primary_color'] = $value;
+
             return;
         }
 
@@ -136,10 +139,12 @@ trait HasBranding
                     $rgb = $this->oklchToRgb((float) $matches[1], (float) $matches[2], (float) $matches[3]);
                     $hex = sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
                     $this->attributes['primary_color'] = $hex;
+
                     return;
                 } catch (\Exception $e) {
                     // If conversion fails, store as null
                     $this->attributes['primary_color'] = null;
+
                     return;
                 }
             }
@@ -153,9 +158,9 @@ trait HasBranding
      * Convert oklch to RGB (simplified conversion).
      * For production, consider using a proper color conversion library.
      *
-     * @param float $l Lightness (0-1)
-     * @param float $c Chroma
-     * @param float $h Hue (0-360)
+     * @param  float  $l  Lightness (0-1)
+     * @param  float  $c  Chroma
+     * @param  float  $h  Hue (0-360)
      * @return array [r, g, b] values (0-255)
      */
     protected function oklchToRgb(float $l, float $c, float $h): array
@@ -170,9 +175,9 @@ trait HasBranding
         $x = $a / 500 + $y;
         $z = $y - $b / 200;
 
-        $x = 0.95047 * (($x > 0.206897) ? pow($x, 3) : ($x - 16/116) / 7.787);
-        $y = 1.00000 * (($y > 0.206897) ? pow($y, 3) : ($y - 16/116) / 7.787);
-        $z = 1.08883 * (($z > 0.206897) ? pow($z, 3) : ($z - 16/116) / 7.787);
+        $x = 0.95047 * (($x > 0.206897) ? pow($x, 3) : ($x - 16 / 116) / 7.787);
+        $y = 1.00000 * (($y > 0.206897) ? pow($y, 3) : ($y - 16 / 116) / 7.787);
+        $z = 1.08883 * (($z > 0.206897) ? pow($z, 3) : ($z - 16 / 116) / 7.787);
 
         $r = $x * 3.2406 + $y * -1.5372 + $z * -0.4986;
         $g = $x * -0.9689 + $y * 1.8758 + $z * 0.0415;
@@ -197,4 +202,3 @@ trait HasBranding
         return $this->primary_color;
     }
 }
-

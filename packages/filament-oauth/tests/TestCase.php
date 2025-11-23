@@ -25,7 +25,7 @@ abstract class TestCase extends Orchestra
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
-        
+
         // Set encryption key for testing encrypted columns
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
@@ -35,4 +35,3 @@ abstract class TestCase extends Orchestra
         $this->loadLaravelMigrations();
     }
 }
-

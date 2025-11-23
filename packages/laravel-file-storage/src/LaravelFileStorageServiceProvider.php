@@ -11,4 +11,3 @@ class LaravelFileStorageServiceProvider extends ServiceProvider
         $this->app->singleton(\BeeGoodIT\LaravelFileStorage\Services\FileStorageService::class);
     }
 }
-

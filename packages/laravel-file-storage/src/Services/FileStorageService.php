@@ -13,8 +13,8 @@ class FileStorageService
     public function store(string $contents, string $directory, ?string $filename = null, ?string $disk = null): string
     {
         $disk = $disk ?? $this->getDefaultDisk();
-        $filename = $filename ?? Str::uuid() . '.bin';
-        $path = trim($directory, '/') . '/' . $filename;
+        $filename = $filename ?? Str::uuid().'.bin';
+        $path = trim($directory, '/').'/'.$filename;
 
         Storage::disk($disk)->put($path, $contents);
 
@@ -76,4 +76,3 @@ class FileStorageService
         return config('filesystems.default') === 's3' ? 's3' : 'public';
     }
 }
-

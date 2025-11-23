@@ -13,4 +13,3 @@ class SocialiteUser extends BaseSocialiteUser
 
     protected $keyType = 'string';
 }
-

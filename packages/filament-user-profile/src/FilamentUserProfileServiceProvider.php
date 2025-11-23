@@ -3,7 +3,6 @@
 namespace BeeGoodIT\FilamentUserProfile;
 
 use BeeGoodIT\FilamentUserProfile\Filament\UserProfilePanelProvider;
-use BeeGoodIT\FilamentUserProfile\UserProfileHelper;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Features;
 
@@ -40,9 +39,8 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         $this->app->singleton('filament-user-profile', function ($app) {
             return new UserProfileHelper;
         });
-        
+
         // Register the user profile panel provider
         $this->app->register(UserProfilePanelProvider::class);
     }
 }
-

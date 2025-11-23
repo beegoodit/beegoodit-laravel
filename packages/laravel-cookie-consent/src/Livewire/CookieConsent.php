@@ -7,13 +7,18 @@ use Livewire\Component;
 class CookieConsent extends Component
 {
     public bool $show = true;
+
     public bool $showSettings = false;
+
     public bool $consentGiven = false; // Track if consent was just given in this session
-    
+
     // Cookie categories
     public bool $essential = true;
+
     public bool $functional = true;
+
     public bool $analytics = false;
+
     public bool $marketing = false;
 
     public function mount(): void
@@ -69,7 +74,7 @@ class CookieConsent extends Component
         } elseif ($this->marketing) {
             return 'marketing';
         }
-        
+
         return 'essential';
     }
 
@@ -99,4 +104,3 @@ class CookieConsent extends Component
         return view('cookie-consent::livewire.cookie-consent');
     }
 }
-

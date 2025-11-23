@@ -40,4 +40,3 @@ class EditTeamProfile extends EditTenantProfile
         return false;
     }
 }
-

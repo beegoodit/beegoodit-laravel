@@ -125,4 +125,3 @@ class AvatarService
         return 'jpg'; // default
     }
 }
-

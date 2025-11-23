@@ -57,4 +57,3 @@ class OAuthAccount extends Model
         return $this->token_expires_at->isPast();
     }
 }
-

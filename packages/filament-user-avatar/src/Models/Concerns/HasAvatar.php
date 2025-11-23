@@ -33,7 +33,7 @@ trait HasAvatar
         // Generate fallback ui-avatars.com URL with hex color
         // Use initials format (no spaces) - ui-avatars.com works better with concatenated initials
         $name = $this->initials();
-        
+
         // Fallback if no initials (shouldn't happen, but be safe)
         if (empty($name)) {
             $name = 'U'; // Single letter fallback
@@ -41,7 +41,7 @@ trait HasAvatar
 
         // Get primary color as hex (ensures hex format, not oklch)
         $primaryColor = $this->getPrimaryColorForAvatar();
-        
+
         // If no primary color, use default amber hex
         if (empty($primaryColor)) {
             $primaryColor = '#f59e0b';
@@ -50,8 +50,8 @@ trait HasAvatar
         // Ensure hex format (remove # for URL)
         $hexColor = ltrim($primaryColor, '#');
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($name) 
-            . '&color=FFFFFF&background=' . $hexColor;
+        return 'https://ui-avatars.com/api/?name='.urlencode($name)
+            .'&color=FFFFFF&background='.$hexColor;
     }
 
     /**
@@ -69,18 +69,18 @@ trait HasAvatar
             if ($tenant) {
                 // Try to use the accessor first (if HasBranding trait is used)
                 // The accessor will convert oklch to hex automatically
-                if (method_exists($tenant, 'getPrimaryColorAttribute') || 
+                if (method_exists($tenant, 'getPrimaryColorAttribute') ||
                     in_array(\BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding::class, class_uses_recursive($tenant))) {
                     $color = $tenant->primary_color;
-                    if (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
+                    if (! empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
                         return $color;
                     }
                 }
-                
+
                 // Fallback: check raw attribute and convert if needed
                 if (isset($tenant->attributes['primary_color'])) {
                     $rawColor = $tenant->attributes['primary_color'];
-                    if (!empty($rawColor)) {
+                    if (! empty($rawColor)) {
                         // If already hex, return it
                         if (preg_match('/^#[0-9A-Fa-f]{6}$/', $rawColor)) {
                             return $rawColor;
@@ -109,4 +109,3 @@ trait HasAvatar
             ->implode('');
     }
 }
-

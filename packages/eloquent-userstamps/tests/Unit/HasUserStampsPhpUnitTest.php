@@ -15,12 +15,12 @@ class HasUserStampsPhpUnitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         Model::unguard();
-        
+
         // Manually run migrations since defineDatabaseMigrations might not be called
         $this->loadLaravelMigrations();
-        
+
         // Create test table
         \Illuminate\Support\Facades\Schema::create('test_models', function ($table) {
             $table->id();
@@ -117,6 +117,6 @@ class TestModelPhpUnit extends Model
     use HasUserStamps;
 
     protected $table = 'test_models';
+
     protected $guarded = [];
 }
-

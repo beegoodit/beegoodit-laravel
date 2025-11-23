@@ -10,8 +10,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 {
     public function test_it_returns_default_locale_when_not_set()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $locale = null;
         };
 
@@ -20,8 +22,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
     public function test_it_returns_user_locale_when_set()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $locale = 'de';
         };
 
@@ -30,8 +34,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
     public function test_it_formats_time_in_12h_format()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $time_format = '12h';
         };
 
@@ -41,8 +47,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
     public function test_it_formats_time_in_24h_format()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $time_format = '24h';
         };
 
@@ -52,8 +60,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
     public function test_it_detects_12h_preference()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $time_format = '12h';
         };
 
@@ -62,8 +72,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
     public function test_it_returns_default_timezone_when_not_set()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $timezone = null;
         };
 
@@ -72,8 +84,10 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
 
     public function test_it_formats_datetime_with_user_preferences()
     {
-        $user = new class extends Model {
+        $user = new class extends Model
+        {
             use HasI18nPreferences;
+
             public $time_format = '12h';
         };
 
@@ -84,4 +98,3 @@ class HasI18nPreferencesPhpUnitTest extends TestCase
         $this->assertStringContainsString('3:30 PM', $formatted);
     }
 }
-

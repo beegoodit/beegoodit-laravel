@@ -8,4 +8,3 @@ class TimezonePicker extends Field
 {
     protected string $view = 'filament-user-profile::components.timezone-picker';
 }
-

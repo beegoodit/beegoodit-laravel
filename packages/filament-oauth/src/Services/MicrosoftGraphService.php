@@ -18,7 +18,7 @@ class MicrosoftGraphService
 
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 // The organization endpoint returns an array with organization details
                 if (isset($data['value'][0]['displayName'])) {
                     return $data['value'][0]['displayName'];
@@ -37,7 +37,6 @@ class MicrosoftGraphService
         }
 
         // Return fallback name using first 8 characters of tenant ID
-        return 'Team ' . substr($tenantId, 0, 8);
+        return 'Team '.substr($tenantId, 0, 8);
     }
 }
-

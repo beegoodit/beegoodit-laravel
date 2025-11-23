@@ -2,17 +2,15 @@
 
 namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 
+use BeeGoodIT\FilamentUserProfile\UserProfileHelper;
 use Exception;
-use Filament\Facades\Filament;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Schema;
-use BeeGoodIT\FilamentUserProfile\UserProfileHelper;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
 use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
@@ -73,6 +71,7 @@ class TwoFactor extends Page implements HasForms
     {
         // Use the user-profile panel (no tenant)
         $panel = $panel ?? 'user-profile';
+
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 
@@ -94,7 +93,7 @@ class TwoFactor extends Page implements HasForms
         abort_unless(Features::enabled(Features::twoFactorAuthentication()), Response::HTTP_FORBIDDEN);
 
         // Check if database columns exist (fallback for direct URL access)
-        if (!UserProfileHelper::hasTwoFactorColumns()) {
+        if (! UserProfileHelper::hasTwoFactorColumns()) {
             Notification::make()
                 ->danger()
                 ->title(__('Database Migration Required'))
@@ -105,6 +104,7 @@ class TwoFactor extends Page implements HasForms
             // Still allow page to load but it won't be functional
             $this->twoFactorEnabled = false;
             $this->requiresConfirmation = false;
+
             return;
         }
 
@@ -116,7 +116,7 @@ class TwoFactor extends Page implements HasForms
 
         $this->twoFactorEnabled = $this->checkTwoFactorEnabled($user);
         $this->requiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
-        
+
         $this->loadRecoveryCodes();
     }
 
@@ -135,7 +135,7 @@ class TwoFactor extends Page implements HasForms
 
         // Fallback: check if two_factor_secret exists and is not null
         if (property_exists($user, 'two_factor_secret')) {
-            return !empty($user->two_factor_secret);
+            return ! empty($user->two_factor_secret);
         }
 
         // If neither method nor property exists, 2FA is not enabled
@@ -148,7 +148,7 @@ class TwoFactor extends Page implements HasForms
     public function enable(EnableTwoFactorAuthentication $enableTwoFactorAuthentication): void
     {
         $user = Auth::user();
-        
+
         try {
             $enableTwoFactorAuthentication($user);
 
@@ -291,7 +291,7 @@ class TwoFactor extends Page implements HasForms
         $this->code = '';
         $this->showModal = false;
         $this->showVerificationStep = false;
-        
+
         // Reset locked properties manually (can't use reset() on locked properties)
         $this->qrCodeSvg = '';
         $this->manualSetupKey = '';
@@ -384,4 +384,3 @@ class TwoFactor extends Page implements HasForms
 
     // Navigation is enabled for the settings panel
 }
-

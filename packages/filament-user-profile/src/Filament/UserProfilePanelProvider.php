@@ -8,7 +8,6 @@ use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
 use BeeGoodIT\FilamentUserProfile\UserProfileHelper;
 use Filament\Facades\Filament;
-use Laravel\Fortify\Features;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -23,6 +22,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Fortify\Features;
 
 class UserProfilePanelProvider extends PanelProvider
 {
@@ -65,14 +65,14 @@ class UserProfilePanelProvider extends PanelProvider
     /**
      * Get the URL to the portal panel dashboard.
      * Handles both tenant and non-tenant portals.
-     * 
+     *
      * Since the settings panel doesn't have tenancy, we need to get the tenant
      * from the authenticated user's teams.
      */
     protected function getPortalUrl(): string
     {
         $portalPanel = Filament::getPanel('portal');
-        
+
         if (! $portalPanel) {
             // Fallback if portal panel doesn't exist
             return '/portal';
@@ -85,11 +85,11 @@ class UserProfilePanelProvider extends PanelProvider
 
         // Try to get tenant from authenticated user's teams
         $user = Auth::user();
-        
+
         if ($user) {
             // Try to get the user's first team (or default team if method exists)
             $team = null;
-            
+
             if (method_exists($user, 'currentTeam')) {
                 $team = $user->currentTeam();
             } elseif (method_exists($user, 'teams')) {
@@ -97,20 +97,18 @@ class UserProfilePanelProvider extends PanelProvider
             } elseif (method_exists($user, 'team')) {
                 $team = $user->team;
             }
-            
+
             if ($team) {
                 return $portalPanel->getUrl(tenant: $team);
             }
         }
-        
+
         // Fallback: return base portal URL (will redirect to team selection if needed)
         return $portalPanel->getUrl();
     }
 
     /**
      * Get the list of pages to register.
-     * 
-     * @return array
      */
     protected function getPages(): array
     {
@@ -130,13 +128,11 @@ class UserProfilePanelProvider extends PanelProvider
 
     /**
      * Determine if the TwoFactor page should be registered.
-     * 
-     * @return bool
      */
     protected function shouldRegisterTwoFactorPage(): bool
     {
         // Check if Fortify 2FA feature is enabled
-        if (!Features::enabled(Features::twoFactorAuthentication())) {
+        if (! Features::enabled(Features::twoFactorAuthentication())) {
             return false;
         }
 
@@ -144,4 +140,3 @@ class UserProfilePanelProvider extends PanelProvider
         return UserProfileHelper::hasTwoFactorColumns();
     }
 }
-

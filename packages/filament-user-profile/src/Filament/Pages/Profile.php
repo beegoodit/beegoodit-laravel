@@ -14,7 +14,6 @@ use Filament\Schemas\Schema;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
 
 class Profile extends Page implements HasForms
@@ -52,6 +51,7 @@ class Profile extends Page implements HasForms
     {
         // Use the user-profile panel (no tenant)
         $panel = $panel ?? 'user-profile';
+
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 
@@ -107,9 +107,10 @@ class Profile extends Page implements HasForms
                             )
                             ->helperText(function () {
                                 $user = Auth::user();
-                                if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+                                if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
                                     return __('Your email address is unverified.');
                                 }
+
                                 return null;
                             }),
                     ]),
@@ -137,7 +138,7 @@ class Profile extends Page implements HasForms
         $validated = $this->form->getState();
 
         $user->name = $validated['name'];
-        
+
         if ($user->email !== $validated['email']) {
             $user->email = $validated['email'];
             if ($user instanceof MustVerifyEmail) {
@@ -156,6 +157,7 @@ class Profile extends Page implements HasForms
     protected function supportsAvatar(): bool
     {
         $user = Auth::user();
+
         return $user instanceof HasAvatar && method_exists($user, 'getAvatarUrl');
     }
 
@@ -166,7 +168,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$this->supportsAvatar() || !$this->avatarUpload) {
+        if (! $this->supportsAvatar() || ! $this->avatarUpload) {
             return;
         }
 
@@ -178,26 +180,26 @@ class Profile extends Page implements HasForms
             // Check if AvatarService is available (from filament-user-avatar package)
             if (class_exists(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
                 $avatarService = app(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
-                
+
                 // Get file content and extension
                 $fileContent = file_get_contents($this->avatarUpload->getRealPath());
                 $extension = $this->avatarUpload->getClientOriginalExtension();
-                
+
                 // Store avatar
                 $avatarPath = $avatarService->storeAvatar($user, $fileContent, $extension);
-                
+
                 // Update user record and delete old avatar
                 $avatarService->updateUserAvatar($user, $avatarPath);
             } else {
                 // Fallback: handle avatar upload directly
                 $disk = config('filesystems.default') === 's3' ? 's3' : 'public';
-                $path = $this->avatarUpload->store('users/' . $user->id . '/avatar', $disk);
-                
+                $path = $this->avatarUpload->store('users/'.$user->id.'/avatar', $disk);
+
                 // Delete old avatar if exists
                 if ($user->avatar) {
                     \Illuminate\Support\Facades\Storage::disk($disk)->delete($user->avatar);
                 }
-                
+
                 // Update user
                 $user->avatar = $path;
                 $user->save();
@@ -207,7 +209,7 @@ class Profile extends Page implements HasForms
             Session::flash('status', 'avatar-updated');
         } catch (\Exception $e) {
             Session::flash('status', 'avatar-update-failed');
-            \Illuminate\Support\Facades\Log::error('Avatar update failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Avatar update failed: '.$e->getMessage());
         }
     }
 
@@ -218,7 +220,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$this->supportsAvatar()) {
+        if (! $this->supportsAvatar()) {
             return;
         }
 
@@ -241,8 +243,7 @@ class Profile extends Page implements HasForms
             Session::flash('status', 'avatar-removed');
         } catch (\Exception $e) {
             Session::flash('status', 'avatar-remove-failed');
-            \Illuminate\Support\Facades\Log::error('Avatar removal failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Avatar removal failed: '.$e->getMessage());
         }
     }
 }
-

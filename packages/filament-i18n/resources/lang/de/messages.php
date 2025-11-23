@@ -8,4 +8,3 @@ return [
     'time_format_24h' => '24-Stunden (15:45)',
     'select_timezone' => 'Wählen Sie Ihre Zeitzone...',
 ];
-

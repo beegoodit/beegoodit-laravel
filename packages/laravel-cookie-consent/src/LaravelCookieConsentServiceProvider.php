@@ -43,4 +43,3 @@ class LaravelCookieConsentServiceProvider extends ServiceProvider
         ], 'cookie-consent-lang');
     }
 }
-

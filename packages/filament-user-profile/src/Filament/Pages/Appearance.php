@@ -5,17 +5,14 @@ namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 use BeeGoodIT\FilamentUserProfile\Filament\Forms\Components\TimezonePicker;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Panel;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
 class Appearance extends Page implements HasForms
@@ -59,6 +56,7 @@ class Appearance extends Page implements HasForms
     {
         // Use the user-profile panel (no tenant)
         $panel = $panel ?? 'user-profile';
+
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 
@@ -177,4 +175,3 @@ class Appearance extends Page implements HasForms
         $this->dispatch('appearance-updated');
     }
 }
-

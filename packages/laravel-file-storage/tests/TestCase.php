@@ -21,7 +21,7 @@ abstract class TestCase extends Orchestra
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
-        
+
         $app['config']->set('filesystems.default', 'public');
     }
 
@@ -30,4 +30,3 @@ abstract class TestCase extends Orchestra
         $this->loadLaravelMigrations();
     }
 }
-

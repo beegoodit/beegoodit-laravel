@@ -39,4 +39,3 @@ trait HasOAuth
         return is_null($this->password);
     }
 }
-

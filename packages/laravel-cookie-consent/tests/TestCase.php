@@ -24,4 +24,3 @@ abstract class TestCase extends Orchestra
         $app['config']->set('cookie-consent.position', 'bottom');
     }
 }
-

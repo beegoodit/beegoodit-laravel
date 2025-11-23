@@ -19,6 +19,7 @@ class TeamAssignmentService
     {
         if (! $tenantId) {
             Log::info('No tenant ID provided for team assignment', ['user_id' => $user->id]);
+
             return;
         }
 
@@ -49,7 +50,7 @@ class TeamAssignmentService
         // Attach user to team if not already attached
         if (! $user->teams()->where('team_id', $team->id)->exists()) {
             $user->teams()->attach($team->id);
-            
+
             Log::info('Assigned user to team', [
                 'user_id' => $user->id,
                 'team_id' => $team->id,
@@ -68,7 +69,6 @@ class TeamAssignmentService
         }
 
         // Fallback to generic name generation
-        return ucfirst($provider) . ' Organization ' . substr($tenantId, 0, 8);
+        return ucfirst($provider).' Organization '.substr($tenantId, 0, 8);
     }
 }
-

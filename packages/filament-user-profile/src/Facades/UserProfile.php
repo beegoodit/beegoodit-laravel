@@ -16,4 +16,3 @@ class UserProfile extends Facade
         return 'filament-user-profile';
     }
 }
-

@@ -5,12 +5,9 @@ namespace BeeGoodIT\FilamentUserProfile;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
-use Filament\Facades\Filament;
 use Filament\Navigation\MenuItem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use Laravel\Fortify\Features;
 
 class UserProfileHelper
 {
@@ -38,8 +35,6 @@ class UserProfileHelper
 
     /**
      * Check if the users table has the required two-factor authentication columns.
-     *
-     * @return bool
      */
     public static function hasTwoFactorColumns(): bool
     {
@@ -50,8 +45,9 @@ class UserProfileHelper
 
         try {
             // Check if users table exists
-            if (!Schema::hasTable('users')) {
+            if (! Schema::hasTable('users')) {
                 self::$hasTwoFactorColumnsCache = false;
+
                 return false;
             }
 
@@ -66,15 +62,15 @@ class UserProfileHelper
             self::$hasTwoFactorColumnsCache = $result;
 
             // Log if columns are missing
-            if (!$result) {
+            if (! $result) {
                 $missingColumns = [];
-                if (!$hasSecret) {
+                if (! $hasSecret) {
                     $missingColumns[] = 'two_factor_secret';
                 }
-                if (!$hasRecoveryCodes) {
+                if (! $hasRecoveryCodes) {
                     $missingColumns[] = 'two_factor_recovery_codes';
                 }
-                if (!$hasConfirmedAt) {
+                if (! $hasConfirmedAt) {
                     $missingColumns[] = 'two_factor_confirmed_at';
                 }
 
@@ -104,6 +100,7 @@ class UserProfileHelper
             ]);
 
             self::$hasTwoFactorColumnsCache = false;
+
             return false;
         }
     }
@@ -117,4 +114,3 @@ class UserProfileHelper
         self::$hasTwoFactorColumnsCache = null;
     }
 }
-

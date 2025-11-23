@@ -49,4 +49,3 @@ trait HasUserStamps
         return config('auth.providers.users.model', \App\Models\User::class);
     }
 }
-

@@ -13,10 +13,10 @@ class FileStorageServicePhpUnitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         Storage::fake('public');
         Storage::fake('s3');
-        $this->service = new FileStorageService();
+        $this->service = new FileStorageService;
     }
 
     public function test_it_stores_files_with_generated_filename()
@@ -78,4 +78,3 @@ class FileStorageServicePhpUnitTest extends TestCase
         $this->assertNull($url);
     }
 }
-

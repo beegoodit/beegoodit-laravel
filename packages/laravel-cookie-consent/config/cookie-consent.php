@@ -42,4 +42,3 @@ return [
      */
     'cookie_secure' => env('COOKIE_CONSENT_SECURE', true),
 ];
-

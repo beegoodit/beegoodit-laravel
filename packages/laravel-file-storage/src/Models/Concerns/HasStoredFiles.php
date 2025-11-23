@@ -47,7 +47,7 @@ trait HasStoredFiles
         // Check if calling a getXxxUrl() method
         if (preg_match('/^get(\w+)Url$/', $method, $matches)) {
             $field = \Illuminate\Support\Str::snake($matches[1]);
-            
+
             // Check if this field is in the storedFiles array
             if (isset($this->storedFiles) && in_array($field, $this->storedFiles)) {
                 return $this->getFileUrl($this->$field, $parameters[0] ?? 60);
@@ -57,4 +57,3 @@ trait HasStoredFiles
         return parent::__call($method, $parameters);
     }
 }
-

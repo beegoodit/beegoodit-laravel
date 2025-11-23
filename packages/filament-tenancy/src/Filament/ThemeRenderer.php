@@ -9,8 +9,8 @@ class ThemeRenderer
     /**
      * Generate the Blade template string for dynamic team theming via CSS variables.
      *
-     * @param string $defaultPrimaryColor Hex color string (e.g., '#00ffff')
-     * @param string|null $defaultSecondaryColor Optional hex color string
+     * @param  string  $defaultPrimaryColor  Hex color string (e.g., '#00ffff')
+     * @param  string|null  $defaultSecondaryColor  Optional hex color string
      * @return string Blade template string
      */
     public static function renderHook(string $defaultPrimaryColor, ?string $defaultSecondaryColor = null): string
@@ -70,15 +70,15 @@ BLADE;
      * Generate the Blade template string with proper variable substitution.
      * This method handles the Blade compilation correctly.
      *
-     * @param string $defaultPrimaryColor Hex color string (e.g., '#00ffff')
-     * @param string|null $defaultSecondaryColor Optional hex color string
+     * @param  string  $defaultPrimaryColor  Hex color string (e.g., '#00ffff')
+     * @param  string|null  $defaultSecondaryColor  Optional hex color string
      * @return string Blade template string ready for rendering
      */
     public static function getTemplate(string $defaultPrimaryColor, ?string $defaultSecondaryColor = null): string
     {
         // Escape the color strings for use in PHP strings
         $primaryColorEscaped = addslashes($defaultPrimaryColor);
-        
+
         // Build secondary color section conditionally
         $secondarySection = '';
         if ($defaultSecondaryColor) {
@@ -97,7 +97,7 @@ BLADE;
         }
 
         $avatarFixScript = self::getAvatarUrlFixScript();
-        
+
         $template = <<<BLADE
 @php
     try {
@@ -227,4 +227,3 @@ BLADE;
 JS;
     }
 }
-

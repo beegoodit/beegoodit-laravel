@@ -13,7 +13,7 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // The parent setUp should have initialized the database
         // Double-check and set up Model if needed
         if ($this->app->bound('db')) {
@@ -29,14 +29,14 @@ abstract class TestCase extends Orchestra
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
-        
+
         $app['config']->set('auth.providers.users.model', User::class);
     }
 
     protected function defineDatabaseMigrations(): void
     {
         $this->loadLaravelMigrations();
-        
+
         // Create test table for userstamps testing
         Schema::create('test_models', function (Blueprint $table) {
             $table->id();

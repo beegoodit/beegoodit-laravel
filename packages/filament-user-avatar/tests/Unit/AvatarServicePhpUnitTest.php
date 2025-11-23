@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class AvatarServicePhpUnitTest extends TestCase
 {
     protected AvatarService $service;
+
     protected Model $user;
 
     protected function setUp(): void
@@ -18,10 +19,12 @@ class AvatarServicePhpUnitTest extends TestCase
 
         Storage::fake('public');
         Storage::fake('s3');
-        $this->service = new AvatarService();
-        
-        $this->user = new class extends Model {
+        $this->service = new AvatarService;
+
+        $this->user = new class extends Model
+        {
             public $id = 'test-uuid-123';
+
             public $avatar = null;
         };
     }
@@ -38,7 +41,7 @@ class AvatarServicePhpUnitTest extends TestCase
 
     public function test_it_stores_avatar_from_base64()
     {
-        $base64 = 'data:image/png;base64,' . base64_encode('fake png data');
+        $base64 = 'data:image/png;base64,'.base64_encode('fake png data');
         $path = $this->service->storeAvatarFromBase64($this->user, $base64);
 
         $this->assertNotNull($path);
@@ -62,4 +65,3 @@ class AvatarServicePhpUnitTest extends TestCase
         Storage::disk('public')->assertMissing($this->user->avatar);
     }
 }
-

@@ -42,11 +42,11 @@ class CreateTeamCommand extends Command
 
         // Get or generate team name
         $teamName = $this->option('name');
-        
+
         if (! $teamName && ! $this->option('no-interaction')) {
             $teamName = $this->ask('Team name (leave empty to generate a fantasy name)');
         }
-        
+
         // Generate fantasy name if still no name provided
         if (! $teamName) {
             $teamName = $this->generateFantasyTeamName();
@@ -55,7 +55,7 @@ class CreateTeamCommand extends Command
 
         // Generate slug from team name (no random suffix)
         $slug = $this->option('slug') ?: Str::slug($teamName);
-        
+
         // Ensure slug uniqueness
         $slug = $this->ensureUniqueSlug($teamModel, $slug);
 
@@ -69,7 +69,7 @@ class CreateTeamCommand extends Command
         if ($this->option('oauth-provider')) {
             $teamData['oauth_provider'] = $this->option('oauth-provider');
             $teamData['oauth_tenant_id'] = $this->option('oauth-tenant-id');
-            
+
             // Only prompt if not in non-interactive mode and no tenant ID provided
             if (! $teamData['oauth_tenant_id'] && ! $this->option('no-interaction')) {
                 $teamData['oauth_tenant_id'] = $this->ask('OAuth tenant ID');
@@ -198,7 +198,7 @@ class CreateTeamCommand extends Command
             'cosmic', 'stellar', 'lunar', 'solar', 'oceanic', 'mountain', 'forest', 'desert',
             'tropical', 'arctic', 'volcanic', 'peaceful', 'dynamic', 'radiant', 'eternal',
         ];
-        
+
         $nouns = [
             'dragon', 'phoenix', 'eagle', 'wolf', 'tiger', 'lion', 'bear', 'falcon',
             'storm', 'thunder', 'lightning', 'wind', 'flame', 'ice', 'shadow', 'light',
@@ -206,11 +206,11 @@ class CreateTeamCommand extends Command
             'ocean', 'mountain', 'river', 'forest', 'valley', 'peak', 'canyon', 'island',
             'crystal', 'gem', 'pearl', 'diamond', 'ruby', 'emerald', 'sapphire', 'jade',
         ];
-        
+
         $adjective = $adjectives[array_rand($adjectives)];
         $noun = $nouns[array_rand($nouns)];
-        
-        return ucfirst($adjective) . ' ' . ucfirst($noun);
+
+        return ucfirst($adjective).' '.ucfirst($noun);
     }
 
     /**
@@ -220,18 +220,17 @@ class CreateTeamCommand extends Command
     {
         $originalSlug = $slug;
         $counter = 1;
-        
+
         while ($teamModel::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
+            $slug = $originalSlug.'-'.$counter;
             $counter++;
-            
+
             // Safety limit to prevent infinite loops
             if ($counter > 1000) {
                 throw new \RuntimeException('Unable to generate unique slug after 1000 attempts');
             }
         }
-        
+
         return $slug;
     }
 }
-
