@@ -16,7 +16,27 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 
 ## Installation in Apps
 
-Add path repository to your app's `composer.json`:
+### Option 1: Packagist (Production)
+
+Install packages directly from Packagist:
+
+```bash
+composer require beegoodit/filament-i18n
+```
+
+Or add to your `composer.json`:
+
+```json
+{
+  "require": {
+    "beegoodit/filament-i18n": "^1.0"
+  }
+}
+```
+
+### Option 2: Path Repository (Development)
+
+For local development, use a path repository in your app's `composer.json`:
 
 ```json
 {
@@ -31,6 +51,8 @@ Add path repository to your app's `composer.json`:
   }
 }
 ```
+
+**Note**: Path repositories take precedence over Packagist, so this is perfect for local development and testing package changes.
 
 ## Development
 
