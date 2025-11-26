@@ -33,7 +33,7 @@
                                 $avatarUrl = $user->getAvatarUrl();
                             @endphp
                             @if ($avatarUrl)
-                                <img src="{{ $avatarUrl }}" alt="{{ __('Avatar') }}" class="h-full w-full object-cover" wire:loading.remove wire:target="avatarUpload" />
+                                <img src="{{ $avatarUrl }}" alt="{{ __('filament-user-profile::messages.Avatar') }}" class="h-full w-full object-cover" wire:loading.remove wire:target="avatarUpload" />
                             @else
                                 <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-lg font-semibold text-black dark:bg-neutral-700 dark:text-white" wire:loading.remove wire:target="avatarUpload">
                                     {{ method_exists($user, 'initials') ? $user->initials() : substr($user->name, 0, 2) }}
@@ -53,7 +53,7 @@
                                 type="button"
                                 wire:click="removeAvatar"
                                 class="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors"
-                                title="{{ __('Remove avatar') }}"
+                                title="{{ __('filament-user-profile::messages.Remove avatar') }}"
                             >
                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -75,13 +75,13 @@
                                 type="button" 
                                 x-on:click="document.getElementById('avatar-upload').click()"
                             >
-                                {{ $avatarUrl ? __('Change picture') : __('Upload picture') }}
+                                {{ $avatarUrl ? __('filament-user-profile::messages.Change picture') : __('filament-user-profile::messages.Upload picture') }}
                             </x-filament::button>
                         </div>
                         
                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ __('Click to upload or drag and drop') }}<br>
-                            {{ __('JPG, PNG, GIF or WebP (max. 2MB)') }}
+                            {{ __('filament-user-profile::messages.Click to upload or drag and drop') }}<br>
+                            {{ __('filament-user-profile::messages.JPG, PNG, GIF or WebP (max. 2MB)') }}
                         </p>
 
                         @error('avatarUpload')
@@ -90,15 +90,15 @@
 
                         @if (session('status') === 'avatar-updated')
                             <p class="text-sm text-success-600 dark:text-success-400">
-                                {{ __('Avatar updated successfully.') }}
+                                {{ __('filament-user-profile::messages.Avatar updated successfully.') }}
                             </p>
                         @elseif (session('status') === 'avatar-removed')
                             <p class="text-sm text-success-600 dark:text-success-400">
-                                {{ __('Avatar removed successfully.') }}
+                                {{ __('filament-user-profile::messages.Avatar removed successfully.') }}
                             </p>
                         @elseif (session('status') === 'avatar-update-failed' || session('status') === 'avatar-remove-failed')
                             <p class="text-sm text-danger-600 dark:text-danger-400">
-                                {{ __('Failed to update avatar. Please try again.') }}
+                                {{ __('filament-user-profile::messages.Failed to update avatar. Please try again.') }}
                             </p>
                         @endif
                     </div>
@@ -112,15 +112,15 @@
         @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
             <div class="mt-4">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('Your email address is unverified.') }}
+                    {{ __('filament-user-profile::messages.Your email address is unverified.') }}
                     <button type="button" wire:click="resendVerificationNotification" class="text-sm text-primary-600 dark:text-primary-400 hover:underline">
-                        {{ __('Click here to re-send the verification email.') }}
+                        {{ __('filament-user-profile::messages.Click here to re-send the verification email.') }}
                     </button>
                 </p>
 
                 @if (session('status') === 'verification-link-sent')
                     <p class="mt-2 text-sm font-medium text-success-600 dark:text-success-400">
-                        {{ __('A new verification link has been sent to your email address.') }}
+                        {{ __('filament-user-profile::messages.A new verification link has been sent to your email address.') }}
                     </p>
                 @endif
             </div>
@@ -128,13 +128,13 @@
 
         @if (session('status') === 'profile-updated')
             <p class="mt-2 text-sm font-medium text-success-600 dark:text-success-400">
-                {{ __('Profile updated successfully.') }}
+                {{ __('filament-user-profile::messages.Profile updated successfully.') }}
             </p>
         @endif
 
         <div class="flex items-center gap-4 mt-4">
             <x-filament::button type="submit">
-                {{ __('Save') }}
+                {{ __('filament-user-profile::messages.Save') }}
             </x-filament::button>
         </div>
     </form>
@@ -142,8 +142,8 @@
     {{-- Delete User Account Section --}}
     <div class="mt-10 space-y-6 border-t border-gray-200 dark:border-gray-700 pt-8">
         <div class="relative mb-5">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Delete account') }}</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Delete your account and all of its resources') }}</p>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('filament-user-profile::messages.Delete account') }}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('filament-user-profile::messages.Delete your account and all of its resources') }}</p>
         </div>
 
         <x-filament::button
@@ -151,7 +151,7 @@
             color="danger"
             wire:click="openDeleteModal"
         >
-            {{ __('Delete account') }}
+            {{ __('filament-user-profile::messages.Delete account') }}
         </x-filament::button>
 
         {{-- Delete User Modal --}}
@@ -186,7 +186,7 @@
                         type="button"
                         @click="showModal = false; $wire.closeDeleteModal()"
                         class="absolute top-4 right-4 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 transition-all"
-                        aria-label="{{ __('Close') }}"
+                        aria-label="{{ __('filament-user-profile::messages.Close') }}"
                     >
                         <x-filament::icon icon="heroicon-o-x-mark" class="h-5 w-5" />
                     </button>
@@ -219,14 +219,14 @@
                             {{-- Header --}}
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                    {{ __('Are you sure you want to delete your account?') }}
+                                    {{ __('filament-user-profile::messages.Are you sure you want to delete your account?') }}
                                 </h3>
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. This action cannot be undone.') }}
+                                    {{ __('filament-user-profile::messages.Once your account is deleted, all of its resources and data will be permanently deleted. This action cannot be undone.') }}
                                 </p>
                                 <div class="rounded-lg bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 p-4">
                                     <p class="text-sm font-medium text-danger-800 dark:text-danger-200">
-                                        {{ __('You will be redirected to re-authenticate with your OAuth provider to confirm this action.') }}
+                                        {{ __('filament-user-profile::messages.You will be redirected to re-authenticate with your OAuth provider to confirm this action.') }}
                                     </p>
                                 </div>
                             </div>
@@ -241,7 +241,7 @@
                                         class="mt-0.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
                                     />
                                     <span class="text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('I understand that this action cannot be undone and all my data will be permanently deleted.') }}
+                                        {{ __('filament-user-profile::messages.I understand that this action cannot be undone and all my data will be permanently deleted.') }}
                                     </span>
                                 </label>
                                 @error('confirmDelete')
@@ -256,14 +256,14 @@
                                     color="gray"
                                     @click="showModal = false; $wire.closeDeleteModal()"
                                 >
-                                    {{ __('Cancel') }}
+                                    {{ __('filament-user-profile::messages.Cancel') }}
                                 </x-filament::button>
 
                                 <x-filament::button
                                     type="submit"
                                     color="danger"
                                 >
-                                    {{ __('Continue to Delete') }}
+                                    {{ __('filament-user-profile::messages.Continue to Delete') }}
                                 </x-filament::button>
                                 </div>
                         </form>
@@ -273,17 +273,17 @@
                             {{-- Header --}}
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                    {{ __('Are you sure you want to delete your account?') }}
+                                    {{ __('filament-user-profile::messages.Are you sure you want to delete your account?') }}
                                 </h3>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                                    {{ __('filament-user-profile::messages.Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
                                 </p>
                             </div>
 
                             {{-- Password Input --}}
                             <div>
                                 <label for="delete-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    {{ __('Password') }}
+                                    {{ __('filament-user-profile::messages.Password') }}
                                 </label>
                                 <input
                                     id="delete-password"
@@ -305,14 +305,14 @@
                                     color="gray"
                                     @click="showModal = false; $wire.closeDeleteModal()"
                                 >
-                                    {{ __('Cancel') }}
+                                    {{ __('filament-user-profile::messages.Cancel') }}
                                 </x-filament::button>
 
                                 <x-filament::button
                                     type="submit"
                                     color="danger"
                                 >
-                                    {{ __('Delete account') }}
+                                    {{ __('filament-user-profile::messages.Delete account') }}
                                 </x-filament::button>
                                 </div>
                         </form>
@@ -321,10 +321,10 @@
                         <div class="p-6 space-y-6">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                    {{ __('Error') }}
+                                    {{ __('filament-user-profile::messages.Error') }}
                                 </h3>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __('Unable to determine account type. Please refresh the page and try again.') }}
+                                    {{ __('filament-user-profile::messages.Unable to determine account type. Please refresh the page and try again.') }}
                                 </p>
                             </div>
                             <div class="flex justify-end">
@@ -333,7 +333,7 @@
                                     color="gray"
                                     @click="showModal = false; $wire.closeDeleteModal()"
                                 >
-                                    {{ __('Close') }}
+                                    {{ __('filament-user-profile::messages.Close') }}
                                 </x-filament::button>
                             </div>
                         </div>

@@ -96,7 +96,7 @@
                     <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style="width: 1rem; height: 1rem;">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
-                    <span>{{ __('Click on a timezone region to select it') }}</span>
+                    <span>{{ __('filament-user-profile::messages.Click on a timezone region to select it') }}</span>
                 </div>
             </div>
             
@@ -105,7 +105,7 @@
                     <div class="flex items-center justify-center h-full text-gray-500">
                         <div class="text-center">
                             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
-                            <div>Loading map...</div>
+                            <div>{{ __('Loading map...') }}</div>
                         </div>
                     </div>
                 </div>

@@ -90,6 +90,11 @@ class Profile extends Page implements HasForms
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-user-profile::messages.Profile');
+    }
+
     // Navigation is enabled for the settings panel
 
     // This page is in a non-tenant panel, so isTenanted() is not needed
@@ -148,29 +153,29 @@ class Profile extends Page implements HasForms
 
     public function getHeading(): string
     {
-        return __('Profile');
+        return __('filament-user-profile::messages.Profile');
     }
 
     public function getSubheading(): ?string
     {
-        return __('Update your name and email address');
+        return __('filament-user-profile::messages.Update your name and email address');
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make(__('Profile Information'))
+                Section::make(__('filament-user-profile::messages.Profile Information'))
                     ->schema([
                         TextInput::make('name')
-                            ->label(__('Name'))
+                            ->label(__('filament-user-profile::messages.Name'))
                             ->required()
                             ->maxLength(255)
                             ->autofocus()
                             ->autocomplete('name'),
 
                         TextInput::make('email')
-                            ->label(__('Email'))
+                            ->label(__('filament-user-profile::messages.Email'))
                             ->email()
                             ->required()
                             ->maxLength(255)
@@ -185,7 +190,7 @@ class Profile extends Page implements HasForms
                             ->helperText(function () {
                                 $user = Auth::user();
                                 if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
-                                    return __('Your email address is unverified.');
+                                    return __('filament-user-profile::messages.Your email address is unverified.');
                                 }
 
                                 return null;
@@ -482,7 +487,7 @@ class Profile extends Page implements HasForms
         // This handles cases where the view incorrectly showed OAuth UI
         if (! is_null($user->password) && $user->password !== '') {
             throw ValidationException::withMessages([
-                'confirmDelete' => __('You have a password set. Please close this modal and use the password field to delete your account.'),
+                'confirmDelete' => __('filament-user-profile::messages.You have a password set. Please close this modal and use the password field to delete your account.'),
             ]);
         }
 
@@ -506,7 +511,7 @@ class Profile extends Page implements HasForms
             ]);
 
             throw ValidationException::withMessages([
-                'confirmDelete' => __('Unable to determine OAuth provider. Please ensure you have connected an OAuth account. If you have a password, please use the password field instead. Otherwise, please contact support.'),
+                'confirmDelete' => __('filament-user-profile::messages.Unable to determine OAuth provider. Please ensure you have connected an OAuth account. If you have a password, please use the password field instead. Otherwise, please contact support.'),
             ]);
         }
 
@@ -538,7 +543,7 @@ class Profile extends Page implements HasForms
         $intent = Session::get('delete_account_intent');
 
         if (! $intent) {
-            Session::flash('error', __('Deletion request expired or invalid.'));
+            Session::flash('error', __('filament-user-profile::messages.Deletion request expired or invalid.'));
             $this->redirect(static::getUrl());
 
             return;
@@ -547,7 +552,7 @@ class Profile extends Page implements HasForms
         // Check expiration
         if (now()->isAfter($intent['expires_at'])) {
             Session::forget('delete_account_intent');
-            Session::flash('error', __('Deletion request expired. Please try again.'));
+            Session::flash('error', __('filament-user-profile::messages.Deletion request expired. Please try again.'));
             $this->redirect(static::getUrl());
 
             return;

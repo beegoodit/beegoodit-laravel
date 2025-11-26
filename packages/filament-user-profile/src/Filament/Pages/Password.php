@@ -28,6 +28,11 @@ class Password extends Page implements HasForms
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-user-profile::messages.Update Password');
+    }
+
     // Navigation is enabled for the settings panel
 
     // This page is in a non-tenant panel, so isTenanted() is not needed
@@ -49,29 +54,29 @@ class Password extends Page implements HasForms
 
     public function getHeading(): string
     {
-        return __('Update Password');
+        return __('filament-user-profile::messages.Update Password');
     }
 
     public function getSubheading(): ?string
     {
-        return __('Ensure your account is using a strong password');
+        return __('filament-user-profile::messages.Ensure your account is using a strong password');
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make(__('Update Password'))
+                Section::make(__('filament-user-profile::messages.Update Password'))
                     ->schema([
                         TextInput::make('current_password')
-                            ->label(__('Current Password'))
+                            ->label(__('filament-user-profile::messages.Current Password'))
                             ->password()
                             ->required()
                             ->autocomplete('current-password')
                             ->rules(['current_password']),
 
                         TextInput::make('password')
-                            ->label(__('New Password'))
+                            ->label(__('filament-user-profile::messages.New Password'))
                             ->password()
                             ->revealable()
                             ->required()
@@ -79,7 +84,7 @@ class Password extends Page implements HasForms
                             ->rules([PasswordRule::defaults(), 'confirmed']),
 
                         TextInput::make('password_confirmation')
-                            ->label(__('Confirm Password'))
+                            ->label(__('filament-user-profile::messages.Confirm Password'))
                             ->password()
                             ->revealable()
                             ->required()
@@ -100,8 +105,8 @@ class Password extends Page implements HasForms
 
         Notification::make()
             ->success()
-            ->title(__('Password updated'))
-            ->body(__('Your password has been updated successfully.'))
+            ->title(__('filament-user-profile::messages.Password updated'))
+            ->body(__('filament-user-profile::messages.Your password has been updated successfully.'))
             ->send();
     }
 }

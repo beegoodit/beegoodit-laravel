@@ -36,11 +36,11 @@ class UserProfilePanelProvider extends PanelProvider
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber,
             ])
-            ->brandName('User Settings')
+            ->brandName(fn () => __('filament-user-profile::messages.User Settings'))
             ->pages($this->getPages())
             ->navigationItems([
                 NavigationItem::make()
-                    ->label(__('Back to Portal'))
+                    ->label(fn () => __('filament-user-profile::messages.Back to Portal'))
                     ->icon('heroicon-o-arrow-left')
                     ->url(fn () => $this->getPortalUrl())
                     ->sort(-1), // Show at the top
@@ -55,6 +55,7 @@ class UserProfilePanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                $this->getSetLocaleMiddleware(),
             ])
             ->authMiddleware([
                 Authenticate::class,
@@ -138,5 +139,25 @@ class UserProfilePanelProvider extends PanelProvider
 
         // Check if required database columns exist
         return UserProfileHelper::hasTwoFactorColumns();
+    }
+
+    /**
+     * Get the SetLocale middleware class.
+     * Tries to use the app's SetLocale middleware first, falls back to the package's.
+     */
+    protected function getSetLocaleMiddleware(): string
+    {
+        // Try to use app's SetLocale middleware first
+        if (class_exists(\App\Http\Middleware\SetLocale::class)) {
+            return \App\Http\Middleware\SetLocale::class;
+        }
+
+        // Fall back to package's SetLocale middleware
+        if (class_exists(\BeeGoodIT\FilamentI18n\Middleware\SetLocale::class)) {
+            return \BeeGoodIT\FilamentI18n\Middleware\SetLocale::class;
+        }
+
+        // If neither exists, return a no-op middleware (shouldn't happen in practice)
+        return \Illuminate\Routing\Middleware\SubstituteBindings::class;
     }
 }

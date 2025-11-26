@@ -4,7 +4,7 @@
 
         <div class="flex items-center gap-4">
             <x-filament::button type="submit">
-                {{ __('Save') }}
+                {{ __('filament-user-profile::messages.Save') }}
             </x-filament::button>
         </div>
     </form>

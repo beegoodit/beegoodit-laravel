@@ -19,6 +19,14 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         // Load views
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-user-profile');
 
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-user-profile');
+
+        // Publish translations
+        $this->publishes([
+            __DIR__.'/../resources/lang' => lang_path('vendor/filament-user-profile'),
+        ], 'filament-user-profile-lang');
+
         // Publish timezone GeoJSON data
         $this->publishes([
             __DIR__.'/../public/data/timezones-tiny.geojson' => public_path('data/timezones-tiny.geojson'),

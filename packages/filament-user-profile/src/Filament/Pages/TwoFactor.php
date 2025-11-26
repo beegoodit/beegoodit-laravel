@@ -58,6 +58,11 @@ class TwoFactor extends Page implements HasForms
 
     protected static ?int $navigationSort = 4;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-user-profile::messages.Two-Factor Authentication');
+    }
+
     // This page is in a non-tenant panel, so isTenanted() is not needed
 
     public static function getSlug(?Panel $panel = null): string
@@ -77,12 +82,12 @@ class TwoFactor extends Page implements HasForms
 
     public function getHeading(): string
     {
-        return __('Two-Factor Authentication');
+        return __('filament-user-profile::messages.Two-Factor Authentication');
     }
 
     public function getSubheading(): ?string
     {
-        return __('Add additional security to your account');
+        return __('filament-user-profile::messages.Add additional security to your account');
     }
 
     /**
@@ -96,8 +101,8 @@ class TwoFactor extends Page implements HasForms
         if (! UserProfileHelper::hasTwoFactorColumns()) {
             Notification::make()
                 ->danger()
-                ->title(__('Database Migration Required'))
-                ->body(__('The two-factor authentication columns are missing from the users table. Please run: php artisan vendor:publish --tag=filament-user-profile-migrations && php artisan migrate'))
+                ->title(__('filament-user-profile::messages.Database Migration Required'))
+                ->body(__('filament-user-profile::messages.The two-factor authentication columns are missing from the users table. Please run: php artisan vendor:publish --tag=filament-user-profile-migrations && php artisan migrate'))
                 ->persistent()
                 ->send();
 
@@ -194,15 +199,15 @@ class TwoFactor extends Page implements HasForms
                 throw new Exception('Two factor secret not found');
             }
         } catch (Exception $e) {
-            $this->addError('setupData', __('Failed to fetch setup data.'));
+            $this->addError('setupData', __('filament-user-profile::messages.Failed to fetch setup data.'));
 
             $this->qrCodeSvg = '';
             $this->manualSetupKey = '';
 
             Notification::make()
                 ->danger()
-                ->title(__('Error'))
-                ->body(__('Failed to load two-factor authentication setup data. Please try again.'))
+                ->title(__('filament-user-profile::messages.Error'))
+                ->body(__('filament-user-profile::messages.Failed to load two-factor authentication setup data. Please try again.'))
                 ->send();
         }
     }
@@ -240,16 +245,16 @@ class TwoFactor extends Page implements HasForms
 
             Notification::make()
                 ->success()
-                ->title(__('Two-Factor Authentication Enabled'))
-                ->body(__('Two-factor authentication has been successfully enabled for your account.'))
+                ->title(__('filament-user-profile::messages.Two-Factor Authentication Enabled'))
+                ->body(__('filament-user-profile::messages.Two-factor authentication has been successfully enabled for your account.'))
                 ->send();
         } catch (Exception $e) {
-            $this->addError('code', __('Invalid verification code. Please try again.'));
+            $this->addError('code', __('filament-user-profile::messages.Invalid verification code. Please try again.'));
 
             Notification::make()
                 ->danger()
-                ->title(__('Verification Failed'))
-                ->body(__('The verification code you entered is invalid. Please try again.'))
+                ->title(__('filament-user-profile::messages.Verification Failed'))
+                ->body(__('filament-user-profile::messages.The verification code you entered is invalid. Please try again.'))
                 ->send();
         }
     }
@@ -278,8 +283,8 @@ class TwoFactor extends Page implements HasForms
 
         Notification::make()
             ->success()
-            ->title(__('Two-Factor Authentication Disabled'))
-            ->body(__('Two-factor authentication has been successfully disabled for your account.'))
+            ->title(__('filament-user-profile::messages.Two-Factor Authentication Disabled'))
+            ->body(__('filament-user-profile::messages.Two-factor authentication has been successfully disabled for your account.'))
             ->send();
     }
 
@@ -311,24 +316,24 @@ class TwoFactor extends Page implements HasForms
     {
         if ($this->twoFactorEnabled) {
             return [
-                'title' => __('Two-Factor Authentication Enabled'),
-                'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('Close'),
+                'title' => __('filament-user-profile::messages.Two-Factor Authentication Enabled'),
+                'description' => __('filament-user-profile::messages.Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
+                'buttonText' => __('filament-user-profile::messages.Close'),
             ];
         }
 
         if ($this->showVerificationStep) {
             return [
-                'title' => __('Verify Authentication Code'),
-                'description' => __('Enter the 6-digit code from your authenticator app.'),
-                'buttonText' => __('Continue'),
+                'title' => __('filament-user-profile::messages.Verify Authentication Code'),
+                'description' => __('filament-user-profile::messages.Enter the 6-digit code from your authenticator app.'),
+                'buttonText' => __('filament-user-profile::messages.Continue'),
             ];
         }
 
         return [
-            'title' => __('Enable Two-Factor Authentication'),
-            'description' => __('To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
-            'buttonText' => __('Continue'),
+            'title' => __('filament-user-profile::messages.Enable Two-Factor Authentication'),
+            'description' => __('filament-user-profile::messages.To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
+            'buttonText' => __('filament-user-profile::messages.Continue'),
         ];
     }
 
@@ -343,8 +348,8 @@ class TwoFactor extends Page implements HasForms
 
         Notification::make()
             ->success()
-            ->title(__('Recovery Codes Regenerated'))
-            ->body(__('New recovery codes have been generated. Please save them in a secure location.'))
+            ->title(__('filament-user-profile::messages.Recovery Codes Regenerated'))
+            ->body(__('filament-user-profile::messages.New recovery codes have been generated. Please save them in a secure location.'))
             ->send();
     }
 
@@ -360,7 +365,7 @@ class TwoFactor extends Page implements HasForms
                 $decrypted = decrypt($user->two_factor_recovery_codes);
                 $this->recoveryCodes = json_decode($decrypted, true) ?: [];
             } catch (Exception $e) {
-                $this->addError('recoveryCodes', __('Failed to load recovery codes'));
+                $this->addError('recoveryCodes', __('filament-user-profile::messages.Failed to load recovery codes'));
 
                 $this->recoveryCodes = [];
             }

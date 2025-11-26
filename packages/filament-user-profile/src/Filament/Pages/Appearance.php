@@ -8,6 +8,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Schema;
@@ -41,6 +42,11 @@ class Appearance extends Page implements HasForms
 
     protected static ?int $navigationSort = 3;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament-user-profile::messages.Appearance Settings');
+    }
+
     // Navigation is enabled for the settings panel
 
     // This page is in a non-tenant panel, so isTenanted() is not needed
@@ -62,12 +68,12 @@ class Appearance extends Page implements HasForms
 
     public function getHeading(): string
     {
-        return __('Appearance Settings');
+        return __('filament-user-profile::messages.Appearance Settings');
     }
 
     public function getSubheading(): ?string
     {
-        return __('Customize your interface appearance and localization preferences');
+        return __('filament-user-profile::messages.Customize your interface appearance and localization preferences');
     }
 
     public function mount(): void
@@ -99,23 +105,23 @@ class Appearance extends Page implements HasForms
     {
         // Store component references for later use
         $this->localeField = Radio::make('locale')
-            ->label(__('Language'))
+            ->label(__('filament-user-profile::messages.Language'))
             ->options([
-                'en' => __('English'),
-                'de' => __('Deutsch'),
+                'en' => __('filament-user-profile::messages.English'),
+                'de' => __('filament-user-profile::messages.Deutsch'),
             ])
             ->inline()
             ->required();
 
         $this->timezoneField = TimezonePicker::make('timezone')
-            ->label(__('Timezone'))
+            ->label(__('filament-user-profile::messages.Timezone'))
             ->required();
 
         $this->timeFormatField = Radio::make('time_format')
-            ->label(__('Time Format'))
+            ->label(__('filament-user-profile::messages.Time Format'))
             ->options([
-                '12h' => __('12-hour (3:45 PM)'),
-                '24h' => __('24-hour (15:45)'),
+                '12h' => __('filament-user-profile::messages.12-hour (3:45 PM)'),
+                '24h' => __('filament-user-profile::messages.24-hour (15:45)'),
             ])
             ->inline()
             ->required();
@@ -173,5 +179,10 @@ class Appearance extends Page implements HasForms
         Session::flash('status', 'appearance-updated');
 
         $this->dispatch('appearance-updated');
+
+        Notification::make()
+            ->success()
+            ->title(__('filament-user-profile::messages.Settings saved'))
+            ->send();
     }
 }

@@ -3,10 +3,10 @@
         {{-- Theme Selection (Client-side, localStorage) --}}
         <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-                {{ __('Theme') }}
+                {{ __('filament-user-profile::messages.Theme') }}
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                {{ __('Choose your preferred color scheme. This setting is saved in your browser.') }}
+                {{ __('filament-user-profile::messages.Choose your preferred color scheme. This setting is saved in your browser.') }}
             </p>
             @include('filament-user-profile::components.theme-toggle')
         </div>
@@ -14,10 +14,10 @@
         {{-- Language Selection (Database-backed) --}}
         <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-                {{ __('Language') }}
+                {{ __('filament-user-profile::messages.Language') }}
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                {{ __('Choose your preferred language.') }}
+                {{ __('filament-user-profile::messages.Choose your preferred language.') }}
             </p>
             <div>
                 @php
@@ -32,10 +32,10 @@
         {{-- Timezone Selection (Database-backed) --}}
         <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-                {{ __('Timezone') }}
+                {{ __('filament-user-profile::messages.Timezone') }}
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                {{ __('Select your timezone.') }}
+                {{ __('filament-user-profile::messages.Select your timezone.') }}
             </p>
             <div>
                 @php
@@ -50,10 +50,10 @@
         {{-- Time Format Selection (Database-backed) --}}
         <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-                {{ __('Time Format') }}
+                {{ __('filament-user-profile::messages.Time Format') }}
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                {{ __('Choose how time is displayed.') }}
+                {{ __('filament-user-profile::messages.Choose how time is displayed.') }}
             </p>
             <div>
                 @php
@@ -69,7 +69,7 @@
         <form wire:submit="submit">
             <div class="flex items-center gap-4">
                 <x-filament::button type="submit">
-                    {{ __('Save') }}
+                    {{ __('filament-user-profile::messages.Save') }}
                 </x-filament::button>
             </div>
         </form>

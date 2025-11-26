@@ -104,7 +104,30 @@ php artisan migrate
 
 If the columns are missing, a warning will be logged and the page will be hidden from navigation.
 
-### 4. Register Pages in Your Panel Provider
+### 4. Translations (Optional)
+
+The package includes translations for English and German. Translations are automatically loaded and available without any setup.
+
+If you want to customize translations, you can publish them:
+
+```bash
+php artisan vendor:publish --tag=filament-user-profile-lang
+```
+
+This will copy the translation files to `lang/vendor/filament-user-profile/` where you can customize them.
+
+**Note**: The package uses namespaced translations (`filament-user-profile::messages.*`) for package-specific strings. Generic keys like `Save` use the standard `__('Save')` function, allowing you to override them in your application's translation files.
+
+### 5. Locale Middleware
+
+The settings panel (`/settings`) automatically includes locale middleware to apply the user's language preference. The package will:
+
+1. First try to use your application's `App\Http\Middleware\SetLocale` middleware (if it exists)
+2. Fall back to `BeeGoodIT\FilamentI18n\Middleware\SetLocale` from the `beegoodit/filament-i18n` package
+
+This ensures the settings pages are displayed in the user's selected language.
+
+### 6. Register Pages in Your Panel Provider
 
 Add the profile pages to your Filament panel:
 
@@ -130,7 +153,7 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-### 5. URLs
+### 7. URLs
 
 Pages will be automatically available at:
 - `/portal/profile` (or your panel path + `/profile`)

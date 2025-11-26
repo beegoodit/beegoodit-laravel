@@ -4,12 +4,12 @@
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
                     <x-filament::badge color="success">
-                        {{ __('Enabled') }}
+                        {{ __('filament-user-profile::messages.Enabled') }}
                     </x-filament::badge>
                 </div>
 
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.') }}
+                    {{ __('filament-user-profile::messages.With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.') }}
                 </p>
 
                 {{-- Recovery Codes Section --}}
@@ -23,10 +23,10 @@
                                 icon="heroicon-o-lock-closed"
                                 class="h-4 w-4"
                             />
-                            <h3 class="text-lg font-semibold">{{ __('2FA Recovery Codes') }}</h3>
+                            <h3 class="text-lg font-semibold">{{ __('filament-user-profile::messages.2FA Recovery Codes') }}</h3>
                         </div>
                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ __('Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.') }}
+                            {{ __('filament-user-profile::messages.Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.') }}
                         </p>
                     </div>
 
@@ -39,7 +39,7 @@
                                 aria-expanded="false"
                                 aria-controls="recovery-codes-section"
                             >
-                                {{ __('View Recovery Codes') }}
+                                {{ __('filament-user-profile::messages.View Recovery Codes') }}
                             </x-filament::button>
 
                             <x-filament::button
@@ -49,7 +49,7 @@
                                 aria-expanded="true"
                                 aria-controls="recovery-codes-section"
                             >
-                                {{ __('Hide Recovery Codes') }}
+                                {{ __('filament-user-profile::messages.Hide Recovery Codes') }}
                             </x-filament::button>
 
                             @if (filled($recoveryCodes))
@@ -58,7 +58,7 @@
                                     icon="heroicon-o-arrow-path"
                                     wire:click="regenerateRecoveryCodes"
                                 >
-                                    {{ __('Regenerate Codes') }}
+                                    {{ __('filament-user-profile::messages.Regenerate Codes') }}
                                 </x-filament::button>
                             @endif
                         </div>
@@ -94,7 +94,7 @@
                                         @endforeach
                                     </div>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">
-                                        {{ __('Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate Codes above.') }}
+                                        {{ __('filament-user-profile::messages.Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate Codes above.') }}
                                     </p>
                                 @endif
                             </div>
@@ -108,7 +108,7 @@
                         icon="heroicon-o-shield-exclamation"
                         wire:click="disable"
                     >
-                        {{ __('Disable 2FA') }}
+                        {{ __('filament-user-profile::messages.Disable 2FA') }}
                     </x-filament::button>
                 </div>
             </div>
@@ -116,19 +116,19 @@
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
                     <x-filament::badge color="danger">
-                        {{ __('Disabled') }}
+                        {{ __('filament-user-profile::messages.Disabled') }}
                     </x-filament::badge>
                 </div>
 
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.') }}
+                    {{ __('filament-user-profile::messages.When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.') }}
                 </p>
 
                 <x-filament::button
                     icon="heroicon-o-shield-check"
                     wire:click="enable"
                 >
-                    {{ __('Enable 2FA') }}
+                    {{ __('filament-user-profile::messages.Enable 2FA') }}
                 </x-filament::button>
             </div>
         @endif
@@ -166,7 +166,7 @@
                     type="button"
                     @click="showModal = false; $wire.closeModal()"
                     class="absolute top-4 right-4 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 transition-all"
-                    aria-label="{{ __('Close') }}"
+                    aria-label="{{ __('filament-user-profile::messages.Close') }}"
                 >
                     <x-filament::icon icon="heroicon-o-x-mark" class="h-5 w-5" />
                 </button>
@@ -232,7 +232,7 @@
                                     class="flex-1"
                                     wire:click="resetVerification"
                                 >
-                                    {{ __('Back') }}
+                                    {{ __('filament-user-profile::messages.Back') }}
                                 </x-filament::button>
 
                                 <x-filament::button
@@ -240,7 +240,7 @@
                                     wire:click="confirmTwoFactor"
                                     x-bind:disabled="$wire.code.length < 6"
                                 >
-                                    {{ __('Confirm') }}
+                                    {{ __('filament-user-profile::messages.Confirm') }}
                                 </x-filament::button>
                             </div>
                         </div>
@@ -280,7 +280,7 @@
                             <div class="relative flex items-center justify-center w-full">
                                 <div class="absolute inset-0 w-full h-px top-1/2 bg-gray-200 dark:bg-gray-600"></div>
                                 <span class="relative px-2 text-sm bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400">
-                                    {{ __('or, enter the code manually') }}
+                                    {{ __('filament-user-profile::messages.or, enter the code manually') }}
                                 </span>
                             </div>
 
