@@ -1,0 +1,31 @@
+{
+    "name": "beegoodit/filament-knowledge-base",
+    "description": "Standardized Knowledge Base for BeeGoodIT Filament Apps",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "BeeGoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^4.0",
+        "guava/filament-knowledge-base": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeeGoodIT\\FilamentKnowledgeBase\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeeGoodIT\\FilamentKnowledgeBase\\FilamentKnowledgeBaseServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
