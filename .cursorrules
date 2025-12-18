@@ -1,0 +1,40 @@
+# GOLDEN RULE: Show, Don't Tell
+
+When you finish implementing:
+1. Run the code
+2. Show me the terminal output
+3. That's the only proof of "working code"
+
+No output = No working code = Not done
+
+# Listen Before Acting
+
+Understand the requirement before writing code.
+
+# Read the Codebase First
+
+Verify what exists before using it.
+
+# Use Existing Patterns
+
+Before implementing any feature or component:
+1. Search the codebase for existing implementations that solve the same or similar problem
+2. Use the patterns already established in the codebase
+3. The codebase patterns take precedence over framework defaults or documentation
+4. Only create new patterns if no suitable example exists
+
+# Read the Official Documentation
+
+Consult official docs for the tools you're using.
+
+# Separation of Concerns
+
+Don't mix different responsibilities.
+
+# Documentation: Less is More
+
+Focus on essentials, not everything.
+
+# Code Must Work
+
+Test before delivery.
