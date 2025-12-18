@@ -20,6 +20,7 @@
             "BeeGoodIT\\FilamentOAuth\\": "packages/filament-oauth/src/",
             "BeeGoodIT\\FilamentTenancy\\": "packages/filament-tenancy/src/",
             "BeeGoodIT\\FilamentUserProfile\\": "packages/filament-user-profile/src/",
+            "BeeGoodIT\\FilamentKnowledgeBase\\": "packages/filament-knowledge-base/src/",
             "BeeGoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/"
         }
     },
@@ -48,4 +49,3 @@
     "minimum-stability": "dev",
     "prefer-stable": true
 }
-
