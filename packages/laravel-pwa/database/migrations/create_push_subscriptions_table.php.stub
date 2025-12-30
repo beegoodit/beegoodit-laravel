@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('push_subscriptions', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable()->index();
+            $table->text('endpoint')->unique();
+            $table->string('public_key');
+            $table->string('auth_token');
+            $table->string('content_encoding')->default('aesgcm');
+            $table->timestamps();
+
+            // Foreign key is optional - apps can customize user model
+            // $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('push_subscriptions');
+    }
+};
