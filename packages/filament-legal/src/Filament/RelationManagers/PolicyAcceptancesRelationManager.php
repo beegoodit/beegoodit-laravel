@@ -1,0 +1,67 @@
+<?php
+
+namespace BeeGoodIT\FilamentLegal\Filament\RelationManagers;
+
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
+class PolicyAcceptancesRelationManager extends RelationManager
+{
+    protected static string $relationship = 'acceptances';
+
+    protected static ?string $recordTitleAttribute = 'ip_address';
+
+    public static function getTitle(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): string
+    {
+        return __('filament-legal::messages.Policy Acceptances');
+    }
+
+    protected static \BackedEnum|string|null $icon = 'heroicon-o-shield-check';
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('user.name')
+                    ->label(__('filament-legal::messages.User'))
+                    ->searchable()
+                    ->sortable()
+                    ->hidden(fn($livewire) => $livewire->getOwnerRecord() instanceof \App\Models\User),
+                TextColumn::make('policy.type')
+                    ->label(__('filament-legal::messages.Policy Type'))
+                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->sortable()
+                    ->hidden(fn($livewire) => $livewire->getOwnerRecord() instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy),
+                TextColumn::make('policy.version')
+                    ->label(__('filament-legal::messages.Version'))
+                    ->sortable()
+                    ->hidden(fn($livewire) => $livewire->getOwnerRecord() instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy),
+                TextColumn::make('ip_address')
+                    ->label(__('filament-legal::messages.IP Address'))
+                    ->searchable(),
+                TextColumn::make('accepted_at')
+                    ->label(__('filament-legal::messages.Accepted At'))
+                    ->dateTime()
+                    ->sortable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->headerActions([
+                //
+            ])
+            ->actions([
+                \Filament\Actions\ViewAction::make()
+                    ->url(
+                        fn($record) => $this->getOwnerRecord() instanceof \App\Models\User
+                        ? \BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource::getUrl('edit', ['record' => $record->legal_policy_id])
+                        : route('filament.admin.resources.users.edit', ['record' => $record->user_id])
+                    ),
+            ])
+            ->bulkActions([
+                //
+            ]);
+    }
+}

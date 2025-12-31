@@ -1,0 +1,45 @@
+PHPUnit Started (PHPUnit 12.3.15 using PHP 8.4.1 (cli) on Linux)
+Test Runner Configured
+Bootstrap Finished (/home/robo/projects/composer/beegoodit-laravel/packages/filament-legal/vendor/autoload.php)
+Event Facade Sealed
+Test Suite Loaded (2 tests)
+Test Runner Started
+Test Suite Sorted
+Test Runner Execution Started (2 tests)
+Test Suite Started (/home/robo/projects/composer/beegoodit-laravel/packages/filament-legal/phpunit.xml, 2 tests)
+Test Suite Started (Feature, 2 tests)
+Test Suite Started (BeeGoodIT\FilamentLegal\Tests\LegalGateTest, 2 tests)
+Before First Test Method Called (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::setUpBeforeClass)
+Before First Test Method Finished:
+- BeeGoodIT\FilamentLegal\Tests\LegalGateTest::setUpBeforeClass
+Test Preparation Started (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_are_redirected_to_legal_acceptance_page_if_not_accepted)
+Before Test Method Called (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::setUp)
+Before Test Method Finished:
+- BeeGoodIT\FilamentLegal\Tests\LegalGateTest::setUp
+Test Prepared (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_are_redirected_to_legal_acceptance_page_if_not_accepted)
+Test Errored (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_are_redirected_to_legal_acceptance_page_if_not_accepted)
+Unsupported cipher or incorrect key length. Supported ciphers are: aes-128-cbc, aes-256-cbc, aes-128-gcm, aes-256-gcm.
+After Test Method Called (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::tearDown)
+After Test Method Finished:
+- BeeGoodIT\FilamentLegal\Tests\LegalGateTest::tearDown
+Test Finished (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_are_redirected_to_legal_acceptance_page_if_not_accepted)
+Test Preparation Started (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_can_access_dashboard_after_accepting_policy)
+Before Test Method Called (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::setUp)
+Before Test Method Finished:
+- BeeGoodIT\FilamentLegal\Tests\LegalGateTest::setUp
+Test Prepared (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_can_access_dashboard_after_accepting_policy)
+Test Errored (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_can_access_dashboard_after_accepting_policy)
+Unsupported cipher or incorrect key length. Supported ciphers are: aes-128-cbc, aes-256-cbc, aes-128-gcm, aes-256-gcm.
+After Test Method Called (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::tearDown)
+After Test Method Finished:
+- BeeGoodIT\FilamentLegal\Tests\LegalGateTest::tearDown
+Test Finished (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::test_users_can_access_dashboard_after_accepting_policy)
+After Last Test Method Called (BeeGoodIT\FilamentLegal\Tests\LegalGateTest::tearDownAfterClass)
+After Last Test Method Finished:
+- BeeGoodIT\FilamentLegal\Tests\LegalGateTest::tearDownAfterClass
+Test Suite Finished (BeeGoodIT\FilamentLegal\Tests\LegalGateTest, 2 tests)
+Test Suite Finished (Feature, 2 tests)
+Test Suite Finished (/home/robo/projects/composer/beegoodit-laravel/packages/filament-legal/phpunit.xml, 2 tests)
+Test Runner Execution Finished
+Test Runner Finished
+PHPUnit Finished (Shell Exit Code: 2)
