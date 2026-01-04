@@ -28,10 +28,14 @@ If your package views are rendered through Filament panels, you need to:
 @source '../../../../vendor/beegoodit/filament-user-profile/resources/views/**/*.blade.php';
 ```
 
-**Note**: If you're using a local path repository, also add the absolute path:
+**Note**: If you're using a local path repository (monorepo), you must also add the path to the original package directory:
 ```css
+/* Path from resources/css/filament/X/theme.css to monorepo package views */
 @source '../../../../../../../composer/beegoodit-laravel/packages/filament-user-profile/resources/views/**/*.blade.php';
 ```
+> [!TIP]
+> Use a wildcard to cover all beegoodit packages if you have many:
+> `@source '../../../../../../../composer/beegoodit-laravel/packages/*/resources/views/**/*.blade.php';`
 
 2. **Register the theme in your panel provider**:
 
@@ -238,6 +242,24 @@ php artisan vendor:publish --tag=filament-user-profile-timezone-data
 This will copy the GeoJSON file to `public/data/timezones-tiny.geojson`.
 
 **Note**: The timezone picker will fall back to a simple select dropdown on mobile devices or if the GeoJSON file is not available.
+
+## Troubleshooting
+
+### Timezone Map not visible
+1. **Screen Width**: The map is hidden on small screens (`md:block`). Ensure your browser window is at least 768px wide.
+2. **Tailwind Sources**: Check your compiled CSS. If `md:block` exists but the map is still hidden, ensure the `@source` paths in your theme CSS correctly point to the package's `.blade.php` files.
+3. **GeoJSON Data**: Open the browser console (F12). If you see `Failed to load resource: timezones-tiny.geojson`, ensure you have published the data (`php artisan vendor:publish --tag=filament-user-profile-timezone-data`).
+4. **JavaScript Errors**: If you see `L is not defined`, Leaflet.js failed to load from the CDN.
+
+### Page not found or translations missing
+If you're using a monorepo with path repositories, sub-dependencies like `beegoodit/filament-i18n` might not be automatically discovered.
+**Fix**: Explicitly add the sub-dependency to your root `composer.json`:
+```json
+"require": {
+    "beegoodit/filament-user-profile": "@dev",
+    "beegoodit/filament-i18n": "@dev"
+}
+```
 
 ## License
 

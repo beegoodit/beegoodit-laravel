@@ -2,6 +2,7 @@
 
 namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
 
+use BeeGoodIT\FilamentI18n\Facades\FilamentI18n;
 use BeeGoodIT\FilamentUserProfile\Filament\Forms\Components\TimezonePicker;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Radio;
@@ -106,10 +107,7 @@ class Appearance extends Page implements HasForms
         // Store component references for later use
         $this->localeField = Radio::make('locale')
             ->label(__('filament-user-profile::messages.Language'))
-            ->options([
-                'en' => __('filament-user-profile::messages.English'),
-                'de' => __('filament-user-profile::messages.Deutsch'),
-            ])
+            ->options(FilamentI18n::localeOptions())
             ->inline()
             ->required();
 
@@ -163,7 +161,7 @@ class Appearance extends Page implements HasForms
         $data = $this->form->getState();
         $user = Auth::user();
 
-        if (! $user instanceof Authenticatable) {
+        if (!$user instanceof Authenticatable) {
             return;
         }
 

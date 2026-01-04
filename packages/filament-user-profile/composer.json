@@ -3,7 +3,14 @@
     "description": "User profile settings pages for Filament applications",
     "type": "library",
     "license": "MIT",
-    "keywords": ["laravel", "filament", "user", "profile", "settings", "beegoodit"],
+    "keywords": [
+        "laravel",
+        "filament",
+        "user",
+        "profile",
+        "settings",
+        "beegoodit"
+    ],
     "authors": [
         {
             "name": "BeeGoodIT",
@@ -12,6 +19,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "beegoodit/filament-i18n": "@dev",
         "illuminate/database": "^11.0|^12.0",
         "filament/filament": "^4.0"
     },
@@ -45,4 +53,3 @@
     "minimum-stability": "dev",
     "prefer-stable": true
 }
-
