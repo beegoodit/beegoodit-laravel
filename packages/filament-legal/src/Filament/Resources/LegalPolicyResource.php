@@ -30,6 +30,11 @@ class LegalPolicyResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Legal';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament-legal::messages.Legal');
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('filament-legal::messages.Legal Policies');

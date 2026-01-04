@@ -26,4 +26,5 @@ return [
     'Content (DE)' => 'Contenido (DE)',
     'Content (EN)' => 'Contenido (EN)',
     'Content (ES)' => 'Contenido (ES)',
+    'Legal' => 'Legal',
 ];
