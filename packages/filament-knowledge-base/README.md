@@ -32,7 +32,13 @@ return [
 ];
 ```
 
-### 3. Configure Your Theme
+### 3. Install NPM Dependencies
+
+```bash
+npm install @tailwindcss/typography
+```
+
+### 4. Configure Your Theme
 
 Add the following to your Filament theme CSS file:
 
@@ -47,7 +53,7 @@ Then rebuild your assets:
 npm run build
 ```
 
-### 4. Integrate with Other Panels (Optional)
+### 5. Integrate with Other Panels (Optional)
 
 To provide access to the Knowledge Base from another panel (e.g., `/portal`):
 
@@ -64,6 +70,46 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+## Locale Support
+
+### SetLocale Middleware (Required)
+
+> [!IMPORTANT]
+> **You MUST add your `SetLocale` middleware to the KB panel** for user locale preferences to be respected.
+
+```php
+// In your KnowledgeBasePanelProvider
+->middleware([
+    // ... other middleware
+    \App\Http\Middleware\SetLocale::class,
+])
+```
+
+Without this, the KB will always use the app's default locale, ignoring user preferences.
+
+### Multi-Locale File Naming
+
+> [!CAUTION]
+> **All locales must use the SAME filename.** Only the content inside is translated.
+
+**Correct (same filename across locales):**
+```
+docs/knowledge-base/
+  en/welcome.md          # title: Welcome
+  de/welcome.md          # title: Willkommen
+  es/welcome.md          # title: Bienvenido
+```
+
+**Incorrect (different filenames):**
+```
+docs/knowledge-base/
+  en/welcome.md          # slug: welcome
+  de/willkommen.md       # slug: willkommen ❌ 404 when locale changes!
+  es/bienvenido.md       # slug: bienvenido ❌ 404 when locale changes!
+```
+
+The slug is derived from the filename. If slugs don't match, navigation breaks when switching locales.
+
 ## Documentation Structure
 
 > [!IMPORTANT]
@@ -75,8 +121,10 @@ public function panel(Panel $panel): Panel
 docs/knowledge-base/
   en/                      # ✅ REQUIRED - Fallback locale (even if your app uses 'de')
     welcome.md
-  de/                      # ✅ Your primary locale
-    willkommen.md
+    getting-started/
+      installation.md
+  de/                      # ✅ Your primary locale (same filenames!)
+    welcome.md
     getting-started/
       installation.md
 ```
@@ -102,6 +150,17 @@ This error occurs when:
 3. **Missing theme configuration** - Add the `@source` paths to your theme.css
 
 **Fix:** Run `php artisan kb:setup --locale=YOUR_LOCALE` - this automatically creates both your locale and the fallback locale.
+
+### 404 on Locale Switch
+
+If pages show 404 when switching locales, check that **all locale folders have files with identical names**. The slug must match across locales.
+
+### Cache Issues
+
+After adding or modifying documentation files:
+```bash
+php artisan cache:clear
+```
 
 ### Validation
 
