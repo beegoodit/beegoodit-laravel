@@ -36,13 +36,13 @@ class UserProfilePanelProvider extends PanelProvider
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber,
             ])
-            ->brandName(fn () => __('filament-user-profile::messages.User Settings'))
+            ->brandName(fn() => __('filament-user-profile::messages.User Settings'))
             ->pages($this->getPages())
             ->navigationItems([
                 NavigationItem::make()
-                    ->label(fn () => __('filament-user-profile::messages.Back to Portal'))
+                    ->label(fn() => __('filament-user-profile::messages.Back to Portal'))
                     ->icon('heroicon-o-arrow-left')
-                    ->url(fn () => $this->getPortalUrl())
+                    ->url(fn() => $this->getPortalUrl())
                     ->sort(-1), // Show at the top
             ])
             ->middleware([
@@ -59,6 +59,7 @@ class UserProfilePanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                \BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class,
             ])
             ->viteTheme('resources/css/filament/portal/theme.css');
     }
@@ -74,13 +75,13 @@ class UserProfilePanelProvider extends PanelProvider
     {
         $portalPanel = Filament::getPanel('portal');
 
-        if (! $portalPanel) {
+        if (!$portalPanel) {
             // Fallback if portal panel doesn't exist
             return '/portal';
         }
 
         // If portal doesn't have tenancy, just return the base URL
-        if (! $portalPanel->hasTenancy()) {
+        if (!$portalPanel->hasTenancy()) {
             return $portalPanel->getUrl();
         }
 
@@ -133,7 +134,7 @@ class UserProfilePanelProvider extends PanelProvider
     protected function shouldRegisterTwoFactorPage(): bool
     {
         // Check if Fortify 2FA feature is enabled
-        if (! Features::enabled(Features::twoFactorAuthentication())) {
+        if (!Features::enabled(Features::twoFactorAuthentication())) {
             return false;
         }
 
