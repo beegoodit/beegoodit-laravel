@@ -57,10 +57,12 @@ class UserProfilePanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
                 $this->getSetLocaleMiddleware(),
             ])
-            ->authMiddleware([
-                Authenticate::class,
-                \BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class,
-            ])
+            ->authMiddleware(array_merge(
+                [Authenticate::class],
+                class_exists(\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
+                ? [\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
+                : []
+            ))
             ->viteTheme('resources/css/filament/portal/theme.css');
     }
 
