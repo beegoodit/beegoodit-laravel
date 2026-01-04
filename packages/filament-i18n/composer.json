@@ -3,7 +3,14 @@
     "description": "User internationalization preferences (locale, timezone, time format) for Filament applications",
     "type": "library",
     "license": "MIT",
-    "keywords": ["laravel", "filament", "i18n", "locale", "timezone", "beegoodit"],
+    "keywords": [
+        "laravel",
+        "filament",
+        "i18n",
+        "locale",
+        "timezone",
+        "beegoodit"
+    ],
     "authors": [
         {
             "name": "BeeGoodIT",
@@ -33,7 +40,10 @@
         "laravel": {
             "providers": [
                 "BeeGoodIT\\FilamentI18n\\FilamentI18nServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "FilamentI18n": "BeeGoodIT\\FilamentI18n\\Facades\\FilamentI18n"
+            }
         }
     },
     "scripts": {
@@ -46,4 +56,3 @@
     "minimum-stability": "dev",
     "prefer-stable": true
 }
-

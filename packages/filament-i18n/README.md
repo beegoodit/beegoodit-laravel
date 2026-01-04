@@ -8,6 +8,10 @@ User internationalization preferences for Filament applications: locale, timezon
 composer require beegoodit/filament-i18n
 ```
 
+> [!TIP]
+> **Monorepo / Local Path Repositories**:
+> If you are installing this as a dependency of another package (like `filament-user-profile`) in a monorepo setup, you may need to explicitly add it to your root `composer.json` to ensure the service provider is properly discovered.
+
 ## Setup
 
 ### 1. Publish Migrations
@@ -77,40 +81,71 @@ $user->prefers12HourFormat(); // true/false
 
 ### Filament Form Components
 
-Build your profile settings form:
+Build your profile settings form with dynamic locale options:
 
 ```php
-use Filament\Forms\Components\Select;
+use BeeGoodIT\FilamentI18n\Facades\FilamentI18n;
 use Filament\Forms\Components\Radio;
 
 Form::make()->schema([
     Radio::make('locale')
         ->label(__('filament-i18n::messages.locale'))
-        ->options([
-            'en' => 'English',
-            'de' => 'Deutsch',
-        ])
+        ->options(FilamentI18n::localeOptions()) // Returns ['en' => 'English', ...]
         ->inline(),
     
-    Select::make('timezone')
-        ->label(__('filament-i18n::messages.timezone'))
-        ->options([
-            'UTC' => 'UTC',
-            'Europe/Berlin' => 'Europe/Berlin',
-            'Europe/London' => 'Europe/London',
-            'America/New_York' => 'America/New York',
-            // ... more timezones
-        ]),
-    
-    Radio::make('time_format')
-        ->label(__('filament-i18n::messages.time_format'))
-        ->options([
-            '12h' => __('filament-i18n::messages.time_format_12h'),
-            '24h' => __('filament-i18n::messages.time_format_24h'),
-        ])
-        ->inline(),
+    // ... timezone and time_format fields
 ])
 ```
+
+### Available Locales Configuration
+
+The package provides centralized locale configuration:
+
+```php
+// config/filament-i18n.php
+return [
+    'available_locales' => ['en', 'de', 'es'], // or via APP_AVAILABLE_LOCALES env var
+    
+    'locales' => [
+        'en' => ['native' => 'English', 'flag' => '🇬🇧', 'rtl' => false],
+        'de' => ['native' => 'Deutsch', 'flag' => '🇩🇪', 'rtl' => false],
+        'es' => ['native' => 'Español', 'flag' => '🇪🇸', 'rtl' => false],
+        // ... more locales
+    ],
+];
+```
+
+Publish to customize:
+
+```bash
+php artisan vendor:publish --tag=filament-i18n-config
+```
+
+### FilamentI18n Facade
+
+```php
+use BeeGoodIT\FilamentI18n\Facades\FilamentI18n;
+
+// Get available locales
+FilamentI18n::availableLocales();       // ['en', 'de', 'es']
+
+// Get options for form select/radio (native names)
+FilamentI18n::localeOptions();          // ['en' => 'English', 'de' => 'Deutsch', ...]
+
+// Get options with flag emojis
+FilamentI18n::localeOptionsWithFlags(); // ['en' => '🇬🇧 English', ...]
+
+// Get full metadata for a locale
+FilamentI18n::localeMetadata('de');     // ['native' => 'Deutsch', 'flag' => '🇩🇪', 'rtl' => false]
+
+// Validation and utilities
+FilamentI18n::isValidLocale('de');      // true
+FilamentI18n::isRtl('ar');              // true
+FilamentI18n::nativeName('de');         // 'Deutsch'
+FilamentI18n::flag('de');               // '🇩🇪'
+```
+
+**Note**: In route files, use `config('filament-i18n.available_locales')` directly since routes load before service providers boot.
 
 ## Middleware Behavior
 
