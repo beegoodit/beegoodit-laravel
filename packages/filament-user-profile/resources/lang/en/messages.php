@@ -112,4 +112,11 @@ return [
     'Back to Portal' => 'Back to Portal',
     'Settings' => 'Settings',
     'User Settings' => 'User Settings',
+
+    // Appearance Toggle component
+    'appearance' => [
+        'light' => 'Light',
+        'dark' => 'Dark',
+        'system' => 'System',
+    ],
 ];

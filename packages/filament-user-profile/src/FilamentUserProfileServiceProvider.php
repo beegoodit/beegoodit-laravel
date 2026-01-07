@@ -7,6 +7,7 @@ use BeeGoodIT\FilamentUserProfile\Filament\UserProfilePanelProvider;
 use DutchCodingCompany\FilamentSocialite\Events\Login;
 use DutchCodingCompany\FilamentSocialite\Events\SocialiteUserConnected;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
@@ -17,24 +18,27 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load views
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-user-profile');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-user-profile');
 
         // Load translations
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-user-profile');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-user-profile');
+
+        // Register Blade components
+        Blade::componentNamespace('BeeGoodIT\\FilamentUserProfile\\View\\Components', 'filament-user-profile');
 
         // Publish translations
         $this->publishes([
-            __DIR__.'/../resources/lang' => lang_path('vendor/filament-user-profile'),
+            __DIR__ . '/../resources/lang' => lang_path('vendor/filament-user-profile'),
         ], 'filament-user-profile-lang');
 
         // Publish timezone GeoJSON data
         $this->publishes([
-            __DIR__.'/../public/data/timezones-tiny.geojson' => public_path('data/timezones-tiny.geojson'),
+            __DIR__ . '/../public/data/timezones-tiny.geojson' => public_path('data/timezones-tiny.geojson'),
         ], 'filament-user-profile-timezone-data');
 
         // Publish migrations
         $this->publishes([
-            __DIR__.'/../database/migrations/add_two_factor_columns_to_users_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_add_two_factor_columns_to_users_table.php'),
+            __DIR__ . '/../database/migrations/add_two_factor_columns_to_users_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_add_two_factor_columns_to_users_table.php'),
         ], 'filament-user-profile-migrations');
 
         // Check for 2FA columns early (this will log if missing)
@@ -60,7 +64,7 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
             $intent = Session::get('delete_account_intent');
 
             \Illuminate\Support\Facades\Log::info('Checking deletion intent', [
-                'has_intent' => ! is_null($intent),
+                'has_intent' => !is_null($intent),
                 'intent_user_id' => $intent['user_id'] ?? null,
                 'session_id' => Session::getId(),
             ]);
@@ -77,7 +81,7 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
                 ]);
 
                 // Verify deletion intent is valid
-                if ($intent['user_id'] === $user->id && ! now()->isAfter($intent['expires_at'])) {
+                if ($intent['user_id'] === $user->id && !now()->isAfter($intent['expires_at'])) {
                     // Store user ID and email before deletion (for logging)
                     $userId = $user->id;
                     $userEmail = $user->email;
