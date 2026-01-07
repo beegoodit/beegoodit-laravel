@@ -119,4 +119,11 @@ return [
         'dark' => 'Dark',
         'system' => 'System',
     ],
+
+    // Dashboard & Misc
+    'Dashboard' => 'Dashboard',
+    'Edit Profile' => 'Edit Profile',
+    'Change Password' => 'Change Password',
+    'Manage your theme and language' => 'Manage your theme and language',
+    'Manage Appearance' => 'Manage Appearance',
 ];

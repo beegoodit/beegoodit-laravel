@@ -47,7 +47,7 @@ class Password extends Page implements HasForms
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
         // Use the user-profile panel (no tenant)
-        $panel = $panel ?? 'user-profile';
+        $panel = $panel ?? 'me';
 
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }

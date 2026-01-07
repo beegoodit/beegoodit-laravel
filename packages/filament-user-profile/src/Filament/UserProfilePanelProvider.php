@@ -3,6 +3,7 @@
 namespace BeeGoodIT\FilamentUserProfile\Filament;
 
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
+use BeeGoodIT\FilamentUserProfile\Filament\Pages\Dashboard;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
@@ -29,8 +30,8 @@ class UserProfilePanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('user-profile')
-            ->path('settings')
+            ->id('me')
+            ->path('me')
             ->login(false) // No login - users access from main panel
             // No tenant() - this panel has no tenancy
             ->colors([
@@ -117,6 +118,7 @@ class UserProfilePanelProvider extends PanelProvider
     protected function getPages(): array
     {
         $pages = [
+            Dashboard::class,
             Profile::class,
             Password::class,
             Appearance::class,

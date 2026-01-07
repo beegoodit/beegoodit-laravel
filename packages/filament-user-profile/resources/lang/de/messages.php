@@ -112,4 +112,11 @@ return [
     'Back to Portal' => 'Zurück zum Portal',
     'Settings' => 'Einstellungen',
     'User Settings' => 'Benutzereinstellungen',
+
+    // Dashboard & Misc
+    'Dashboard' => 'Dashboard',
+    'Edit Profile' => 'Profil bearbeiten',
+    'Change Password' => 'Passwort ändern',
+    'Manage your theme and language' => 'Design und Sprache verwalten',
+    'Manage Appearance' => 'Erscheinungsbild verwalten',
 ];

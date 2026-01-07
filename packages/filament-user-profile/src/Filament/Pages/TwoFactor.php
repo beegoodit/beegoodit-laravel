@@ -75,7 +75,7 @@ class TwoFactor extends Page implements HasForms
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
         // Use the user-profile panel (no tenant)
-        $panel = $panel ?? 'user-profile';
+        $panel = $panel ?? 'me';
 
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
@@ -98,7 +98,7 @@ class TwoFactor extends Page implements HasForms
         abort_unless(Features::enabled(Features::twoFactorAuthentication()), Response::HTTP_FORBIDDEN);
 
         // Check if database columns exist (fallback for direct URL access)
-        if (! UserProfileHelper::hasTwoFactorColumns()) {
+        if (!UserProfileHelper::hasTwoFactorColumns()) {
             Notification::make()
                 ->danger()
                 ->title(__('filament-user-profile::messages.Database Migration Required'))
@@ -140,7 +140,7 @@ class TwoFactor extends Page implements HasForms
 
         // Fallback: check if two_factor_secret exists and is not null
         if (property_exists($user, 'two_factor_secret')) {
-            return ! empty($user->two_factor_secret);
+            return !empty($user->two_factor_secret);
         }
 
         // If neither method nor property exists, 2FA is not enabled
@@ -157,7 +157,7 @@ class TwoFactor extends Page implements HasForms
         try {
             $enableTwoFactorAuthentication($user);
 
-            if (! $this->requiresConfirmation) {
+            if (!$this->requiresConfirmation) {
                 $this->twoFactorEnabled = $this->checkTwoFactorEnabled($user);
             }
 
@@ -303,7 +303,7 @@ class TwoFactor extends Page implements HasForms
 
         $this->resetErrorBag();
 
-        if (! $this->requiresConfirmation) {
+        if (!$this->requiresConfirmation) {
             $this->twoFactorEnabled = $this->checkTwoFactorEnabled(Auth::user());
             $this->loadRecoveryCodes();
         }
