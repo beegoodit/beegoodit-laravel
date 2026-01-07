@@ -157,12 +157,11 @@ class UserProfilePanelProvider extends PanelProvider
             return \App\Http\Middleware\SetLocale::class;
         }
 
-        // Fall back to package's SetLocale middleware
+        // Fall back to package's SetLocale middleware if available
         if (class_exists(\BeeGoodIT\FilamentI18n\Middleware\SetLocale::class)) {
             return \BeeGoodIT\FilamentI18n\Middleware\SetLocale::class;
         }
 
-        // If neither exists, return a no-op middleware (shouldn't happen in practice)
         return \Illuminate\Routing\Middleware\SubstituteBindings::class;
     }
 }

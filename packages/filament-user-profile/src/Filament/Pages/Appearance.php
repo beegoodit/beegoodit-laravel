@@ -173,6 +173,7 @@ class Appearance extends Page implements HasForms
 
         // Update app locale for current session
         app()->setLocale($data['locale']);
+        session(['locale' => $data['locale']]);
 
         Session::flash('status', 'appearance-updated');
 
