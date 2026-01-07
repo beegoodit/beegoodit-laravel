@@ -7,4 +7,9 @@ return [
     'time_format_12h' => '12-hour (3:45 PM)',
     'time_format_24h' => '24-hour (15:45)',
     'select_timezone' => 'Select your timezone...',
+    'theme' => [
+        'light' => 'Light',
+        'dark' => 'Dark',
+        'system' => 'System',
+    ],
 ];
