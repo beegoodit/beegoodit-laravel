@@ -2,6 +2,7 @@
 
 namespace BeeGoodIT\FilamentI18n;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class FilamentI18nServiceProvider extends ServiceProvider
@@ -19,8 +20,14 @@ class FilamentI18nServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Load views
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-i18n');
+
         // Load translations
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-i18n');
+
+        // Register Blade components
+        Blade::componentNamespace('BeeGoodIT\\FilamentI18n\\View\\Components', 'filament-i18n');
 
         // Publish config
         $this->publishes([
@@ -36,5 +43,10 @@ class FilamentI18nServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../resources/lang' => lang_path('vendor/filament-i18n'),
         ], 'filament-i18n-lang');
+
+        // Publish views
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/filament-i18n'),
+        ], 'filament-i18n-views');
     }
 }
