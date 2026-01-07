@@ -23,6 +23,7 @@ class FilamentKnowledgeBasePanelProvider extends PanelProvider
         return $panel
             ->id('knowledge-base')
             ->path('kb')
+            ->viteTheme('resources/css/filament/portal/theme.css')
             ->plugins([
                 KnowledgeBasePlugin::make(),
             ])
@@ -36,6 +37,7 @@ class FilamentKnowledgeBasePanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \BeeGoodIT\FilamentI18n\Middleware\SetLocale::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
