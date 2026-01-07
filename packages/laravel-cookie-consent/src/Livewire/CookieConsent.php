@@ -80,22 +80,26 @@ class CookieConsent extends Component
 
     protected function hasConsented(): bool
     {
-        return request()->cookie(config('cookie-consent.cookie_name')) !== null;
+        $name = config('cookie-consent.cookie_name', config('cookie-consent.cookie_key'));
+        return request()->cookie($name) !== null;
     }
 
     protected function setConsent(string $value): void
     {
+        $name = config('cookie-consent.cookie_name', config('cookie-consent.cookie_key'));
+        $lifetime = config('cookie-consent.cookie_lifetime', config('cookie-consent.cookie_expiration_days', 365));
+
         cookie()->queue(
-            config('cookie-consent.cookie_name'),
+            $name,
             $value,
-            config('cookie-consent.cookie_lifetime') * 24 * 60 // Convert days to minutes
+            $lifetime * 24 * 60 // Convert days to minutes
         );
     }
 
     public function render()
     {
         // Don't render anything if consent already given or disabled
-        if (! config('cookie-consent.enabled') || $this->consentGiven) {
+        if (config('cookie-consent.enabled', true) === false || $this->consentGiven) {
             return <<<'HTML'
             <div></div>
             HTML;
