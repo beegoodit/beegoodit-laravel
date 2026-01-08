@@ -169,6 +169,33 @@ Pages will be automatically available at:
 
 The URLs follow your panel's configured path automatically.
 
+
+## Unified Login
+
+This package provides a `UnifiedAuthenticate` middleware to redirect unauthenticated users from any panel (e.g., Admin, Player) to the central `/me/login` page provided by this package.
+
+### Usage
+
+1. **Disable Native Login** on your other panels.
+2. **Register Middleware** in your other panel providers.
+
+```php
+use BeeGoodIT\FilamentUserProfile\Http\Middleware\UnifiedAuthenticate;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        // Remove ->login() or ->loginRoute()
+        ->authMiddleware([
+            UnifiedAuthenticate::class,
+             // ... other middleware
+        ]);
+}
+```
+
+This will ensure that all unauthenticated access to your panel redirects to the User Profile login page.
+
 ## Features
 
 ### Phase 1 (Current)

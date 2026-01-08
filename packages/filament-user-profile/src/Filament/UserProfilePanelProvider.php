@@ -32,7 +32,8 @@ class UserProfilePanelProvider extends PanelProvider
         return $panel
             ->id('me')
             ->path('me')
-            ->login(false) // No login - users access from main panel
+            // No login(false) - using default login to serve as central auth
+            ->login()
             // No tenant() - this panel has no tenancy
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber,
