@@ -18,6 +18,12 @@ class Password extends Page implements HasForms
 {
     use InteractsWithForms;
 
+    public ?string $current_password = '';
+
+    public ?string $password = '';
+
+    public ?string $password_confirmation = '';
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-key';
 
     protected string $view = 'filament-user-profile::pages.password';
@@ -60,6 +66,15 @@ class Password extends Page implements HasForms
     public function getSubheading(): ?string
     {
         return __('filament-user-profile::messages.Ensure your account is using a strong password');
+    }
+
+    public function mount(): void
+    {
+        $this->form->fill([
+            'current_password' => '',
+            'password' => '',
+            'password_confirmation' => '',
+        ]);
     }
 
     public function form(Schema $schema): Schema
