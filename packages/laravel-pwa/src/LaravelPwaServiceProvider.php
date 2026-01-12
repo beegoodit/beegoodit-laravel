@@ -6,6 +6,7 @@ use BeeGoodIT\LaravelPwa\Channels\WebPushChannel;
 use BeeGoodIT\LaravelPwa\Console\GenerateVapidKeysCommand;
 use BeeGoodIT\LaravelPwa\Services\PushNotificationService;
 use Illuminate\Notifications\ChannelManager;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -54,6 +55,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 GenerateVapidKeysCommand::class,
+                \BeeGoodIT\LaravelPwa\Console\SendPushNotificationCommand::class,
             ]);
         }
 
@@ -62,6 +64,9 @@ class LaravelPwaServiceProvider extends ServiceProvider
 
         // Register notification channel
         $this->registerNotificationChannel();
+
+        // Register Blade directives
+        $this->registerBladeDirectives();
     }
 
     public function register(): void
@@ -79,7 +84,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
     {
         Route::group([
             'prefix' => 'api',
-            'middleware' => ['web'],
+            'middleware' => config('pwa.push.middleware', ['web']),
         ], function () {
             Route::post('/push-subscriptions', [
                 \BeeGoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
@@ -99,6 +104,17 @@ class LaravelPwaServiceProvider extends ServiceProvider
             $service->extend('webPush', function ($app) {
                 return $app->make(WebPushChannel::class);
             });
+        });
+    }
+
+    protected function registerBladeDirectives(): void
+    {
+        Blade::directive('pwaHead', function () {
+            return "<?php echo view('laravel-pwa::partials.pwa-meta')->render(); ?>";
+        });
+
+        Blade::directive('pwaScripts', function () {
+            return "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>";
         });
     }
 }

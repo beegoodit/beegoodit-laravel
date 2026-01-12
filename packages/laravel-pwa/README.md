@@ -1,6 +1,6 @@
 # BeeGoodIT Laravel PWA
 
-Progressive Web App support for Laravel applications with manifest, service worker, and installability.
+Progressive Web App support for Laravel with Manifest, Service Worker, and **Web Push Notifications**.
 
 ## Installation
 
@@ -10,100 +10,89 @@ composer require beegoodit/laravel-pwa
 
 ## Setup
 
-### 1. Publish Assets
+### 1. Add Trait to User Model
+Add the `HasPushSubscriptions` trait to your `App\Models\User` model:
 
-```bash
-php artisan vendor:publish --tag=pwa-manifest
-php artisan vendor:publish --tag=pwa-service-worker
-php artisan vendor:publish --tag=pwa-views
-```
+```php
+use BeeGoodIT\LaravelPwa\Models\Traits\HasPushSubscriptions;
 
-### 2. Customize Manifest
-
-Edit `public/manifest.json`:
-
-```json
-{
-  "name": "Your App Name",
-  "short_name": "App",
-  "description": "Your app description",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+class User extends Authenticatable {
+    use HasPushSubscriptions;
 }
 ```
 
-### 3. Add Icons
+### 2. Publish and Migrate
+```bash
+php artisan vendor:publish --tag=pwa-config
+php artisan vendor:publish --tag=pwa-migrations
+php artisan vendor:publish --tag=pwa-js
+php artisan migrate
+```
 
-Place icons in `public/icons/`:
-- icon-48x48.png
-- icon-72x72.png
-- icon-96x96.png
-- icon-144x144.png
-- icon-180x180.png
-- icon-192x192.png
-- icon-512x512.png
+### 3. Generate VAPID Keys
+```bash
+php artisan pwa:vapid-keys
+```
 
-### 4. Include Meta Tags
-
-Add to your layout's `<head>`:
+### 4. Configure Layout
+Add the Blade directives to your main layout. They handle meta tags, manifest inclusion, and script registration.
 
 ```blade
-@include('laravel-pwa::partials.pwa-meta')
+<head>
+    ...
+    @pwaHead
+</head>
+<body>
+    ...
+    @yield('content')
+    
+    @pwaScripts
+</body>
+```
+
+### 5. Setup Proxy/HTTPS (If using Tunnel)
+If you are using a Cloudflare tunnel or proxy, ensure you trust proxies in `bootstrap/app.php` and force HTTPS in your `AppServiceProvider` if needed.
+
+## Push Notifications
+
+### Artisan Testing
+Send a test message to all subscribers:
+```bash
+php artisan pwa:send --all --title="Hello" --body="Test Message"
+```
+
+### Filament Integration
+To add the Broadcast UI to your Filament Admin panel, register the page in your `PanelProvider`:
+
+```php
+->pages([
+    \BeeGoodIT\LaravelPwa\Filament\Pages\BroadcastPushNotification::class,
+])
+```
+
+### Custom Notifications
+Use the `webPush` channel in your standard Laravel Notifications:
+
+```php
+public function via($notifiable) {
+    return ['webPush'];
+}
+
+public function toWebPush($notifiable) {
+    return (new \BeeGoodIT\LaravelPwa\Messages\WebPushMessage)
+        ->title('New Alert')
+        ->body('Something happened!')
+        ->action('View', url('/'));
+}
 ```
 
 ## Features
-
-- ✅ PWA manifest.json
-- ✅ Service worker with caching
-- ✅ Install prompt handling
-- ✅ Offline support
-- ✅ App icon templates
-- ✅ Apple touch icons
-
-## Service Worker
-
-The service worker:
-- Caches app shell (CSS, JS)
-- Caches static assets automatically
-- Serves from cache first
-- Falls back to network
-- Cleans old caches on update
-
-## Customization
-
-### Update Cache Version
-
-Edit `public/sw.js`:
-
-```javascript
-const CACHE_NAME = 'my-app-v2'; // ← Change version to bust cache
-```
-
-### Add More Cached URLs
-
-```javascript
-const urlsToCache = [
-  '/',
-  '/build/assets/app.css',
-  '/build/assets/app.js',
-  '/images/logo.svg',  // ← Add more
-];
-```
-
-## Testing
-
-Test PWA features:
-1. Open DevTools → Application → Manifest
-2. Check service worker registration
-3. Test offline mode
-4. Test install prompt
-
-## Requirements
-
-- PHP 8.2+
-- Laravel 11.0+ or 12.0+
+- ✅ **PWA manifest.json** installation support
+- ✅ **Push Notifications** via Web Push (VAPID)
+- ✅ **Filament Admin** broadcast page included
+- ✅ **Artisan Command** for manual/test sending
+- ✅ **Automatic SW registration** via Blade directives
+- ✅ **Service Worker** with caching and offline support
 
 ## License
-
-MIT License. See [LICENSE](LICENSE) for details.
-
+MIT License.

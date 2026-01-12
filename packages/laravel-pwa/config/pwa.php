@@ -19,6 +19,17 @@ return [
             'public_key' => env('VAPID_PUBLIC_KEY'),
             'private_key' => env('VAPID_PRIVATE_KEY'),
         ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Subscription Middleware
+        |--------------------------------------------------------------------------
+        |
+        | Default middleware for the push subscription routes. Use 'web' to
+        | support sessions/auth, or 'api' for stateless tokens.
+        |
+        */
+        'middleware' => ['web'],
     ],
 
     /*

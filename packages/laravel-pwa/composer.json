@@ -3,7 +3,17 @@
     "description": "Progressive Web App support for Laravel applications with push notifications",
     "type": "library",
     "license": "MIT",
-    "keywords": ["laravel", "pwa", "progressive-web-app", "service-worker", "manifest", "push-notifications", "web-push", "vapid", "beegoodit"],
+    "keywords": [
+        "laravel",
+        "pwa",
+        "progressive-web-app",
+        "service-worker",
+        "manifest",
+        "push-notifications",
+        "web-push",
+        "vapid",
+        "beegoodit"
+    ],
     "authors": [
         {
             "name": "BeeGoodIT",
@@ -13,7 +23,7 @@
     "require": {
         "php": "^8.2",
         "illuminate/support": "^11.0|^12.0",
-        "minishlink/web-push": "^9.0"
+        "minishlink/web-push": "^10.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0"
@@ -45,4 +55,3 @@
     "minimum-stability": "dev",
     "prefer-stable": true
 }
-
