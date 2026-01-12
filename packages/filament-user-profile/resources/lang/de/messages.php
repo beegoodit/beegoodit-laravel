@@ -118,5 +118,20 @@ return [
     'Edit Profile' => 'Profil bearbeiten',
     'Change Password' => 'Passwort ändern',
     'Manage your theme and language' => 'Design und Sprache verwalten',
+
+    // Notifications Page
+    'Notifications' => 'Benachrichtigungen',
+    'Manage your notification preferences' => 'Verwalten Sie Ihre Benachrichtigungseinstellungen',
+    'Push Notifications' => 'Push-Benachrichtigungen',
+    'Receive push notifications in your browser even when the app is closed.' => 'Erhalten Sie Push-Benachrichtigungen in Ihrem Browser, auch wenn die App geschlossen ist.',
+    'Push notifications enabled' => 'Push-Benachrichtigungen aktiviert',
+    'Not subscribed' => 'Nicht abonniert',
+    'Notifications blocked' => 'Benachrichtigungen blockiert',
+    'To enable push notifications on iOS, add this app to your Home Screen first.' => 'Um Push-Benachrichtigungen auf iOS zu aktivieren, fügen Sie diese App zuerst Ihrem Home-Bildschirm hinzu.',
+    'Notifications are blocked. Please enable them in your browser settings.' => 'Benachrichtigungen sind blockiert. Bitte aktivieren Sie diese in Ihren Browsereinstellungen.',
+    'Enable Push Notifications' => 'Push-Benachrichtigungen aktivieren',
+    'Disable Push Notifications' => 'Push-Benachrichtigungen deaktivieren',
+    'Push notifications are not configured. Please contact your administrator.' => 'Push-Benachrichtigungen sind nicht konfiguriert. Bitte kontaktieren Sie Ihren Administrator.',
+    'Push notifications are not available.' => 'Push-Benachrichtigungen sind nicht verfügbar.',
     'Manage Appearance' => 'Erscheinungsbild verwalten',
 ];

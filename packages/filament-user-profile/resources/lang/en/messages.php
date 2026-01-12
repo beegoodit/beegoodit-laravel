@@ -125,5 +125,19 @@ return [
     'Edit Profile' => 'Edit Profile',
     'Change Password' => 'Change Password',
     'Manage your theme and language' => 'Manage your theme and language',
-    'Manage Appearance' => 'Manage Appearance',
+
+    // Notifications Page
+    'Notifications' => 'Notifications',
+    'Manage your notification preferences' => 'Manage your notification preferences',
+    'Push Notifications' => 'Push Notifications',
+    'Receive push notifications in your browser even when the app is closed.' => 'Receive push notifications in your browser even when the app is closed.',
+    'Push notifications enabled' => 'Push notifications enabled',
+    'Not subscribed' => 'Not subscribed',
+    'Notifications blocked' => 'Notifications blocked',
+    'To enable push notifications on iOS, add this app to your Home Screen first.' => 'To enable push notifications on iOS, add this app to your Home Screen first.',
+    'Notifications are blocked. Please enable them in your browser settings.' => 'Notifications are blocked. Please enable them in your browser settings.',
+    'Enable Push Notifications' => 'Enable Push Notifications',
+    'Disable Push Notifications' => 'Disable Push Notifications',
+    'Push notifications are not configured. Please contact your administrator.' => 'Push notifications are not configured. Please contact your administrator.',
+    'Push notifications are not available.' => 'Push notifications are not available.',
 ];

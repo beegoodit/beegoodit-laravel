@@ -178,11 +178,16 @@
                         this.error = null;
 
                         try {
+                            console.log('[Alpine] Calling push.subscribe()...');
                             await this.push.subscribe();
+                            console.log('[Alpine] push.subscribe() resolved. Refreshing status...');
                             await this.refreshStatus();
+                            console.log('[Alpine] Status refreshed.');
                         } catch (e) {
+                            console.error('[Alpine] Subscription error:', e);
                             this.error = e.message || 'Failed to enable notifications';
                         } finally {
+                            console.log('[Alpine] Loading finished.');
                             this.loading = false;
                         }
                     },

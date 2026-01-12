@@ -46,8 +46,23 @@ class Notifications extends Page
 
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
-        $panel = $panel ?? 'user-profile';
+        // Use the me panel (no tenant)
+        $panel = $panel ?? 'me';
 
+        $panelInstance = Filament::getPanel($panel);
+
+        if ($panelInstance) {
+            // Construct URL using panel path and page slug
+            $url = $panelInstance->getPath() . '/' . static::getSlug($panelInstance);
+
+            if ($isAbsolute) {
+                return url($url);
+            }
+
+            return '/' . ltrim($url, '/');
+        }
+
+        // Fallback to parent method
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
 

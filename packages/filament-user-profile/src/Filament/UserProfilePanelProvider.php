@@ -4,6 +4,7 @@ namespace BeeGoodIT\FilamentUserProfile\Filament;
 
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Dashboard;
+use BeeGoodIT\FilamentUserProfile\Filament\Pages\Notifications;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
 use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
@@ -124,6 +125,11 @@ class UserProfilePanelProvider extends PanelProvider
             Password::class,
             Appearance::class,
         ];
+
+        // Register Notifications page if push notification service is available
+        if (class_exists(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class)) {
+            $pages[] = Notifications::class;
+        }
 
         // Only register TwoFactor page if Fortify 2FA is enabled AND database columns exist
         if ($this->shouldRegisterTwoFactorPage()) {
