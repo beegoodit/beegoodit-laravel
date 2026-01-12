@@ -1,5 +1,6 @@
 {{-- PWA Meta Tags --}}
 <meta name="theme-color" content="{{ config('app.theme_color', '#000000') }}" />
+<meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="{{ config('app.name') }}" />
@@ -15,18 +16,17 @@
 
 {{-- Service Worker Registration --}}
 @push('scripts')
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('✅ ServiceWorker registered:', registration.scope);
-      })
-      .catch((error) => {
-        console.error('❌ ServiceWorker registration failed:', error);
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('✅ ServiceWorker registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('❌ ServiceWorker registration failed:', error);
+          });
       });
-  });
-}
-</script>
+    }
+  </script>
 @endpush
-

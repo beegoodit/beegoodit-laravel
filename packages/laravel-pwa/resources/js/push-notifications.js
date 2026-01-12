@@ -94,18 +94,24 @@ class PushNotifications {
         }
 
         // Get service worker registration
+        console.log('[PushNotifications] Waiting for Service Worker to be ready...');
         this.registration = await navigator.serviceWorker.ready;
+        console.log('[PushNotifications] Service Worker ready.');
 
         // Subscribe to push
         const applicationServerKey = this.urlBase64ToUint8Array(this.vapidPublicKey);
         
+        console.log('[PushNotifications] Subscribing to push manager...');
         this.subscription = await this.registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: applicationServerKey,
         });
+        console.log('[PushNotifications] Subscription successful:', this.subscription);
 
         // Send subscription to server
+        console.log('[PushNotifications] Sending subscription to server...');
         await this.sendSubscriptionToServer(this.subscription);
+        console.log('[PushNotifications] Server registration successful.');
 
         return this.subscription;
     }

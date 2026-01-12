@@ -15,6 +15,12 @@ class PushSubscriptionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        \Log::debug('PushSubscriptionController@store', [
+            'endpoint' => $request->input('endpoint'),
+            'user_id' => Auth::id(),
+            'method' => $request->method(),
+        ]);
+
         $request->validate([
             'endpoint' => 'required|string|url',
             'keys.p256dh' => 'required|string',

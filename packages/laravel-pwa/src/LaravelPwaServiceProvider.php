@@ -79,7 +79,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
     {
         Route::group([
             'prefix' => 'api',
-            'middleware' => ['api'],
+            'middleware' => ['web'],
         ], function () {
             Route::post('/push-subscriptions', [
                 \BeeGoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
