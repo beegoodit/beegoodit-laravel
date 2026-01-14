@@ -66,6 +66,12 @@ class PushNotificationService
         try {
             $webPushSubscription = Subscription::create($subscription->toWebPush());
 
+            Log::debug('Sending push notification', [
+                'endpoint' => substr($subscription->endpoint, 0, 50) . '...',
+                'vapid_subject' => config('pwa.push.vapid.subject'),
+                'vapid_public_key_length' => strlen(config('pwa.push.vapid.public_key') ?? ''),
+            ]);
+
             $report = $this->getWebPush()->sendOneNotification(
                 $webPushSubscription,
                 json_encode($payload)

@@ -43,4 +43,13 @@ return [
     */
 
     'subscription_model' => \BeeGoodIT\LaravelPwa\Models\PushSubscription::class,
+    /*
+    |--------------------------------------------------------------------------
+    | Push Notification Teaser (Soft Prompts)
+    |--------------------------------------------------------------------------
+    */
+    'teaser' => [
+        'url' => '/me/notifications',
+        'dismiss_duration' => 7, // days
+    ],
 ];

@@ -46,10 +46,23 @@ class LaravelPwaServiceProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/create_push_subscriptions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His') . '_create_push_subscriptions_table.php'),
         ], 'pwa-migrations');
 
+        // Publish translations
+        $this->publishes([
+            __DIR__ . '/../resources/lang' => lang_path('vendor/laravel-pwa'),
+        ], 'pwa-lang');
+
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-pwa');
+
         // Publish JavaScript
         $this->publishes([
             __DIR__ . '/../resources/js/push-notifications.js' => public_path('js/push-notifications.js'),
         ], 'pwa-js');
+
+        // Publish CSS
+        $this->publishes([
+            __DIR__ . '/../resources/css/push-prompt.css' => public_path('css/push-prompt.css'),
+        ], 'pwa-css');
 
         // Register commands
         if ($this->app->runningInConsole()) {
@@ -65,7 +78,8 @@ class LaravelPwaServiceProvider extends ServiceProvider
         // Register notification channel
         $this->registerNotificationChannel();
 
-        // Register Blade directives
+        // Register Blade components & directives
+        $this->registerBladeComponents();
         $this->registerBladeDirectives();
     }
 
@@ -116,5 +130,14 @@ class LaravelPwaServiceProvider extends ServiceProvider
         Blade::directive('pwaScripts', function () {
             return "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>";
         });
+
+        Blade::directive('pwaStyles', function () {
+            return "<?php echo \"<link rel='stylesheet' href='\" . asset('css/push-prompt.css') . \"'>\"; ?>";
+        });
+    }
+
+    protected function registerBladeComponents(): void
+    {
+        Blade::component('laravel-pwa::components.push-prompt-teaser', 'pwa::push-prompt-teaser');
     }
 }

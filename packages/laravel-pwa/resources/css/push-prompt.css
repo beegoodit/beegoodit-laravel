@@ -1,0 +1,100 @@
+:root {
+    --pwa-teaser-bg: var(--color-white, #ffffff);
+    --pwa-teaser-text: var(--color-gray-900, #1f2937);
+    --pwa-teaser-button-bg: var(--color-primary-600, #3b82f6);
+    --pwa-teaser-button-text: var(--color-white, #ffffff);
+    --pwa-teaser-border: var(--color-gray-200, #e5e7eb);
+    --pwa-teaser-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --pwa-teaser-font: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --pwa-teaser-bg: var(--color-gray-800, #1f2937);
+        --pwa-teaser-text: var(--color-gray-50, #f9fafb);
+        --pwa-teaser-border: var(--color-gray-700, #374151);
+        --pwa-teaser-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    }
+}
+
+/* Also support .dark class (common in Tailwind projects) */
+.dark :root {
+    --pwa-teaser-bg: var(--color-gray-800, #1f2937);
+    --pwa-teaser-text: var(--color-gray-50, #f9fafb);
+    --pwa-teaser-border: var(--color-gray-700, #374151);
+}
+
+.pwa-push-teaser {
+    font-family: var(--pwa-teaser-font);
+    background-color: var(--pwa-teaser-bg);
+    color: var(--pwa-teaser-text);
+    border: 1px solid var(--pwa-teaser-border);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: var(--pwa-teaser-shadow);
+    margin: 1rem 0;
+}
+
+.pwa-push-teaser--fixed-bottom {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 50;
+    margin: 0;
+}
+
+@media (min-width: 640px) {
+    .pwa-push-teaser--fixed-bottom {
+        left: auto;
+        max-width: 24rem;
+    }
+}
+
+.pwa-push-teaser__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.pwa-push-teaser__content {
+    flex: 1;
+}
+
+.pwa-push-teaser__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--pwa-teaser-button-bg);
+    color: var(--pwa-teaser-button-text);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: filter 0.2s;
+}
+
+.pwa-push-teaser__button:hover {
+    filter: brightness(110%);
+}
+
+.pwa-push-teaser__dismiss-button {
+    color: inherit;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+}
+
+.pwa-push-teaser__dismiss-button:hover {
+    opacity: 1;
+}
+
+[x-cloak] {
+    display: none !important;
+}
