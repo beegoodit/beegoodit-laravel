@@ -5,9 +5,13 @@ namespace BeeGoodIT\LaravelPwa\Filament\Pages;
 use BeeGoodIT\LaravelPwa\Services\PushNotificationService;
 use Filament\Notifications\Notification as FilamentNotification;
 use Filament\Pages\Page;
+use UnitEnum;
+use App\Filament\Traits\HasModelTranslations;
 
 class BroadcastPushNotification extends Page
 {
+    use HasModelTranslations;
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-megaphone';
 
     protected string $view = 'laravel-pwa::filament.pages.broadcast-push-notification';
@@ -44,6 +48,8 @@ class BroadcastPushNotification extends Page
 
         $this->reset(['title_input', 'body', 'action_url']);
     }
+
+    protected static UnitEnum|string|null $navigationGroup = 'navigation.groups.settings';
 
     public static function getNavigationLabel(): string
     {
