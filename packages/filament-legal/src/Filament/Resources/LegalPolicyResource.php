@@ -5,8 +5,8 @@ namespace BeeGoodIT\FilamentLegal\Filament\Resources;
 use BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
 use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -72,23 +72,20 @@ class LegalPolicyResource extends Resource
                             ->tabs([
                                 Tabs\Tab::make(__('filament-legal::messages.German'))
                                     ->schema([
-                                        Textarea::make('content.de')
+                                        RichEditor::make('content.de')
                                             ->label(__('filament-legal::messages.Content (DE)'))
-                                            ->rows(15)
                                             ->required(),
                                     ]),
                                 Tabs\Tab::make(__('filament-legal::messages.English'))
                                     ->schema([
-                                        Textarea::make('content.en')
+                                        RichEditor::make('content.en')
                                             ->label(__('filament-legal::messages.Content (EN)'))
-                                            ->rows(15)
                                             ->required(),
                                     ]),
                                 Tabs\Tab::make(__('filament-legal::messages.Spanish'))
                                     ->schema([
-                                        Textarea::make('content.es')
+                                        RichEditor::make('content.es')
                                             ->label(__('filament-legal::messages.Content (ES)'))
-                                            ->rows(15)
                                             ->required(),
                                     ]),
                             ]),

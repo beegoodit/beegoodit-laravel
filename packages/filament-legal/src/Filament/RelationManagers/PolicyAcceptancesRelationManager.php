@@ -59,9 +59,10 @@ class PolicyAcceptancesRelationManager extends RelationManager
                         ? \BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource::getUrl('edit', ['record' => $record->legal_policy_id])
                         : route('filament.admin.resources.users.edit', ['record' => $record->user_id])
                     ),
+                \Filament\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                //
+                \Filament\Actions\DeleteBulkAction::make(),
             ]);
     }
 }

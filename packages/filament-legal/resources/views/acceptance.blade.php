@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ __('filament-legal::messages.Legal Acceptance Required') }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
 </head>
 
 <body class="h-full">
@@ -28,7 +28,7 @@
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl">
             <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 space-y-6">
                 <div class="prose prose-sm max-w-none overflow-y-auto max-h-[60vh] p-4 border rounded-lg bg-gray-50">
-                    {!! nl2br(e($content)) !!}
+                    {!! $content !!}
                 </div>
 
                 <form action="{{ route('filament-legal.submit-acceptance') }}" method="POST">
