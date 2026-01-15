@@ -17,6 +17,8 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
+use BeeGoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -37,6 +39,31 @@ class UserProfilePanelProvider extends PanelProvider
 
         if (config('filament-user-profile.registration', false)) {
             $panel->registration();
+        }
+
+        if (class_exists(FilamentSocialitePluginHelper::class)) {
+            $providersList = [];
+            $oauthProviders = config('filament-oauth.providers', []);
+
+            if (data_get($oauthProviders, 'discord.enabled', false)) {
+                $providersList[] = Provider::make('discord')
+                    ->label('Discord')
+                    ->icon('heroicon-o-chat-bubble-bottom-center-text');
+            }
+
+            if (data_get($oauthProviders, 'microsoft.enabled', false)) {
+                $providersList[] = Provider::make('microsoft')
+                    ->label('Microsoft')
+                    ->icon('heroicon-o-command-line');
+            }
+
+            if (!empty($providersList)) {
+                $panel->plugin(
+                    FilamentSocialitePluginHelper::make()
+                        ->providers($providersList)
+                        ->registration(config('filament-user-profile.registration', false))
+                );
+            }
         }
 
         return $panel
