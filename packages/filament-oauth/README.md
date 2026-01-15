@@ -53,19 +53,27 @@ class User extends Authenticatable implements HasTenants
 ### 3. Configure OAuth
 
 **Step 1: Add environment variables to `.env`:**
+
 ```env
+# Microsoft
 MICROSOFT_CLIENT_ID=your_client_id
 MICROSOFT_CLIENT_SECRET=your_secret
 MICROSOFT_TENANT_ID=your_tenant_id
 OAUTH_MICROSOFT_ENABLED=true
+
+# Discord
+DISCORD_CLIENT_ID=your_discord_client_id
+DISCORD_CLIENT_SECRET=your_discord_client_secret
+OAUTH_DISCORD_ENABLED=true
+
 OAUTH_AUTO_ASSIGN_TEAMS=true
 ```
 
 **Step 2: Configure `config/services.php` (REQUIRED)**
 
-⚠️ **Important**: Laravel Socialite requires the Microsoft provider to be configured in `config/services.php`. 
+⚠️ **Important**: Laravel Socialite requires the OAuth providers to be configured in `config/services.php`. 
 
-The package **automatically configures** this at runtime, but it's **recommended** to add it manually to `config/services.php` for clarity and to ensure it works with config caching:
+The package **automatically configures** Microsoft at runtime, but it's **recommended** to add providers manually to `config/services.php` for clarity and to ensure it works with config caching:
 
 Add to `config/services.php`:
 ```php
@@ -74,6 +82,12 @@ Add to `config/services.php`:
     'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
     'redirect' => env('APP_URL') . '/portal/oauth/callback/microsoft',
     'tenant' => env('MICROSOFT_TENANT_ID', 'common'),
+],
+
+'discord' => [
+    'client_id' => env('DISCORD_CLIENT_ID'),
+    'client_secret' => env('DISCORD_CLIENT_SECRET'),
+    'redirect' => env('APP_URL') . '/me/oauth/callback/discord',
 ],
 ```
 
@@ -97,7 +111,10 @@ public function panel(Panel $panel): Panel
                 ->providers([
                     Provider::make('microsoft')
                         ->label('Sign in with Microsoft 365')
-                        ->icon('heroicon-o-building-office')
+                        ->icon('heroicon-o-building-office'),
+                    Provider::make('discord')
+                        ->label('Sign in with Discord')
+                        ->icon('heroicon-o-chat-bubble-bottom-center-text')
                 ])
                 ->registration(true)  // Enable new user registration via OAuth
         );
@@ -117,7 +134,7 @@ public function panel(Panel $panel): Panel
 
 ## Features
 
-- ✅ OAuth2 authentication (Microsoft 365)
+- ✅ OAuth2 authentication (Microsoft 365, Discord)
 - ✅ Automatic team assignment based on tenant ID
 - ✅ OAuth account storage (encrypted tokens)
 - ✅ Avatar sync from OAuth provider

@@ -24,11 +24,22 @@ class FilamentSocialitePluginHelper
                     'email_verified_at' => now(),
                 ]);
 
-                // Assign team DURING user creation (inside the transaction)
-                // This ensures the team is assigned before the user is returned,
-                // so it's available when Filament checks for tenants
-                if ($provider === 'microsoft' && config('filament-oauth.auto_assign_teams', true)) {
-                    $tenantId = self::extractMicrosoftTenantId($oauthUser);
+                // Sync avatar if enabled
+                if (config('filament-oauth.sync_avatars', false)) {
+                    app(\BeeGoodIT\FilamentOAuth\Services\AvatarService::class)->syncAvatar($user, $oauthUser);
+                }
+
+                // Assign team DURING user creation (inside the transaction) if enabled for this provider
+                $providerConfig = config("filament-oauth.providers.{$provider}");
+                $shouldAssignTeam = $providerConfig['team_assignment'] ?? false;
+
+                if ($shouldAssignTeam && config('filament-oauth.auto_assign_teams', true)) {
+                    $tenantId = null;
+                    if ($provider === 'microsoft') {
+                        $tenantId = self::extractMicrosoftTenantId($oauthUser);
+                    }
+                    // Add other providers here if they support tenant-based assignment
+                    
                     $accessToken = $oauthUser->token ?? null;
 
                     if ($tenantId) {

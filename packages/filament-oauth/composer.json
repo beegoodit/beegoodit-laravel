@@ -3,7 +3,14 @@
     "description": "OAuth2 authentication with automatic team assignment for Filament applications",
     "type": "library",
     "license": "MIT",
-    "keywords": ["laravel", "filament", "oauth", "microsoft", "teams", "beegoodit"],
+    "keywords": [
+        "laravel",
+        "filament",
+        "oauth",
+        "microsoft",
+        "teams",
+        "beegoodit"
+    ],
     "authors": [
         {
             "name": "BeeGoodIT",
@@ -18,6 +25,7 @@
         "dutchcodingcompany/filament-socialite": "^3.0",
         "laravel/socialite": "^5.23",
         "socialiteproviders/microsoft": "^4.7",
+        "socialiteproviders/discord": "^4.2",
         "beegoodit/filament-user-avatar": "*"
     },
     "require-dev": {
@@ -57,4 +65,3 @@
     "minimum-stability": "dev",
     "prefer-stable": true
 }
-

@@ -77,10 +77,23 @@ class TeamAssignmentService
     {
         // For Microsoft providers, try to fetch organization name from Graph API
         if ($provider === 'microsoft' && $accessToken) {
-            return $this->graphService->getOrganizationName($accessToken, $tenantId);
+            try {
+                return $this->graphService->getOrganizationName($accessToken, $tenantId);
+            } catch (\Exception $e) {
+                Log::warning('Failed to fetch organization name from Microsoft Graph', [
+                    'error' => $e->getMessage(),
+                    'tenant_id' => $tenantId,
+                ]);
+            }
         }
 
         // Fallback to generic name generation
-        return ucfirst($provider).' Organization '.substr($tenantId, 0, 8);
+        $name = ucfirst($provider);
+        
+        if ($provider === 'microsoft') {
+            $name = 'Microsoft';
+        }
+
+        return $name . ' Organization ' . substr($tenantId, 0, 8);
     }
 }

@@ -23,7 +23,19 @@ return [
     |
     */
 
-    'auto_assign_teams' => env('OAUTH_AUTO_ASSIGN_TEAMS', true),
+    'auto_assign_teams' => env('OAUTH_AUTO_ASSIGN_TEAMS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sync Avatars
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, profile pictures from OAuth providers will be downloaded
+    | and synced to the user model.
+    |
+    */
+
+    'sync_avatars' => env('OAUTH_SYNC_AVATARS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,17 +54,25 @@ return [
     | OAuth Providers
     |--------------------------------------------------------------------------
     |
-    | Configuration for supported OAuth providers. Currently supports Microsoft.
+    | Configuration for supported OAuth providers. Currently supports Microsoft and Discord.
     |
     */
 
     'providers' => [
         'microsoft' => [
-            'enabled' => env('OAUTH_MICROSOFT_ENABLED', true),
+            'enabled' => env('OAUTH_MICROSOFT_ENABLED', false),
             'client_id' => env('MICROSOFT_CLIENT_ID'),
             'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
             'tenant_id' => env('MICROSOFT_TENANT_ID', 'common'),
-            'redirect' => env('APP_URL').'/portal/oauth/callback/microsoft',
+            'redirect' => env('APP_URL') . '/portal/oauth/callback/microsoft',
+            'team_assignment' => env('OAUTH_MICROSOFT_TEAM_ASSIGNMENT', true),
+        ],
+        'discord' => [
+            'enabled' => env('OAUTH_DISCORD_ENABLED', false),
+            'client_id' => env('DISCORD_CLIENT_ID'),
+            'client_secret' => env('DISCORD_CLIENT_SECRET'),
+            'redirect' => env('APP_URL') . '/me/oauth/callback/discord',
+            'team_assignment' => env('OAUTH_DISCORD_TEAM_ASSIGNMENT', false),
         ],
     ],
 

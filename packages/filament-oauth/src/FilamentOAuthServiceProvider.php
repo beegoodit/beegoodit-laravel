@@ -16,15 +16,16 @@ class FilamentOAuthServiceProvider extends ServiceProvider
 
         // Merge config
         $this->mergeConfigFrom(
-            __DIR__.'/../config/filament-oauth.php',
+            __DIR__ . '/../config/filament-oauth.php',
             'filament-oauth'
         );
     }
 
     public function boot(): void
     {
-        // Automatically configure Microsoft in services.php
+        // Automatically configure OAuth providers in services.php
         $this->configureMicrosoftService();
+        $this->configureDiscordService();
 
         // Register commands
         if ($this->app->runningInConsole()) {
@@ -36,20 +37,23 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         // Publish migrations
         $timestamp = date('Y_m_d_His');
         $this->publishes([
-            __DIR__.'/../database/migrations/create_oauth_accounts_table.php.stub' => database_path('migrations/'.$timestamp.'_create_oauth_accounts_table.php'),
-            __DIR__.'/../database/migrations/make_password_nullable_in_users_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time() + 1).'_make_password_nullable_in_users_table.php'),
-        ], 'oauth-migrations');
+            __DIR__ . '/../database/migrations/create_oauth_accounts_table.php.stub' => database_path('migrations/' . $timestamp . '_create_oauth_accounts_table.php'),
+            __DIR__ . '/../database/migrations/make_password_nullable_in_users_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_make_password_nullable_in_users_table.php'),
+        ], 'filament-oauth-migrations');
 
         // Publish config
         $this->publishes([
-            __DIR__.'/../config/filament-oauth.php' => config_path('filament-oauth.php'),
+            __DIR__ . '/../config/filament-oauth.php' => config_path('filament-oauth.php'),
         ], 'filament-oauth-config');
 
-        // Register Microsoft Socialite driver
-        // This must happen early, so we use Event::listen for the SocialiteWasCalled event
+        // Register Socialite drivers
         Event::listen(
             \SocialiteProviders\Manager\SocialiteWasCalled::class,
             [\SocialiteProviders\Microsoft\MicrosoftExtendSocialite::class, 'handle']
+        );
+        Event::listen(
+            \SocialiteProviders\Manager\SocialiteWasCalled::class,
+            [\SocialiteProviders\Discord\DiscordExtendSocialite::class, 'handle']
         );
 
         // Optional team assignment listeners (configurable)
@@ -82,7 +86,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
             $user = $event->socialiteUser->getUser();
 
             // Verify email automatically (OAuth providers verify emails)
-            if (! $user->hasVerifiedEmail()) {
+            if (!$user->hasVerifiedEmail()) {
                 $user->markEmailAsVerified();
             }
         });
@@ -113,13 +117,13 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         $tenantId = $oauthUser->user['tid'] ?? null;
 
         // If not in user data, try access token response
-        if (! $tenantId && isset($oauthUser->accessTokenResponseBody)) {
+        if (!$tenantId && isset($oauthUser->accessTokenResponseBody)) {
             $tokenData = $oauthUser->accessTokenResponseBody;
             $tenantId = $tokenData['tenant_id'] ?? $tokenData['tid'] ?? null;
         }
 
         // If still no tenant ID, try to decode the JWT token
-        if (! $tenantId && isset($oauthUser->token)) {
+        if (!$tenantId && isset($oauthUser->token)) {
             try {
                 $tokenParts = explode('.', $oauthUser->token);
                 if (count($tokenParts) === 3) {
@@ -143,7 +147,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
     protected function configureMicrosoftService(): void
     {
         // Only configure if Microsoft is enabled
-        if (! config('filament-oauth.providers.microsoft.enabled', true)) {
+        if (!config('filament-oauth.providers.microsoft.enabled', true)) {
             return;
         }
 
@@ -154,21 +158,55 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         $microsoftConfig = [
             'client_id' => config('filament-oauth.providers.microsoft.client_id', env('MICROSOFT_CLIENT_ID')),
             'client_secret' => config('filament-oauth.providers.microsoft.client_secret', env('MICROSOFT_CLIENT_SECRET')),
-            'redirect' => config('filament-oauth.providers.microsoft.redirect', env('APP_URL').'/portal/oauth/callback/microsoft'),
+            'redirect' => config('filament-oauth.providers.microsoft.redirect', env('APP_URL') . '/portal/oauth/callback/microsoft'),
             'tenant' => config('filament-oauth.providers.microsoft.tenant_id', env('MICROSOFT_TENANT_ID', 'common')),
         ];
 
         // Filter out empty values
-        $microsoftConfig = array_filter($microsoftConfig, fn ($value) => ! empty($value));
+        $microsoftConfig = array_filter($microsoftConfig, fn($value) => !empty($value));
 
         // Only merge if not already configured or if existing config is incomplete
-        if (! isset($services['microsoft']) || empty($services['microsoft']['client_id'])) {
+        if (!isset($services['microsoft']) || empty($services['microsoft']['client_id'])) {
             config(['services.microsoft' => $microsoftConfig]);
         } else {
             // Merge missing keys into existing config (existing values take precedence)
             $existing = $services['microsoft'];
-            $merged = array_merge($microsoftConfig, array_filter($existing, fn ($value) => ! empty($value)));
+            $merged = array_merge($microsoftConfig, array_filter($existing, fn($value) => !empty($value)));
             config(['services.microsoft' => $merged]);
+        }
+    }
+
+    /**
+     * Automatically configure Discord OAuth in config/services.php.
+     */
+    protected function configureDiscordService(): void
+    {
+        // Only configure if Discord is enabled
+        if (!config('filament-oauth.providers.discord.enabled', true)) {
+            return;
+        }
+
+        // Get the current services config
+        $services = config('services', []);
+
+        // Build Discord configuration from filament-oauth config or env
+        $discordConfig = [
+            'client_id' => config('filament-oauth.providers.discord.client_id', env('DISCORD_CLIENT_ID')),
+            'client_secret' => config('filament-oauth.providers.discord.client_secret', env('DISCORD_CLIENT_SECRET')),
+            'redirect' => config('filament-oauth.providers.discord.redirect', env('APP_URL') . '/me/oauth/callback/discord'),
+        ];
+
+        // Filter out empty values
+        $discordConfig = array_filter($discordConfig, fn($value) => !empty($value));
+
+        // Only merge if not already configured or if existing config is incomplete
+        if (!isset($services['discord']) || empty($services['discord']['client_id'])) {
+            config(['services.discord' => $discordConfig]);
+        } else {
+            // Merge missing keys into existing config (existing values take precedence)
+            $existing = $services['discord'];
+            $merged = array_merge($discordConfig, array_filter($existing, fn($value) => !empty($value)));
+            config(['services.discord' => $merged]);
         }
     }
 
@@ -177,7 +215,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
      */
     protected function showMigrationInstructions(): void
     {
-        if (! config('filament-oauth.suppress_instructions', false)) {
+        if (!config('filament-oauth.suppress_instructions', false)) {
             echo "\n\033[1;33m⚠️  Important:\033[0m FilamentOAuth requires filament-socialite migrations.\n";
             echo "\033[0;33mIf not already published, run:\033[0m\n";
             echo "  \033[1mphp artisan vendor:publish --tag=filament-socialite-migrations\033[0m\n\n";
