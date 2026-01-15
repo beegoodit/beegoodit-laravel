@@ -41,6 +41,11 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/add_two_factor_columns_to_users_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_add_two_factor_columns_to_users_table.php'),
         ], 'filament-user-profile-migrations');
 
+        // Publish config
+        $this->publishes([
+            __DIR__ . '/../config/filament-user-profile.php' => config_path('filament-user-profile.php'),
+        ], 'filament-user-profile-config');
+
         // Check for 2FA columns early (this will log if missing)
         // Only check if Fortify 2FA is enabled
         if (Features::enabled(Features::twoFactorAuthentication())) {
@@ -138,6 +143,9 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         $this->app->singleton('filament-user-profile', function ($app) {
             return new UserProfileHelper;
         });
+
+        // Merge config
+        $this->mergeConfigFrom(__DIR__ . '/../config/filament-user-profile.php', 'filament-user-profile');
 
         // Register the user profile panel provider
         $this->app->register(UserProfilePanelProvider::class);

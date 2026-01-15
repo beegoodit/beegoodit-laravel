@@ -120,9 +120,22 @@ php artisan vendor:publish --tag=filament-user-profile-lang
 
 This will copy the translation files to `lang/vendor/filament-user-profile/` where you can customize them.
 
-**Note**: The package uses namespaced translations (`filament-user-profile::messages.*`) for package-specific strings. Generic keys like `Save` use the standard `__('Save')` function, allowing you to override them in your application's translation files.
+### 5. Registration (Optional)
 
-### 5. Locale Middleware
+By default, registration on the `/me` panel is disabled. You can enable it by publishing the configuration file and setting `registration` to `true`:
+
+```bash
+php artisan vendor:publish --tag=filament-user-profile-config
+```
+
+Then in `config/filament-user-profile.php`:
+```php
+return [
+    'registration' => true,
+];
+```
+
+### 6. Locale Middleware
 
 The settings panel (`/settings`) automatically includes locale middleware to apply the user's language preference. The package will:
 

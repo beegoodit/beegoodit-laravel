@@ -30,11 +30,16 @@ class UserProfilePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $panel
             ->id('me')
             ->path('me')
-            // No login(false) - using default login to serve as central auth
-            ->login()
+            ->login();
+
+        if (config('filament-user-profile.registration', false)) {
+            $panel->registration();
+        }
+
+        return $panel
             // No tenant() - this panel has no tenancy
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber,
@@ -42,30 +47,30 @@ class UserProfilePanelProvider extends PanelProvider
             ->brandName(fn() => __('filament-user-profile::messages.User Settings'))
             ->pages($this->getPages())
             ->navigationItems([
-                NavigationItem::make()
-                    ->label(fn() => __('filament-user-profile::messages.Back to Portal'))
-                    ->icon('heroicon-o-arrow-left')
-                    ->url(fn() => $this->getPortalUrl())
-                    ->sort(-1), // Show at the top
-            ])
+                    NavigationItem::make()
+                        ->label(fn() => __('filament-user-profile::messages.Back to Portal'))
+                        ->icon('heroicon-o-arrow-left')
+                        ->url(fn() => $this->getPortalUrl())
+                        ->sort(-1), // Show at the top
+                ])
             ->middleware([
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
-                $this->getSetLocaleMiddleware(),
-            ])
+                    EncryptCookies::class,
+                    AddQueuedCookiesToResponse::class,
+                    StartSession::class,
+                    AuthenticateSession::class,
+                    ShareErrorsFromSession::class,
+                    VerifyCsrfToken::class,
+                    SubstituteBindings::class,
+                    DisableBladeIconComponents::class,
+                    DispatchServingFilamentEvent::class,
+                    $this->getSetLocaleMiddleware(),
+                ])
             ->authMiddleware(array_merge(
-                [Authenticate::class],
-                class_exists(\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
-                ? [\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
-                : []
-            ))
+                    [Authenticate::class],
+                    class_exists(\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
+                    ? [\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
+                    : []
+                ))
             ->viteTheme('resources/css/filament/portal/theme.css');
     }
 
