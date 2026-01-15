@@ -118,6 +118,14 @@ return [
     'Edit Profile' => 'Profil bearbeiten',
     'Change Password' => 'Passwort ändern',
     'Manage your theme and language' => 'Design und Sprache verwalten',
+    'Manage Appearance' => 'Erscheinungsbild verwalten',
+
+    // Appearance Toggle component
+    'appearance' => [
+        'light' => 'Hell',
+        'dark' => 'Dunkel',
+        'system' => 'System',
+    ],
 
     // Notifications Page
     'Notifications' => 'Benachrichtigungen',
@@ -133,5 +141,4 @@ return [
     'Disable Push Notifications' => 'Push-Benachrichtigungen deaktivieren',
     'Push notifications are not configured. Please contact your administrator.' => 'Push-Benachrichtigungen sind nicht konfiguriert. Bitte kontaktieren Sie Ihren Administrator.',
     'Push notifications are not available.' => 'Push-Benachrichtigungen sind nicht verfügbar.',
-    'Manage Appearance' => 'Erscheinungsbild verwalten',
 ];

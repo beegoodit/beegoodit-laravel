@@ -125,6 +125,14 @@ return [
     'Edit Profile' => 'Editar Perfil',
     'Change Password' => 'Cambiar Contraseña',
     'Manage your theme and language' => 'Administra tu tema e idioma',
+    'Manage Appearance' => 'Administrar Apariencia',
+
+    // Appearance Toggle component
+    'appearance' => [
+        'light' => 'Claro',
+        'dark' => 'Oscuro',
+        'system' => 'Sistema',
+    ],
 
     // Notifications Page
     'Notifications' => 'Notificaciones',
