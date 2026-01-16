@@ -17,7 +17,7 @@ class HasBrandingPhpUnitTest extends TestCase
         Storage::fake('s3');
     }
 
-    public function test_it_generates_logo_url()
+    public function test_it_generates_logo_url(): void
     {
         $team = new class extends Model
         {
@@ -33,19 +33,19 @@ class HasBrandingPhpUnitTest extends TestCase
         $this->assertStringContainsString('teams/logo/test.png', $url);
     }
 
-    public function test_it_returns_null_for_empty_logo()
+    public function test_it_returns_null_for_empty_logo(): void
     {
         $team = new class extends Model
         {
             use HasBranding;
 
-            public $logo = null;
+            public $logo;
         };
 
         $this->assertNull($team->getLogoUrl());
     }
 
-    public function test_it_provides_filament_logo_url()
+    public function test_it_provides_filament_logo_url(): void
     {
         $team = new class extends Model
         {

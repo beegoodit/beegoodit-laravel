@@ -16,7 +16,7 @@ class PushNotificationService
      */
     protected function getWebPush(): WebPush
     {
-        if ($this->webPush === null) {
+        if (!$this->webPush instanceof \Minishlink\WebPush\WebPush) {
             $vapidConfig = config('pwa.push.vapid');
 
             $auth = [
@@ -69,7 +69,7 @@ class PushNotificationService
             Log::debug('Sending push notification', [
                 'endpoint' => substr($subscription->endpoint, 0, 50) . '...',
                 'vapid_subject' => config('pwa.push.vapid.subject'),
-                'vapid_public_key_length' => strlen(config('pwa.push.vapid.public_key') ?? ''),
+                'vapid_public_key_length' => strlen((string) config('pwa.push.vapid.public_key', '')),
             ]);
 
             $report = $this->getWebPush()->sendOneNotification(

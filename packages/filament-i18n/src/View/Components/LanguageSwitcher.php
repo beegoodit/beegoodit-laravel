@@ -27,11 +27,11 @@ class LanguageSwitcher extends Component
 
             foreach ($this->locales as $locale) {
                 if (str_starts_with($currentRouteName, $locale . '.')) {
-                    return substr($currentRouteName, strlen($locale) + 1);
+                    return substr($currentRouteName, strlen((string) $locale) + 1);
                 }
             }
             return 'home';
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return 'home';
         }
     }

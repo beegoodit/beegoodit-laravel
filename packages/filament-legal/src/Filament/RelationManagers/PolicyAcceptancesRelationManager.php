@@ -28,16 +28,16 @@ class PolicyAcceptancesRelationManager extends RelationManager
                     ->label(__('filament-legal::messages.User'))
                     ->searchable()
                     ->sortable()
-                    ->hidden(fn($livewire) => $livewire->getOwnerRecord() instanceof \App\Models\User),
+                    ->hidden(fn($livewire): bool => $livewire->getOwnerRecord() instanceof \App\Models\User),
                 TextColumn::make('policy.type')
                     ->label(__('filament-legal::messages.Policy Type'))
-                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->formatStateUsing(fn($state): string => ucfirst((string) $state))
                     ->sortable()
-                    ->hidden(fn($livewire) => $livewire->getOwnerRecord() instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy),
+                    ->hidden(fn($livewire): bool => $livewire->getOwnerRecord() instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy),
                 TextColumn::make('policy.version')
                     ->label(__('filament-legal::messages.Version'))
                     ->sortable()
-                    ->hidden(fn($livewire) => $livewire->getOwnerRecord() instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy),
+                    ->hidden(fn($livewire): bool => $livewire->getOwnerRecord() instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy),
                 TextColumn::make('ip_address')
                     ->label(__('filament-legal::messages.IP Address'))
                     ->searchable(),

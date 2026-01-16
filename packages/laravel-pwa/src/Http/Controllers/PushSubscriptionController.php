@@ -22,10 +22,10 @@ class PushSubscriptionController extends Controller
         ]);
 
         $request->validate([
-            'endpoint' => 'required|string|url',
-            'keys.p256dh' => 'required|string',
-            'keys.auth' => 'required|string',
-            'contentEncoding' => 'nullable|string',
+            'endpoint' => ['required', 'string', 'url'],
+            'keys.p256dh' => ['required', 'string'],
+            'keys.auth' => ['required', 'string'],
+            'contentEncoding' => ['nullable', 'string'],
         ]);
 
         $model = config('pwa.subscription_model', PushSubscription::class);
@@ -52,7 +52,7 @@ class PushSubscriptionController extends Controller
     public function destroy(Request $request): JsonResponse
     {
         $request->validate([
-            'endpoint' => 'required|string',
+            'endpoint' => ['required', 'string'],
         ]);
 
         $model = config('pwa.subscription_model', PushSubscription::class);

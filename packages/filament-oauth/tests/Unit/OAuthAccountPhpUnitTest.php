@@ -18,7 +18,7 @@ class OAuthAccountPhpUnitTest extends TestCase
 
         $this->loadLaravelMigrations();
 
-        Schema::create('oauth_accounts', function ($table) {
+        Schema::create('oauth_accounts', function ($table): void {
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('provider');
@@ -33,7 +33,7 @@ class OAuthAccountPhpUnitTest extends TestCase
         });
     }
 
-    public function test_it_encrypts_access_and_refresh_tokens()
+    public function test_it_encrypts_access_and_refresh_tokens(): void
     {
         $account = OAuthAccount::create([
             'user_id' => \Illuminate\Support\Str::uuid(),
@@ -50,7 +50,7 @@ class OAuthAccountPhpUnitTest extends TestCase
         $this->assertEquals('secret-token', $account->access_token);
     }
 
-    public function test_it_detects_expired_tokens()
+    public function test_it_detects_expired_tokens(): void
     {
         $account = OAuthAccount::create([
             'user_id' => \Illuminate\Support\Str::uuid(),
@@ -62,7 +62,7 @@ class OAuthAccountPhpUnitTest extends TestCase
         $this->assertTrue($account->isTokenExpired());
     }
 
-    public function test_it_detects_non_expired_tokens()
+    public function test_it_detects_non_expired_tokens(): void
     {
         $account = OAuthAccount::create([
             'user_id' => \Illuminate\Support\Str::uuid(),
@@ -74,7 +74,7 @@ class OAuthAccountPhpUnitTest extends TestCase
         $this->assertFalse($account->isTokenExpired());
     }
 
-    public function test_it_scopes_by_provider()
+    public function test_it_scopes_by_provider(): void
     {
         $user1Id = \Illuminate\Support\Str::uuid();
 

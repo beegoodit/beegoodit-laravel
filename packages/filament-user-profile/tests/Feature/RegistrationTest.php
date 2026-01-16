@@ -6,7 +6,7 @@ use BeeGoodIT\FilamentUserProfile\Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
-    public function test_registration_is_conditionally_called_in_panel_provider()
+    public function test_registration_is_conditionally_called_in_panel_provider(): void
     {
         $panelProviderFile = __DIR__ . '/../../src/Filament/UserProfilePanelProvider.php';
 
@@ -18,7 +18,7 @@ class RegistrationTest extends TestCase
         $this->assertStringContainsString("->registration(config('filament-user-profile.registration', false))", $content);
     }
 
-    public function test_config_file_exists_with_default_false()
+    public function test_config_file_exists_with_default_false(): void
     {
         $configFile = __DIR__ . '/../../config/filament-user-profile.php';
 

@@ -18,12 +18,6 @@ class LegalPolicy extends Model
         'published_at',
     ];
 
-    protected $casts = [
-        'content' => 'array',
-        'is_active' => 'boolean',
-        'published_at' => 'datetime',
-    ];
-
     public function acceptances(): HasMany
     {
         return $this->hasMany(PolicyAcceptance::class);
@@ -35,5 +29,13 @@ class LegalPolicy extends Model
             ->where('is_active', true)
             ->orderByDesc('version')
             ->first();
+    }
+    protected function casts(): array
+    {
+        return [
+            'content' => 'array',
+            'is_active' => 'boolean',
+            'published_at' => 'datetime',
+        ];
     }
 }

@@ -98,7 +98,7 @@ BLADE;
 
         $avatarFixScript = self::getAvatarUrlFixScript();
 
-        $template = <<<BLADE
+        return <<<BLADE
 @php
     try {
         \$tenant = filament()->getTenant();
@@ -142,8 +142,6 @@ BLADE;
 </style>
 {$avatarFixScript}
 BLADE;
-
-        return $template;
     }
 
     /**

@@ -38,7 +38,7 @@ abstract class TestCase extends Orchestra
         $this->loadLaravelMigrations();
 
         // Create test table for userstamps testing
-        Schema::create('test_models', function (Blueprint $table) {
+        Schema::create('test_models', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('created_by_id')->nullable();

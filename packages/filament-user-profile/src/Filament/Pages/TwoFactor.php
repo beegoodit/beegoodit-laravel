@@ -75,7 +75,7 @@ class TwoFactor extends Page implements HasForms
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
         // Use the user-profile panel (no tenant)
-        $panel = $panel ?? 'me';
+        $panel ??= 'me';
 
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }
@@ -133,7 +133,7 @@ class TwoFactor extends Page implements HasForms
         if (method_exists($user, 'hasEnabledTwoFactorAuthentication')) {
             try {
                 return $user->hasEnabledTwoFactorAuthentication();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Method exists but might throw an error, fall through to fallback
             }
         }
@@ -198,7 +198,7 @@ class TwoFactor extends Page implements HasForms
             } else {
                 throw new Exception('Two factor secret not found');
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->addError('setupData', __('filament-user-profile::messages.Failed to fetch setup data.'));
 
             $this->qrCodeSvg = '';
@@ -248,7 +248,7 @@ class TwoFactor extends Page implements HasForms
                 ->title(__('filament-user-profile::messages.Two-Factor Authentication Enabled'))
                 ->body(__('filament-user-profile::messages.Two-factor authentication has been successfully enabled for your account.'))
                 ->send();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->addError('code', __('filament-user-profile::messages.Invalid verification code. Please try again.'));
 
             Notification::make()
@@ -363,8 +363,8 @@ class TwoFactor extends Page implements HasForms
         if ($this->checkTwoFactorEnabled($user) && property_exists($user, 'two_factor_recovery_codes') && $user->two_factor_recovery_codes) {
             try {
                 $decrypted = decrypt($user->two_factor_recovery_codes);
-                $this->recoveryCodes = json_decode($decrypted, true) ?: [];
-            } catch (Exception $e) {
+                $this->recoveryCodes = json_decode((string) $decrypted, true) ?: [];
+            } catch (Exception) {
                 $this->addError('recoveryCodes', __('filament-user-profile::messages.Failed to load recovery codes'));
 
                 $this->recoveryCodes = [];

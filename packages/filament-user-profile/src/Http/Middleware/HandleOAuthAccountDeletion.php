@@ -33,7 +33,7 @@ class HandleOAuthAccountDeletion
                 if (Auth::check()) {
                     Auth::guard('web')->logout();
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // User might already be deleted, ignore
             }
 
@@ -50,16 +50,11 @@ class HandleOAuthAccountDeletion
         if (Session::has('account_deleted_after_oauth')) {
             \Illuminate\Support\Facades\Log::info('HandleOAuthAccountDeletion - flag found AFTER request, modifying redirect', [
                 'path' => $request->path(),
-                'response_type' => get_class($response),
+                'response_type' => $response::class,
             ]);
 
             Session::forget('account_deleted_after_oauth');
             Session::forget('deleted_user_email');
-
-            // If it's a redirect response, change it to redirect to home
-            if ($response instanceof \Illuminate\Http\RedirectResponse) {
-                return redirect('/')->with('account_deleted', true);
-            }
 
             // If it's a regular response, redirect to home
             return redirect('/')->with('account_deleted', true);

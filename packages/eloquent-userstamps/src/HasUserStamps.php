@@ -11,14 +11,14 @@ trait HasUserStamps
      */
     protected static function bootHasUserStamps(): void
     {
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (auth()->check()) {
                 $model->created_by_id = auth()->id();
                 $model->updated_by_id = auth()->id();
             }
         });
 
-        static::updating(function ($model) {
+        static::updating(function ($model): void {
             if (auth()->check()) {
                 $model->updated_by_id = auth()->id();
             }

@@ -55,7 +55,7 @@ trait HasBranding
         }
 
         // Ensure hex format (remove # for URL)
-        $hexColor = ltrim($primaryColor, '#');
+        $hexColor = ltrim((string) $primaryColor, '#');
 
         return 'https://ui-avatars.com/api/?name='.urlencode($name)
             .'&color=FFFFFF&background='.$hexColor;
@@ -69,7 +69,7 @@ trait HasBranding
      * @param  mixed  $value  The raw value from the database
      * @return string|null Hex color string (e.g., '#f59e0b') or null
      */
-    public function getPrimaryColorAttribute($value)
+    protected function getPrimaryColorAttribute($value): ?string
     {
         // Get the raw value from attributes (bypassing accessor to avoid recursion)
         $rawValue = $this->attributes['primary_color'] ?? $value;
@@ -87,22 +87,19 @@ trait HasBranding
         }
 
         // If oklch format, convert to hex
-        if (str_starts_with($rawValue, 'oklch')) {
-            // Extract oklch values: oklch(L C H) or oklch(L C H / alpha)
-            if (preg_match('/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)/', $rawValue, $matches)) {
-                $l = (float) $matches[1];
-                $c = (float) $matches[2];
-                $h = (float) $matches[3];
+        // Extract oklch values: oklch(L C H) or oklch(L C H / alpha)
+        if (str_starts_with($rawValue, 'oklch') && preg_match('/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)/', $rawValue, $matches)) {
+            $l = (float) $matches[1];
+            $c = (float) $matches[2];
+            $h = (float) $matches[3];
+            // Convert oklch to rgb, then to hex
+            try {
+                $rgb = $this->oklchToRgb($l, $c, $h);
 
-                // Convert oklch to rgb, then to hex
-                try {
-                    $rgb = $this->oklchToRgb($l, $c, $h);
-
-                    return sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
-                } catch (\Exception $e) {
-                    // If conversion fails, return null
-                    return null;
-                }
+                return sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
+            } catch (\Exception) {
+                // If conversion fails, return null
+                return null;
             }
         }
 
@@ -115,7 +112,7 @@ trait HasBranding
      *
      * @param  mixed  $value
      */
-    public function setPrimaryColorAttribute($value)
+    protected function setPrimaryColorAttribute($value): void
     {
         if (empty($value)) {
             $this->attributes['primary_color'] = null;
@@ -133,20 +130,18 @@ trait HasBranding
         }
 
         // If oklch, convert to hex before storing
-        if (str_starts_with($value, 'oklch')) {
-            if (preg_match('/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)/', $value, $matches)) {
-                try {
-                    $rgb = $this->oklchToRgb((float) $matches[1], (float) $matches[2], (float) $matches[3]);
-                    $hex = sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
-                    $this->attributes['primary_color'] = $hex;
+        if (str_starts_with($value, 'oklch') && preg_match('/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)/', $value, $matches)) {
+            try {
+                $rgb = $this->oklchToRgb((float) $matches[1], (float) $matches[2], (float) $matches[3]);
+                $hex = sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
+                $this->attributes['primary_color'] = $hex;
 
-                    return;
-                } catch (\Exception $e) {
-                    // If conversion fails, store as null
-                    $this->attributes['primary_color'] = null;
+                return;
+            } catch (\Exception) {
+                // If conversion fails, store as null
+                $this->attributes['primary_color'] = null;
 
-                    return;
-                }
+                return;
             }
         }
 
@@ -175,9 +170,9 @@ trait HasBranding
         $x = $a / 500 + $y;
         $z = $y - $b / 200;
 
-        $x = 0.95047 * (($x > 0.206897) ? pow($x, 3) : ($x - 16 / 116) / 7.787);
-        $y = 1.00000 * (($y > 0.206897) ? pow($y, 3) : ($y - 16 / 116) / 7.787);
-        $z = 1.08883 * (($z > 0.206897) ? pow($z, 3) : ($z - 16 / 116) / 7.787);
+        $x = 0.95047 * (($x > 0.206897) ? $x ** 3 : ($x - 16 / 116) / 7.787);
+        $y = 1.00000 * (($y > 0.206897) ? $y ** 3 : ($y - 16 / 116) / 7.787);
+        $z = 1.08883 * (($z > 0.206897) ? $z ** 3 : ($z - 16 / 116) / 7.787);
 
         $r = $x * 3.2406 + $y * -1.5372 + $z * -0.4986;
         $g = $x * -0.9689 + $y * 1.8758 + $z * 0.0415;

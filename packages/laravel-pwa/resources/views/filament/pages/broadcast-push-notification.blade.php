@@ -1,11 +1,11 @@
 <x-filament-panels::page>
     <x-filament::section>
         <x-slot name="heading">
-            {{ __('Broadcast Notification') }}
+            {{ __('laravel-pwa::broadcast.heading') }}
         </x-slot>
 
         <x-slot name="description">
-            {{ __('Send a push notification to specific or all subscribed users.') }}
+            {{ __('laravel-pwa::broadcast.description') }}
         </x-slot>
 
         <form wire:submit="submit" class="space-y-6">
@@ -13,7 +13,7 @@
 
             <div class="flex justify-end">
                 <x-filament::button type="submit">
-                    {{ __('Send Notification') }}
+                    {{ __('laravel-pwa::broadcast.buttons.send') }}
                 </x-filament::button>
             </div>
         </form>

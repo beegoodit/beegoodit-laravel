@@ -25,7 +25,7 @@ class AvatarService
             $response = Http::get($avatarUrl);
 
             if ($response->successful()) {
-                $extension = pathinfo(parse_url($avatarUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+                $extension = pathinfo(parse_url((string) $avatarUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
                 $filename = 'avatars/' . Str::uuid() . '.' . $extension;
 
                 $disk = config('filesystems.default') === 's3' ? 's3' : 'public';

@@ -21,18 +21,18 @@ class ServiceLogicTest extends TestCase
         $this->loadLaravelMigrations();
     }
 
-    public function test_config_defaults()
+    public function test_config_defaults(): void
     {
         // The user changed the package default to false
         $this->assertFalse(config('filament-oauth.auto_assign_teams'));
         $this->assertFalse(config('filament-oauth.sync_avatars'));
     }
 
-    public function test_avatar_service_handles_missing_avatar()
+    public function test_avatar_service_handles_missing_avatar(): void
     {
         $user = $this->createMock(\Illuminate\Database\Eloquent\Model::class);
         $oauthUser = new class {
-            public function getAvatar() { return null; }
+            public function getAvatar(): null { return null; }
         };
 
         $service = new AvatarService();

@@ -98,7 +98,7 @@ class LegalPolicyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('type')
-                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->formatStateUsing(fn($state): string => ucfirst((string) $state))
                     ->sortable(),
                 TextColumn::make('version')
                     ->sortable(),

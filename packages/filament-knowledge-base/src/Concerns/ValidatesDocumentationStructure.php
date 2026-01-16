@@ -104,7 +104,7 @@ trait ValidatesDocumentationStructure
         $hasFallbackLocale = false;
 
         foreach ($directories as $directory) {
-            $folderName = basename($directory);
+            $folderName = basename((string) $directory);
 
             if ($this->isValidLocaleCode($folderName)) {
                 $hasValidLocale = true;
@@ -117,7 +117,7 @@ trait ValidatesDocumentationStructure
         }
 
         // Check for invalid folder names
-        if (!$hasValidLocale && !empty($invalidFolders)) {
+        if (!$hasValidLocale && $invalidFolders !== []) {
             $this->handleInvalidStructure($invalidFolders);
         }
 
@@ -141,7 +141,7 @@ trait ValidatesDocumentationStructure
      */
     protected function handleInvalidStructure(array $invalidFolders): void
     {
-        $folders = implode(', ', array_map(fn($f) => "'{$f}'", $invalidFolders));
+        $folders = implode(', ', array_map(fn($f): string => "'{$f}'", $invalidFolders));
 
         $message = <<<MSG
 [Knowledge Base] Invalid documentation structure detected!

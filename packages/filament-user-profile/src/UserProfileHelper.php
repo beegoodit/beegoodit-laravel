@@ -28,7 +28,7 @@ class UserProfileHelper
             'profile' => MenuItem::make()
                 ->label(fn () => __('filament-user-profile::messages.Profile'))
                 ->icon('heroicon-o-user-circle')
-                ->url(fn () => Profile::getUrl())
+                ->url(fn (): string => Profile::getUrl())
                 ->sort(0),
         ];
     }

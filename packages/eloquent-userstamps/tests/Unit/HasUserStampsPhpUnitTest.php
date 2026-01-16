@@ -22,7 +22,7 @@ class HasUserStampsPhpUnitTest extends TestCase
         $this->loadLaravelMigrations();
 
         // Create test table
-        \Illuminate\Support\Facades\Schema::create('test_models', function ($table) {
+        \Illuminate\Support\Facades\Schema::create('test_models', function ($table): void {
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('created_by_id')->nullable();
@@ -31,7 +31,7 @@ class HasUserStampsPhpUnitTest extends TestCase
         });
     }
 
-    public function test_it_sets_created_by_id_when_creating_a_model()
+    public function test_it_sets_created_by_id_when_creating_a_model(): void
     {
         $user = Authenticatable::create([
             'name' => 'Test User',
@@ -47,7 +47,7 @@ class HasUserStampsPhpUnitTest extends TestCase
         $this->assertEquals($user->id, $model->updated_by_id);
     }
 
-    public function test_it_sets_updated_by_id_when_updating_a_model()
+    public function test_it_sets_updated_by_id_when_updating_a_model(): void
     {
         $creator = Authenticatable::create([
             'name' => 'Creator',
@@ -71,7 +71,7 @@ class HasUserStampsPhpUnitTest extends TestCase
         $this->assertEquals($updater->id, $model->updated_by_id);
     }
 
-    public function test_it_does_not_set_userstamps_when_user_is_not_authenticated()
+    public function test_it_does_not_set_userstamps_when_user_is_not_authenticated(): void
     {
         $model = TestModelPhpUnit::create(['name' => 'Test']);
 
@@ -79,7 +79,7 @@ class HasUserStampsPhpUnitTest extends TestCase
         $this->assertNull($model->updated_by_id);
     }
 
-    public function test_it_provides_created_by_relationship()
+    public function test_it_provides_created_by_relationship(): void
     {
         $user = Authenticatable::create([
             'name' => 'Test User',
@@ -95,7 +95,7 @@ class HasUserStampsPhpUnitTest extends TestCase
         $this->assertEquals($user->id, $model->createdBy->id);
     }
 
-    public function test_it_provides_updated_by_relationship()
+    public function test_it_provides_updated_by_relationship(): void
     {
         $user = Authenticatable::create([
             'name' => 'Test User',

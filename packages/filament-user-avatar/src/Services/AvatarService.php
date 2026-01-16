@@ -26,7 +26,7 @@ class AvatarService
      */
     public function storeAvatarFromBase64(Model $user, ?string $base64DataUrl): ?string
     {
-        if (empty($base64DataUrl)) {
+        if (in_array($base64DataUrl, [null, '', '0'], true)) {
             return null;
         }
 
@@ -42,7 +42,7 @@ class AvatarService
             }
 
             $imageData = base64_decode($parts[1] ?? '');
-            if ($imageData === false || empty($imageData)) {
+            if ($imageData === false || ($imageData === '' || $imageData === '0')) {
                 return null;
             }
 

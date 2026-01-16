@@ -62,11 +62,9 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         }
 
         // Show helpful message when migrations are published
-        if ($this->app->runningInConsole()) {
-            // Display migration instructions
-            if (isset($_SERVER['argv']) && in_array('vendor:publish', $_SERVER['argv'])) {
-                $this->showMigrationInstructions();
-            }
+        // Display migration instructions
+        if ($this->app->runningInConsole() && (isset($_SERVER['argv']) && in_array('vendor:publish', \Illuminate\Support\Facades\Request::server('argv')))) {
+            $this->showMigrationInstructions();
         }
     }
 
@@ -82,7 +80,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         // Handle new user registration via OAuth
         // Note: Team assignment is now handled in createUserUsing callback (inside transaction)
         // This listener only handles email verification
-        Event::listen(Registered::class, function ($event) {
+        Event::listen(Registered::class, function ($event): void {
             $user = $event->socialiteUser->getUser();
 
             // Verify email automatically (OAuth providers verify emails)
@@ -92,7 +90,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         });
 
         // Handle existing user connecting OAuth account
-        Event::listen(SocialiteUserConnected::class, function ($event) use ($teamAssignmentService) {
+        Event::listen(SocialiteUserConnected::class, function ($event) use ($teamAssignmentService): void {
             $user = $event->socialiteUser->getUser();
             $provider = $event->provider;
 
@@ -163,7 +161,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         ];
 
         // Filter out empty values
-        $microsoftConfig = array_filter($microsoftConfig, fn($value) => !empty($value));
+        $microsoftConfig = array_filter($microsoftConfig, fn($value): bool => !empty($value));
 
         // Only merge if not already configured or if existing config is incomplete
         if (!isset($services['microsoft']) || empty($services['microsoft']['client_id'])) {
@@ -171,7 +169,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         } else {
             // Merge missing keys into existing config (existing values take precedence)
             $existing = $services['microsoft'];
-            $merged = array_merge($microsoftConfig, array_filter($existing, fn($value) => !empty($value)));
+            $merged = array_merge($microsoftConfig, array_filter($existing, fn($value): bool => !empty($value)));
             config(['services.microsoft' => $merged]);
         }
     }
@@ -197,7 +195,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         ];
 
         // Filter out empty values
-        $discordConfig = array_filter($discordConfig, fn($value) => !empty($value));
+        $discordConfig = array_filter($discordConfig, fn($value): bool => !empty($value));
 
         // Only merge if not already configured or if existing config is incomplete
         if (!isset($services['discord']) || empty($services['discord']['client_id'])) {
@@ -205,7 +203,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         } else {
             // Merge missing keys into existing config (existing values take precedence)
             $existing = $services['discord'];
-            $merged = array_merge($discordConfig, array_filter($existing, fn($value) => !empty($value)));
+            $merged = array_merge($discordConfig, array_filter($existing, fn($value): bool => !empty($value)));
             config(['services.discord' => $merged]);
         }
     }

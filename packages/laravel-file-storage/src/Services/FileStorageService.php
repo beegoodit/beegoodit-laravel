@@ -12,8 +12,8 @@ class FileStorageService
      */
     public function store(string $contents, string $directory, ?string $filename = null, ?string $disk = null): string
     {
-        $disk = $disk ?? $this->getDefaultDisk();
-        $filename = $filename ?? Str::uuid().'.bin';
+        $disk ??= $this->getDefaultDisk();
+        $filename ??= Str::uuid().'.bin';
         $path = trim($directory, '/').'/'.$filename;
 
         Storage::disk($disk)->put($path, $contents);
@@ -26,7 +26,7 @@ class FileStorageService
      */
     public function delete(string $path, ?string $disk = null): bool
     {
-        $disk = $disk ?? $this->getDefaultDisk();
+        $disk ??= $this->getDefaultDisk();
 
         if (Storage::disk($disk)->exists($path)) {
             return Storage::disk($disk)->delete($path);
@@ -40,7 +40,7 @@ class FileStorageService
      */
     public function exists(string $path, ?string $disk = null): bool
     {
-        $disk = $disk ?? $this->getDefaultDisk();
+        $disk ??= $this->getDefaultDisk();
 
         return Storage::disk($disk)->exists($path);
     }
@@ -50,7 +50,7 @@ class FileStorageService
      */
     public function url(string $path, int $expiryMinutes = 60, ?string $disk = null): ?string
     {
-        $disk = $disk ?? $this->getDefaultDisk();
+        $disk ??= $this->getDefaultDisk();
 
         if (! $this->exists($path, $disk)) {
             return null;

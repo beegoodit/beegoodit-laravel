@@ -47,7 +47,7 @@ class Notifications extends Page
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
         // Use the me panel (no tenant)
-        $panel = $panel ?? 'me';
+        $panel ??= 'me';
 
         $panelInstance = Filament::getPanel($panel);
 
@@ -80,7 +80,7 @@ class Notifications extends Page
     {
         // Check if push service is available and configured
         if (class_exists(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class)) {
-            $pushService = app(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class);
+            $pushService = resolve(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class);
             $this->pushSupported = true;
             $this->pushEnabled = $pushService->isEnabled();
             $this->vapidPublicKey = $pushService->getVapidPublicKey();

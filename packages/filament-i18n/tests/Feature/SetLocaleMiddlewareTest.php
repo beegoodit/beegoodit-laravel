@@ -32,7 +32,7 @@ class SetLocaleMiddlewareTest extends TestCase
         $app['config']->set('auth.providers.users.model', TestUser::class);
     }
 
-    public function test_it_sets_locale_from_authenticated_user()
+    public function test_it_sets_locale_from_authenticated_user(): void
     {
         // Create a mock user object with locale
         $user = new TestUser;
@@ -44,7 +44,7 @@ class SetLocaleMiddlewareTest extends TestCase
         }
 
         $request = Request::create('/');
-        $request->setUserResolver(fn () => $user);
+        $request->setUserResolver(fn (): \BeeGoodIT\FilamentI18n\Tests\Feature\TestUser => $user);
 
         $middleware = new SetLocale;
         $middleware->handle($request, fn ($req) => $req);
@@ -52,7 +52,7 @@ class SetLocaleMiddlewareTest extends TestCase
         $this->assertEquals('de', app()->getLocale());
     }
 
-    public function test_it_does_not_change_locale_when_user_not_authenticated()
+    public function test_it_does_not_change_locale_when_user_not_authenticated(): void
     {
         $originalLocale = app()->getLocale();
 

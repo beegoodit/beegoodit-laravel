@@ -48,9 +48,9 @@ trait HasAvatar
         }
 
         // Ensure hex format (remove # for URL)
-        $hexColor = ltrim($primaryColor, '#');
+        $hexColor = ltrim((string) $primaryColor, '#');
 
-        return 'https://ui-avatars.com/api/?name='.urlencode($name)
+        return 'https://ui-avatars.com/api/?name='.urlencode((string) $name)
             .'&color=FFFFFF&background='.$hexColor;
     }
 
@@ -72,7 +72,7 @@ trait HasAvatar
                 if (method_exists($tenant, 'getPrimaryColorAttribute') ||
                     in_array(\BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding::class, class_uses_recursive($tenant))) {
                     $color = $tenant->primary_color;
-                    if (! empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
+                    if (! empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', (string) $color)) {
                         return $color;
                     }
                 }
@@ -82,7 +82,7 @@ trait HasAvatar
                     $rawColor = $tenant->attributes['primary_color'];
                     if (! empty($rawColor)) {
                         // If already hex, return it
-                        if (preg_match('/^#[0-9A-Fa-f]{6}$/', $rawColor)) {
+                        if (preg_match('/^#[0-9A-Fa-f]{6}$/', (string) $rawColor)) {
                             return $rawColor;
                         }
                         // If oklch, we can't easily convert here without the HasBranding method
@@ -90,7 +90,7 @@ trait HasAvatar
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If filament() is not available or tenant doesn't exist, continue to fallback
         }
 

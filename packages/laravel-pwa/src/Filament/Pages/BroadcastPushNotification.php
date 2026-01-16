@@ -40,39 +40,39 @@ class BroadcastPushNotification extends Page
             ->components([
 
                 Select::make('target_type')
-                    ->label(__('Target'))
+                    ->label(__('laravel-pwa::broadcast.fields.target_type.label'))
                     ->options([
-                        'all' => __('All Users'),
-                        'users' => __('Specific Users'),
+                        'all' => __('laravel-pwa::broadcast.fields.target_type.options.all'),
+                        'users' => __('laravel-pwa::broadcast.fields.target_type.options.users'),
                     ])
                     ->required()
                     ->live(),
 
                 Select::make('users')
-                    ->label(__('Users'))
+                    ->label(__('laravel-pwa::broadcast.fields.users.label'))
                     ->multiple()
                     ->searchable()
                     ->options(User::query()->pluck('name', 'id'))
                     ->required()
-                    ->visible(fn (Get $get) => $get('target_type') === 'users'),
+                    ->visible(fn (Get $get): bool => $get('target_type') === 'users'),
 
                 TextInput::make('title_input')
-                    ->label(__('Title'))
+                    ->label(__('laravel-pwa::broadcast.fields.title.label'))
                     ->required()
                     ->maxLength(255)
-                    ->placeholder(__('e.g. New Event Published!')),
+                    ->placeholder(__('laravel-pwa::broadcast.fields.title.placeholder')),
 
                 Textarea::make('body')
-                    ->label(__('Body'))
+                    ->label(__('laravel-pwa::broadcast.fields.body.label'))
                     ->required()
                     ->maxLength(500)
                     ->rows(4)
-                    ->placeholder(__('e.g. A new tournament is available in your city.')),
+                    ->placeholder(__('laravel-pwa::broadcast.fields.body.placeholder')),
 
                 TextInput::make('action_url')
-                    ->label(__('Action URL (optional)'))
+                    ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
                     ->url()
-                    ->placeholder('https://...'),
+                    ->placeholder(__('laravel-pwa::broadcast.fields.action_url.placeholder')),
             ])
             ->statePath('data');
     }
@@ -81,7 +81,7 @@ class BroadcastPushNotification extends Page
     {
         $data = $this->form->getState();
 
-        $pushService = app(PushNotificationService::class);
+        $pushService = resolve(PushNotificationService::class);
 
         $payload = [
             'title' => $data['title_input'],
@@ -98,8 +98,8 @@ class BroadcastPushNotification extends Page
         }
 
         FilamentNotification::make()
-            ->title('Push Sent')
-            ->body("Successfully sent push notification to {$count} subscriptions.")
+            ->title(__('laravel-pwa::broadcast.notifications.success.title'))
+            ->body(__('laravel-pwa::broadcast.notifications.success.body', ['count' => $count]))
             ->success()
             ->send();
 
@@ -113,7 +113,7 @@ class BroadcastPushNotification extends Page
 
     public static function getNavigationLabel(): string
     {
-        return 'Push Broadcast';
+        return __('laravel-pwa::broadcast.navigation_label');
     }
 }
 

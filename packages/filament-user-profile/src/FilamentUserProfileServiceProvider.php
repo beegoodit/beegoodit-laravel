@@ -58,8 +58,8 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         // Listen for OAuth callbacks to handle account deletion
         // Listen to both Login (existing user) and SocialiteUserConnected (new connection) events
         // Use a very high priority to ensure we run first and can modify the redirect
-        $handleDeletion = function ($event) {
-            $eventType = get_class($event);
+        $handleDeletion = function ($event): void {
+            $eventType = $event::class;
             \Illuminate\Support\Facades\Log::info("=== OAuth event fired: {$eventType} ===", [
                 'provider' => $event->provider ?? null,
                 'has_socialite_user' => isset($event->socialiteUser),
@@ -131,8 +131,8 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         };
 
         // Listen to both events
-        Event::listen(Login::class, $handleDeletion, 999);
-        Event::listen(SocialiteUserConnected::class, $handleDeletion, 999);
+        Event::listen(Login::class, $handleDeletion);
+        Event::listen(SocialiteUserConnected::class, $handleDeletion);
 
         \Illuminate\Support\Facades\Log::info('FilamentUserProfileServiceProvider: Event listeners registered for Login and SocialiteUserConnected');
     }
@@ -140,9 +140,7 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register facade
-        $this->app->singleton('filament-user-profile', function ($app) {
-            return new UserProfileHelper;
-        });
+        $this->app->singleton('filament-user-profile', fn($app) => new UserProfileHelper);
 
         // Merge config
         $this->mergeConfigFrom(__DIR__ . '/../config/filament-user-profile.php', 'filament-user-profile');

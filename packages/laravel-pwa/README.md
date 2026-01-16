@@ -25,12 +25,10 @@ Include the `@pwaStyles` directive in your layout's `<head>` and `@pwaScripts` b
 </body>
 ```
 
-Then, place the teaser component contextually in your application:
+To display the push notification teaser, you can use the Blade component:
 
 ```blade
-<x-pwa::push-prompt-teaser 
-    position="fixed-bottom"
-/>
+<x-pwa::push_prompt_teaser position="fixed-bottom" />
 ```
 
 ##### Features

@@ -19,7 +19,7 @@ class FileStorageServicePhpUnitTest extends TestCase
         $this->service = new FileStorageService;
     }
 
-    public function test_it_stores_files_with_generated_filename()
+    public function test_it_stores_files_with_generated_filename(): void
     {
         $path = $this->service->store('file contents', 'uploads');
 
@@ -27,7 +27,7 @@ class FileStorageServicePhpUnitTest extends TestCase
         Storage::disk('public')->assertExists($path);
     }
 
-    public function test_it_stores_files_with_custom_filename()
+    public function test_it_stores_files_with_custom_filename(): void
     {
         $path = $this->service->store('file contents', 'uploads', 'test.txt');
 
@@ -35,7 +35,7 @@ class FileStorageServicePhpUnitTest extends TestCase
         Storage::disk('public')->assertExists('uploads/test.txt');
     }
 
-    public function test_it_deletes_existing_files()
+    public function test_it_deletes_existing_files(): void
     {
         $path = $this->service->store('file contents', 'uploads', 'test.txt');
         Storage::disk('public')->assertExists($path);
@@ -46,14 +46,14 @@ class FileStorageServicePhpUnitTest extends TestCase
         Storage::disk('public')->assertMissing($path);
     }
 
-    public function test_it_returns_false_when_deleting_non_existent_files()
+    public function test_it_returns_false_when_deleting_non_existent_files(): void
     {
         $deleted = $this->service->delete('non-existent.txt');
 
         $this->assertFalse($deleted);
     }
 
-    public function test_it_checks_file_existence()
+    public function test_it_checks_file_existence(): void
     {
         $path = $this->service->store('contents', 'uploads', 'exists.txt');
 
@@ -61,7 +61,7 @@ class FileStorageServicePhpUnitTest extends TestCase
         $this->assertFalse($this->service->exists('non-existent.txt'));
     }
 
-    public function test_it_generates_urls_for_existing_files()
+    public function test_it_generates_urls_for_existing_files(): void
     {
         $path = $this->service->store('contents', 'uploads', 'test.txt');
 
@@ -71,7 +71,7 @@ class FileStorageServicePhpUnitTest extends TestCase
         $this->assertStringContainsString('uploads/test.txt', $url);
     }
 
-    public function test_it_returns_null_for_non_existent_file_urls()
+    public function test_it_returns_null_for_non_existent_file_urls(): void
     {
         $url = $this->service->url('non-existent.txt');
 

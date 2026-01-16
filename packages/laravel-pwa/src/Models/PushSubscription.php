@@ -46,7 +46,7 @@ class PushSubscription extends Model
     /**
      * Scope to get subscriptions for a specific user.
      */
-    public function scopeForUser($query, $userId)
+    protected function scopeForUser($query, $userId)
     {
         return $query->where('user_id', $userId);
     }

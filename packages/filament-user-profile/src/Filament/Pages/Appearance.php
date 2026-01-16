@@ -27,11 +27,11 @@ class Appearance extends Page implements HasForms
 
     public ?string $time_format = null;
 
-    protected $localeField = null;
+    protected $localeField;
 
-    protected $timezoneField = null;
+    protected $timezoneField;
 
-    protected $timeFormatField = null;
+    protected $timeFormatField;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-paint-brush';
 
@@ -62,7 +62,7 @@ class Appearance extends Page implements HasForms
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
         // Use the user-profile panel (no tenant)
-        $panel = $panel ?? 'me';
+        $panel ??= 'me';
 
         return parent::getUrl($parameters, $isAbsolute, $panel, null);
     }

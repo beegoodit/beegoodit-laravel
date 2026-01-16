@@ -26,7 +26,7 @@ class Profile extends Page implements HasForms
 
     public ?string $email = null;
 
-    public $avatarUpload = null;
+    public $avatarUpload;
 
     public string $deletePassword = '';
 
@@ -50,7 +50,7 @@ class Profile extends Page implements HasForms
         if (method_exists($user, 'oauthAccounts')) {
             try {
                 return $user->oauthAccounts()->exists();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Fall through to DB query
             }
         }
@@ -61,7 +61,7 @@ class Profile extends Page implements HasForms
                 if (DB::table('oauth_accounts')->where('user_id', $user->id)->exists()) {
                     return true;
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Continue to check socialite_users
             }
         }
@@ -72,7 +72,7 @@ class Profile extends Page implements HasForms
                 return DB::table('socialite_users')
                     ->where('user_id', $user->id)
                     ->exists();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 return false;
             }
         }
@@ -109,7 +109,7 @@ class Profile extends Page implements HasForms
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
     {
         // Use the user-profile panel (no tenant)
-        $panel = $panel ?? 'me';
+        $panel ??= 'me';
 
         $panelInstance = Filament::getPanel($panel);
 
@@ -222,7 +222,7 @@ class Profile extends Page implements HasForms
         $user->name = $validated['name'];
 
         // Lowercase email to match eveant's behavior
-        $email = strtolower($validated['email']);
+        $email = strtolower((string) $validated['email']);
 
         if ($user->email !== $email) {
             $user->email = $email;
@@ -264,7 +264,7 @@ class Profile extends Page implements HasForms
         try {
             // Check if AvatarService is available (from filament-user-avatar package)
             if (class_exists(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
-                $avatarService = app(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
+                $avatarService = resolve(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
 
                 // Get file content and extension
                 $fileContent = file_get_contents($this->avatarUpload->getRealPath());
@@ -312,7 +312,7 @@ class Profile extends Page implements HasForms
         try {
             // Check if AvatarService is available
             if (class_exists(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
-                $avatarService = app(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
+                $avatarService = resolve(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
                 $avatarService->deleteAvatar($user);
             } else {
                 // Fallback: delete avatar directly
@@ -401,7 +401,7 @@ class Profile extends Page implements HasForms
                 \Illuminate\Support\Facades\Log::debug('OAuth accounts relationship failed', [
                     'error' => $e->getMessage(),
                     'user_id' => $user->id,
-                    'user_class' => get_class($user),
+                    'user_class' => $user::class,
                     'trace' => $e->getTraceAsString(),
                 ]);
             }
@@ -417,7 +417,7 @@ class Profile extends Page implements HasForms
                     if ($account && isset($account->provider)) {
                         return $account->provider;
                     }
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Continue to next provider
                     continue;
                 }
@@ -430,8 +430,7 @@ class Profile extends Page implements HasForms
             try {
                 $userId = $user->id;
                 $account = DB::table('oauth_accounts')
-                    ->where('user_id', $userId)
-                    ->orderBy('created_at', 'desc')
+                    ->where('user_id', $userId)->latest()
                     ->first();
 
                 if ($account && isset($account->provider)) {
@@ -449,8 +448,7 @@ class Profile extends Page implements HasForms
             try {
                 $userId = $user->id;
                 $account = DB::table('socialite_users')
-                    ->where('user_id', $userId)
-                    ->orderBy('created_at', 'desc')
+                    ->where('user_id', $userId)->latest()
                     ->first();
 
                 if ($account && isset($account->provider)) {

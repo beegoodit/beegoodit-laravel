@@ -28,7 +28,7 @@ class EnsureLegalAcceptance
         // Get the current active privacy policy
         $activePrivacyPolicy = LegalPolicy::getActive('privacy');
 
-        if (!$activePrivacyPolicy) {
+        if (!$activePrivacyPolicy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
             return $next($request);
         }
 
@@ -44,7 +44,7 @@ class EnsureLegalAcceptance
             if ($request->isMethod('GET')) {
                 session()->put('url.intended', $request->fullUrl());
             }
-            return redirect()->route('filament-legal.acceptance');
+            return to_route('filament-legal.acceptance');
         }
 
         return $next($request);

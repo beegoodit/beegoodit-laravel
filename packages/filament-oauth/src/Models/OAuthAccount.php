@@ -38,12 +38,12 @@ class OAuthAccount extends Model
         return $this->belongsTo(config('auth.providers.users.model'));
     }
 
-    public function scopeWhereProvider($query, string $provider)
+    protected function scopeWhereProvider($query, string $provider)
     {
         return $query->where('provider', $provider);
     }
 
-    public function scopeWhereProviderId($query, string $providerId)
+    protected function scopeWhereProviderId($query, string $providerId)
     {
         return $query->where('provider_id', $providerId);
     }

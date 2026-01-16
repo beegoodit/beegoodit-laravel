@@ -20,7 +20,7 @@ trait HasStoredFiles
      */
     protected function getFileUrl(?string $path, int $expiryMinutes = 60): ?string
     {
-        if (empty($path)) {
+        if (in_array($path, [null, '', '0'], true)) {
             return null;
         }
 
@@ -45,7 +45,7 @@ trait HasStoredFiles
     public function __call($method, $parameters)
     {
         // Check if calling a getXxxUrl() method
-        if (preg_match('/^get(\w+)Url$/', $method, $matches)) {
+        if (preg_match('/^get(\w+)Url$/', (string) $method, $matches)) {
             $field = \Illuminate\Support\Str::snake($matches[1]);
 
             // Check if this field is in the storedFiles array

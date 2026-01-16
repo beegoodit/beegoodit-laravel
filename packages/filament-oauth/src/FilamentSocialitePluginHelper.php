@@ -26,7 +26,7 @@ class FilamentSocialitePluginHelper
 
                 // Sync avatar if enabled
                 if (config('filament-oauth.sync_avatars', false)) {
-                    app(\BeeGoodIT\FilamentOAuth\Services\AvatarService::class)->syncAvatar($user, $oauthUser);
+                    resolve(\BeeGoodIT\FilamentOAuth\Services\AvatarService::class)->syncAvatar($user, $oauthUser);
                 }
 
                 // Assign team DURING user creation (inside the transaction) if enabled for this provider
@@ -43,7 +43,7 @@ class FilamentSocialitePluginHelper
                     $accessToken = $oauthUser->token ?? null;
 
                     if ($tenantId) {
-                        $teamAssignmentService = app(\BeeGoodIT\FilamentOAuth\Services\TeamAssignmentService::class);
+                        $teamAssignmentService = resolve(\BeeGoodIT\FilamentOAuth\Services\TeamAssignmentService::class);
                         $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
 
                         // Critical: Ensure teams relationship is loaded on the user instance
@@ -71,7 +71,7 @@ class FilamentSocialitePluginHelper
 
                     // Redirect to 2FA challenge if enabled
                     if ($user->two_factor_secret && !session()->get('auth.two_factor_confirmed_at')) {
-                        return redirect()->route('filament.user-profile.pages.two-factor-challenge');
+                        return to_route('filament.user-profile.pages.two-factor-challenge');
                     }
 
                     if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {

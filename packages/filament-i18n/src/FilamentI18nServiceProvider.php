@@ -13,9 +13,7 @@ class FilamentI18nServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/filament-i18n.php', 'filament-i18n');
 
         // Register facade singleton
-        $this->app->singleton('filament-i18n', function ($app) {
-            return new I18nHelper;
-        });
+        $this->app->singleton('filament-i18n', fn($app) => new I18nHelper);
     }
 
     public function boot(): void

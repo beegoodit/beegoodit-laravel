@@ -57,7 +57,7 @@ class UserProfilePanelProvider extends PanelProvider
                     ->icon('heroicon-o-command-line');
             }
 
-            if (!empty($providersList)) {
+            if ($providersList !== []) {
                 $panel->plugin(
                     FilamentSocialitePluginHelper::make()
                         ->providers($providersList)
@@ -77,7 +77,7 @@ class UserProfilePanelProvider extends PanelProvider
                     NavigationItem::make()
                         ->label(fn() => __('filament-user-profile::messages.Back to Portal'))
                         ->icon('heroicon-o-arrow-left')
-                        ->url(fn() => $this->getPortalUrl())
+                        ->url(fn(): string => $this->getPortalUrl())
                         ->sort(-1), // Show at the top
                 ])
             ->middleware([

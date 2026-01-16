@@ -14,18 +14,18 @@ class LegalAcceptanceController extends Controller
     {
         $policy = LegalPolicy::getActive('privacy');
 
-        if (!$policy) {
+        if (!$policy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
             return redirect()->intended();
         }
 
-        return view('filament-legal::acceptance', compact('policy'));
+        return view('filament-legal::acceptance', ['policy' => $policy]);
     }
 
     public function accept(Request $request)
     {
         $policy = LegalPolicy::getActive('privacy');
 
-        if (!$policy) {
+        if (!$policy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
             return redirect()->intended();
         }
 

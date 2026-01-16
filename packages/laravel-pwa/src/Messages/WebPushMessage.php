@@ -184,11 +184,11 @@ class WebPushMessage
             $payload['tag'] = $this->tag;
         }
 
-        if (!empty($this->data)) {
+        if ($this->data !== []) {
             $payload['data'] = $this->data;
         }
 
-        if (!empty($this->actions)) {
+        if ($this->actions !== []) {
             $payload['actions'] = $this->actions;
         }
 

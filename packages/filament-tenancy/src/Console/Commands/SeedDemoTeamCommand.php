@@ -265,7 +265,7 @@ class SeedDemoTeamCommand extends Command
 
         $adjective = $adjectives[array_rand($adjectives)];
         $noun = $nouns[array_rand($nouns)];
-        $randomNumber = rand(10000, 99999);
+        $randomNumber = random_int(10000, 99999);
 
         return "{$adjective}-{$noun}-{$randomNumber}";
     }

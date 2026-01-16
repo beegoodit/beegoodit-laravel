@@ -12,13 +12,11 @@ class LegalGateTest extends TestCase
     {
         parent::setUp();
 
-        Route::middleware(['web', EnsureLegalAcceptance::class])->get('/dashboard', function () {
-            return 'dashboard';
-        })->name('dashboard');
+        Route::middleware(['web', EnsureLegalAcceptance::class])->get('/dashboard', fn() => 'dashboard')->name('dashboard');
     }
 
     /** @test */
-    public function test_users_are_redirected_to_legal_acceptance_page_if_not_accepted()
+    public function test_users_are_redirected_to_legal_acceptance_page_if_not_accepted(): void
     {
         $user = User::create([
             'name' => 'Test User',
@@ -39,7 +37,7 @@ class LegalGateTest extends TestCase
     }
 
     /** @test */
-    public function test_users_can_access_dashboard_after_accepting_policy()
+    public function test_users_can_access_dashboard_after_accepting_policy(): void
     {
         $user = User::create([
             'name' => 'Test User',

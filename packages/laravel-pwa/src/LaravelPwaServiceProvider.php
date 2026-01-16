@@ -89,9 +89,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/pwa.php', 'pwa');
 
         // Register push notification service
-        $this->app->singleton(PushNotificationService::class, function ($app) {
-            return new PushNotificationService;
-        });
+        $this->app->singleton(PushNotificationService::class, fn($app) => new PushNotificationService);
     }
 
     protected function registerRoutes(): void
@@ -99,7 +97,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         Route::group([
             'prefix' => 'api',
             'middleware' => config('pwa.push.middleware', ['web']),
-        ], function () {
+        ], function (): void {
             Route::post('/push-subscriptions', [
                 \BeeGoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
                 'store',
@@ -114,30 +112,22 @@ class LaravelPwaServiceProvider extends ServiceProvider
 
     protected function registerNotificationChannel(): void
     {
-        Notification::resolved(function (ChannelManager $service) {
-            $service->extend('webPush', function ($app) {
-                return $app->make(WebPushChannel::class);
-            });
+        Notification::resolved(function (ChannelManager $service): void {
+            $service->extend('webPush', fn($app) => $app->make(WebPushChannel::class));
         });
     }
 
     protected function registerBladeDirectives(): void
     {
-        Blade::directive('pwaHead', function () {
-            return "<?php echo view('laravel-pwa::partials.pwa-meta')->render(); ?>";
-        });
+        Blade::directive('pwaHead', fn() => "<?php echo view('laravel-pwa::partials.pwa-meta')->render(); ?>");
 
-        Blade::directive('pwaScripts', function () {
-            return "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>";
-        });
+        Blade::directive('pwaScripts', fn() => "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>");
 
-        Blade::directive('pwaStyles', function () {
-            return "<?php echo \"<link rel='stylesheet' href='\" . asset('css/push-prompt.css') . \"'>\"; ?>";
-        });
+        Blade::directive('pwaStyles', fn() => "<?php echo \"<link rel='stylesheet' href='\" . asset('css/push-prompt.css') . \"'>\"; ?>");
     }
 
     protected function registerBladeComponents(): void
     {
-        Blade::component('laravel-pwa::components.push-prompt-teaser', 'pwa::push-prompt-teaser');
+        Blade::component('laravel-pwa::components.push-prompt-teaser', 'pwa::push_prompt_teaser');
     }
 }

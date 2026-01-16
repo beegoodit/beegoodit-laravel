@@ -31,7 +31,7 @@ class TestCase extends Orchestra
 
     protected function setUpDatabase($app)
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();

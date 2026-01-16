@@ -22,7 +22,7 @@ class BrandingSchema
                     ->label('Team Logo')
                     ->image()
                     ->disk(config('filesystems.default') === 's3' ? 's3' : 'public')
-                    ->directory(fn () => sprintf('teams/logo/%s', Filament::getTenant()->id))
+                    ->directory(fn (): string => sprintf('teams/logo/%s', Filament::getTenant()->id))
                     ->maxSize(2048)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'])
                     ->helperText('Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)')
