@@ -142,6 +142,24 @@ class PushNotificationService
     }
 
     /**
+     * Send push notification to specific users.
+     */
+    public function sendToUsers(array $userIds, array $payload): int
+    {
+        $model = config('pwa.subscription_model', PushSubscription::class);
+        $sent = 0;
+
+        foreach ($model::whereIn('user_id', $userIds)->cursor() as $subscription) {
+            if ($this->send($subscription, $payload)) {
+                $sent++;
+            }
+        }
+
+        return $sent;
+    }
+
+
+    /**
      * Get the VAPID public key for JavaScript.
      */
     public function getVapidPublicKey(): ?string
