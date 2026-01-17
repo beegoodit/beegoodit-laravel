@@ -1,0 +1,36 @@
+{
+    "name": "beegoodit/filament-connect",
+    "description": "Multi-tenant API credential management for Filament.",
+    "keywords": [
+        "laravel",
+        "filament",
+        "api",
+        "connect"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^4.0",
+        "illuminate/contracts": "^12.0",
+        "illuminate/database": "^12.0",
+        "illuminate/support": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Beegoodit\\FilamentConnect\\": "src/",
+            "Beegoodit\\FilamentConnect\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Beegoodit\\FilamentConnect\\FilamentConnectServiceProvider"
+            ],
+            "aliases": {
+                "Connect": "Beegoodit\\FilamentConnect\\Facades\\Connect"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
