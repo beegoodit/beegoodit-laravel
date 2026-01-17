@@ -41,6 +41,13 @@ class FilamentOAuthServiceProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/make_password_nullable_in_users_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_make_password_nullable_in_users_table.php'),
         ], 'filament-oauth-migrations');
 
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-oauth');
+
+        // Add package's resources/lang to the translator paths to support vendor overrides.
+        // This allows providing translations for filament-socialite:: without overwriting the original namespace hint.
+        $this->app['translator']->getLoader()->addPath(__DIR__ . '/../resources/lang');
+
         // Publish config
         $this->publishes([
             __DIR__ . '/../config/filament-oauth.php' => config_path('filament-oauth.php'),
