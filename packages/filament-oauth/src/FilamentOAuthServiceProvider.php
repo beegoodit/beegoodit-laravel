@@ -47,14 +47,19 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         ], 'filament-oauth-config');
 
         // Register Socialite drivers
-        Event::listen(
-            \SocialiteProviders\Manager\SocialiteWasCalled::class,
-            [\SocialiteProviders\Microsoft\MicrosoftExtendSocialite::class, 'handle']
-        );
-        Event::listen(
-            \SocialiteProviders\Manager\SocialiteWasCalled::class,
-            [\SocialiteProviders\Discord\DiscordExtendSocialite::class, 'handle']
-        );
+        if (class_exists(\SocialiteProviders\Manager\SocialiteWasCalled::class)) {
+            foreach ([
+                \SocialiteProviders\Microsoft\MicrosoftExtendSocialite::class,
+                \SocialiteProviders\Discord\DiscordExtendSocialite::class,
+            ] as $handler) {
+                if (class_exists($handler)) {
+                    \Illuminate\Support\Facades\Event::listen(
+                        \SocialiteProviders\Manager\SocialiteWasCalled::class,
+                        [$handler, 'handle']
+                    );
+                }
+            }
+        }
 
         // Optional team assignment listeners (configurable)
         if (config('filament-oauth.auto_assign_teams', true)) {
