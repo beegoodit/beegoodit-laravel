@@ -141,4 +141,12 @@ return [
     'Disable Push Notifications' => 'Disable Push Notifications',
     'Push notifications are not configured. Please contact your administrator.' => 'Push notifications are not configured. Please contact your administrator.',
     'Push notifications are not available.' => 'Push notifications are not available.',
+
+    // Two-Factor Challenge & Login flow
+    'Recovery Code' => 'Recovery Code',
+    'Authentication Code' => 'Authentication Code',
+    'Invalid Code' => 'Invalid Code',
+    'The provided two-factor authentication code was invalid.' => 'The provided two-factor authentication code was invalid.',
+    'Authentication Success' => 'Authentication Success',
+    'Invalid verification code. Please try again.' => 'Invalid verification code. Please try again.',
 ];

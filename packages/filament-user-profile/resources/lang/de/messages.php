@@ -141,4 +141,12 @@ return [
     'Disable Push Notifications' => 'Push-Benachrichtigungen deaktivieren',
     'Push notifications are not configured. Please contact your administrator.' => 'Push-Benachrichtigungen sind nicht konfiguriert. Bitte kontaktieren Sie Ihren Administrator.',
     'Push notifications are not available.' => 'Push-Benachrichtigungen sind nicht verfügbar.',
+
+    // Two-Factor Challenge & Login flow
+    'Recovery Code' => 'Wiederherstellungscode',
+    'Authentication Code' => 'Authentifizierungscode',
+    'Invalid Code' => 'Ungültiger Code',
+    'The provided two-factor authentication code was invalid.' => 'Der angegebene Zwei-Faktor-Authentifizierungscode war ungültig.',
+    'Authentication Success' => 'Authentifizierung erfolgreich',
+    'Invalid verification code. Please try again.' => 'Ungültiger Verifizierungscode. Bitte versuchen Sie es erneut.',
 ];
