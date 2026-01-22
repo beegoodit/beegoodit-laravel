@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\LaravelFileStorage\Tests\Unit;
+namespace BeegoodIT\LaravelFileStorage\Tests\Unit;
 
-use BeeGoodIT\LaravelFileStorage\Services\FileStorageService;
-use BeeGoodIT\LaravelFileStorage\Tests\TestCase;
+use BeegoodIT\LaravelFileStorage\Services\FileStorageService;
+use BeegoodIT\LaravelFileStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 
 class FileStorageServicePhpUnitTest extends TestCase

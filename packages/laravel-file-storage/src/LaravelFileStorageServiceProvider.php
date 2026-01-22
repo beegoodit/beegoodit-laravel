@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\LaravelFileStorage;
+namespace BeegoodIT\LaravelFileStorage;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -8,6 +8,6 @@ class LaravelFileStorageServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(\BeeGoodIT\LaravelFileStorage\Services\FileStorageService::class);
+        $this->app->singleton(\BeegoodIT\LaravelFileStorage\Services\FileStorageService::class);
     }
 }

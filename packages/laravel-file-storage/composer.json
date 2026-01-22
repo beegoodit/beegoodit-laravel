@@ -6,7 +6,7 @@
     "keywords": ["laravel", "storage", "s3", "files", "beegoodit"],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -20,18 +20,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\LaravelFileStorage\\": "src/"
+            "BeegoodIT\\LaravelFileStorage\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\LaravelFileStorage\\Tests\\": "tests/"
+            "BeegoodIT\\LaravelFileStorage\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\LaravelFileStorage\\LaravelFileStorageServiceProvider"
+                "BeegoodIT\\LaravelFileStorage\\LaravelFileStorageServiceProvider"
             ]
         }
     },

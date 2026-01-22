@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelFileStorage\Tests;
+namespace BeegoodIT\LaravelFileStorage\Tests;
 
-use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
+use BeegoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

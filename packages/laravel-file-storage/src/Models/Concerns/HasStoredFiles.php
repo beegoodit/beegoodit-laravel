@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\LaravelFileStorage\Models\Concerns;
+namespace BeegoodIT\LaravelFileStorage\Models\Concerns;
 
 use Illuminate\Support\Facades\Storage;
 

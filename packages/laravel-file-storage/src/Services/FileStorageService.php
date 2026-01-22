@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\LaravelFileStorage\Services;
+namespace BeegoodIT\LaravelFileStorage\Services;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
