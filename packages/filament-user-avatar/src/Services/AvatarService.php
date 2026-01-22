@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserAvatar\Services;
+namespace BeegoodIT\FilamentUserAvatar\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;

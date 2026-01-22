@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserAvatar\Tests\Unit;
+namespace BeegoodIT\FilamentUserAvatar\Tests\Unit;
 
-use BeeGoodIT\FilamentUserAvatar\Services\AvatarService;
-use BeeGoodIT\FilamentUserAvatar\Tests\TestCase;
+use BeegoodIT\FilamentUserAvatar\Services\AvatarService;
+use BeegoodIT\FilamentUserAvatar\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 

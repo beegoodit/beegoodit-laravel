@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserAvatar\Models\Concerns;
+namespace BeegoodIT\FilamentUserAvatar\Models\Concerns;
 
-use BeeGoodIT\LaravelFileStorage\Models\Concerns\HasStoredFiles;
+use BeegoodIT\LaravelFileStorage\Models\Concerns\HasStoredFiles;
 
 trait HasAvatar
 {
@@ -70,7 +70,7 @@ trait HasAvatar
                 // Try to use the accessor first (if HasBranding trait is used)
                 // The accessor will convert oklch to hex automatically
                 if (method_exists($tenant, 'getPrimaryColorAttribute') ||
-                    in_array(\BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding::class, class_uses_recursive($tenant))) {
+                    in_array(\BeegoodIT\FilamentTenancy\Models\Concerns\HasBranding::class, class_uses_recursive($tenant))) {
                     $color = $tenant->primary_color;
                     if (! empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', (string) $color)) {
                         return $color;

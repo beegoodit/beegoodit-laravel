@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserAvatar\Tests;
+namespace BeegoodIT\FilamentUserAvatar\Tests;
 
-use BeeGoodIT\FilamentUserAvatar\FilamentUserAvatarServiceProvider;
-use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
+use BeegoodIT\FilamentUserAvatar\FilamentUserAvatarServiceProvider;
+use BeegoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

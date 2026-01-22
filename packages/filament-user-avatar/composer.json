@@ -6,7 +6,7 @@
     "keywords": ["laravel", "filament", "avatar", "upload", "s3", "beegoodit"],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -22,18 +22,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\FilamentUserAvatar\\": "src/"
+            "BeegoodIT\\FilamentUserAvatar\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\FilamentUserAvatar\\Tests\\": "tests/"
+            "BeegoodIT\\FilamentUserAvatar\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\FilamentUserAvatar\\FilamentUserAvatarServiceProvider"
+                "BeegoodIT\\FilamentUserAvatar\\FilamentUserAvatarServiceProvider"
             ]
         }
     },

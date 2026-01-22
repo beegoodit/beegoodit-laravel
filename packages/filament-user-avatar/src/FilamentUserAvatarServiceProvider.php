@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserAvatar;
+namespace BeegoodIT\FilamentUserAvatar;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -8,7 +8,7 @@ class FilamentUserAvatarServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
+        $this->app->singleton(\BeegoodIT\FilamentUserAvatar\Services\AvatarService::class);
     }
 
     public function boot(): void
