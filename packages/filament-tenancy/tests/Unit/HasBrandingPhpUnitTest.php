@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Tests\Unit;
+namespace BeegoodIT\FilamentTenancy\Tests\Unit;
 
-use BeeGoodIT\FilamentTenancy\Models\Concerns\HasBranding;
-use BeeGoodIT\FilamentTenancy\Tests\TestCase;
+use BeegoodIT\FilamentTenancy\Models\Concerns\HasBranding;
+use BeegoodIT\FilamentTenancy\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 

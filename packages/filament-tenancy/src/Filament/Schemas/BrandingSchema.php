@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Filament\Schemas;
+namespace BeegoodIT\FilamentTenancy\Filament\Schemas;
 
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;

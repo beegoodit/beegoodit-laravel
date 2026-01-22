@@ -6,7 +6,7 @@
     "keywords": ["laravel", "filament", "tenancy", "multi-tenant", "team", "branding", "logo", "colors", "beegoodit"],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -21,18 +21,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\FilamentTenancy\\": "src/"
+            "BeegoodIT\\FilamentTenancy\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\FilamentTenancy\\Tests\\": "tests/"
+            "BeegoodIT\\FilamentTenancy\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\FilamentTenancy\\FilamentTenancyServiceProvider"
+                "BeegoodIT\\FilamentTenancy\\FilamentTenancyServiceProvider"
             ]
         }
     },

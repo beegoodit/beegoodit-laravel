@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Filament;
+namespace BeegoodIT\FilamentTenancy\Filament;
 
 use Filament\Support\Colors\Color;
 

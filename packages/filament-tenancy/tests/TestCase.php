@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Tests;
+namespace BeegoodIT\FilamentTenancy\Tests;
 
-use BeeGoodIT\FilamentTenancy\FilamentTenancyServiceProvider;
-use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
+use BeegoodIT\FilamentTenancy\FilamentTenancyServiceProvider;
+use BeegoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

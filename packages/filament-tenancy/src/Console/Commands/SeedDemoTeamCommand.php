@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Console\Commands;
+namespace BeegoodIT\FilamentTenancy\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;

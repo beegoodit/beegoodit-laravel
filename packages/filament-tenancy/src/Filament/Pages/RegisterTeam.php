@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Filament\Pages;
+namespace BeegoodIT\FilamentTenancy\Filament\Pages;
 
-use BeeGoodIT\FilamentTenancy\Filament\Schemas\BrandingSchema;
+use BeegoodIT\FilamentTenancy\Filament\Schemas\BrandingSchema;
 use Filament\Pages\Tenancy\RegisterTenant;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;

@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy;
+namespace BeegoodIT\FilamentTenancy;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -11,7 +11,7 @@ class FilamentTenancyServiceProvider extends ServiceProvider
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([
-                \BeeGoodIT\FilamentTenancy\Console\Commands\SeedDemoTeamCommand::class,
+                \BeegoodIT\FilamentTenancy\Console\Commands\SeedDemoTeamCommand::class,
             ]);
         }
 

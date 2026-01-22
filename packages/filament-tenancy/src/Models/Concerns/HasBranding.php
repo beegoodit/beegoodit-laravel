@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentTenancy\Models\Concerns;
+namespace BeegoodIT\FilamentTenancy\Models\Concerns;
 
-use BeeGoodIT\LaravelFileStorage\Models\Concerns\HasStoredFiles;
+use BeegoodIT\LaravelFileStorage\Models\Concerns\HasStoredFiles;
 use Filament\Support\Colors\Color;
 
 trait HasBranding
