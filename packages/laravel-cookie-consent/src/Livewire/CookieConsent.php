@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\LaravelCookieConsent\Livewire;
+namespace BeegoodIT\LaravelCookieConsent\Livewire;
 
 use Livewire\Component;
 

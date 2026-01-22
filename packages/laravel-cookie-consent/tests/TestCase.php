@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelCookieConsent\Tests;
+namespace BeegoodIT\LaravelCookieConsent\Tests;
 
-use BeeGoodIT\LaravelCookieConsent\LaravelCookieConsentServiceProvider;
+use BeegoodIT\LaravelCookieConsent\LaravelCookieConsentServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 

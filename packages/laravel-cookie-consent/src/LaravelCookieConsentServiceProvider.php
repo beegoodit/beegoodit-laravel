@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelCookieConsent;
+namespace BeegoodIT\LaravelCookieConsent;
 
-use BeeGoodIT\LaravelCookieConsent\Livewire\CookieConsent;
+use BeegoodIT\LaravelCookieConsent\Livewire\CookieConsent;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 

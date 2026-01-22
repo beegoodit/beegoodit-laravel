@@ -6,7 +6,7 @@
     "keywords": ["laravel", "cookie", "consent", "gdpr", "livewire", "beegoodit"],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -20,18 +20,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\LaravelCookieConsent\\": "src/"
+            "BeegoodIT\\LaravelCookieConsent\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\LaravelCookieConsent\\Tests\\": "tests/"
+            "BeegoodIT\\LaravelCookieConsent\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\LaravelCookieConsent\\LaravelCookieConsentServiceProvider"
+                "BeegoodIT\\LaravelCookieConsent\\LaravelCookieConsentServiceProvider"
             ]
         }
     },
