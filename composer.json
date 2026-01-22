@@ -1,6 +1,6 @@
 {
     "name": "beegoodit/laravel-packages",
-    "description": "BeeGoodIT Laravel package monorepo",
+    "description": "BeegoodIT Laravel package monorepo",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -14,30 +14,30 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\EloquentUserstamps\\": "packages/eloquent-userstamps/src/",
-            "BeeGoodIT\\LaravelFileStorage\\": "packages/laravel-file-storage/src/",
-            "BeeGoodIT\\LaravelCookieConsent\\": "packages/laravel-cookie-consent/src/",
-            "BeeGoodIT\\FilamentI18n\\": "packages/filament-i18n/src/",
-            "BeeGoodIT\\FilamentUserAvatar\\": "packages/filament-user-avatar/src/",
-            "BeeGoodIT\\FilamentOAuth\\": "packages/filament-oauth/src/",
-            "BeeGoodIT\\FilamentTenancy\\": "packages/filament-tenancy/src/",
-            "BeeGoodIT\\FilamentUserProfile\\": "packages/filament-user-profile/src/",
-            "BeeGoodIT\\FilamentKnowledgeBase\\": "packages/filament-knowledge-base/src/",
-            "BeeGoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/"
+            "BeegoodIT\\EloquentUserstamps\\": "packages/eloquent-userstamps/src/",
+            "BeegoodIT\\LaravelFileStorage\\": "packages/laravel-file-storage/src/",
+            "BeegoodIT\\LaravelCookieConsent\\": "packages/laravel-cookie-consent/src/",
+            "BeegoodIT\\FilamentI18n\\": "packages/filament-i18n/src/",
+            "BeegoodIT\\FilamentUserAvatar\\": "packages/filament-user-avatar/src/",
+            "BeegoodIT\\FilamentOAuth\\": "packages/filament-oauth/src/",
+            "BeegoodIT\\FilamentTenancy\\": "packages/filament-tenancy/src/",
+            "BeegoodIT\\FilamentUserProfile\\": "packages/filament-user-profile/src/",
+            "BeegoodIT\\FilamentKnowledgeBase\\": "packages/filament-knowledge-base/src/",
+            "BeegoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
-            "BeeGoodIT\\EloquentUserstamps\\Tests\\": "packages/eloquent-userstamps/tests/",
-            "BeeGoodIT\\LaravelFileStorage\\Tests\\": "packages/laravel-file-storage/tests/",
-            "BeeGoodIT\\LaravelCookieConsent\\Tests\\": "packages/laravel-cookie-consent/tests/",
-            "BeeGoodIT\\FilamentI18n\\Tests\\": "packages/filament-i18n/tests/",
-            "BeeGoodIT\\FilamentUserAvatar\\Tests\\": "packages/filament-user-avatar/tests/",
-            "BeeGoodIT\\FilamentOAuth\\Tests\\": "packages/filament-oauth/tests/",
-            "BeeGoodIT\\FilamentTenancy\\Tests\\": "packages/filament-tenancy/tests/",
-            "BeeGoodIT\\FilamentUserProfile\\Tests\\": "packages/filament-user-profile/tests/",
-            "BeeGoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/"
+            "BeegoodIT\\EloquentUserstamps\\Tests\\": "packages/eloquent-userstamps/tests/",
+            "BeegoodIT\\LaravelFileStorage\\Tests\\": "packages/laravel-file-storage/tests/",
+            "BeegoodIT\\LaravelCookieConsent\\Tests\\": "packages/laravel-cookie-consent/tests/",
+            "BeegoodIT\\FilamentI18n\\Tests\\": "packages/filament-i18n/tests/",
+            "BeegoodIT\\FilamentUserAvatar\\Tests\\": "packages/filament-user-avatar/tests/",
+            "BeegoodIT\\FilamentOAuth\\Tests\\": "packages/filament-oauth/tests/",
+            "BeegoodIT\\FilamentTenancy\\Tests\\": "packages/filament-tenancy/tests/",
+            "BeegoodIT\\FilamentUserProfile\\Tests\\": "packages/filament-user-profile/tests/",
+            "BeegoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/"
         }
     },
     "scripts": {
