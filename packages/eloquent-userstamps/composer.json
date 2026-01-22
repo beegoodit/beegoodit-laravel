@@ -6,7 +6,7 @@
     "keywords": ["laravel", "eloquent", "userstamps", "audit", "beegoodit"],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -19,18 +19,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\EloquentUserstamps\\": "src/"
+            "BeegoodIT\\EloquentUserstamps\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\EloquentUserstamps\\Tests\\": "tests/"
+            "BeegoodIT\\EloquentUserstamps\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\EloquentUserstamps\\EloquentUserstampsServiceProvider"
+                "BeegoodIT\\EloquentUserstamps\\EloquentUserstampsServiceProvider"
             ]
         }
     },

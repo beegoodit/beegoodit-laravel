@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\EloquentUserstamps\Tests\Unit;
+namespace BeegoodIT\EloquentUserstamps\Tests\Unit;
 
-use BeeGoodIT\EloquentUserstamps\HasUserStamps;
-use BeeGoodIT\EloquentUserstamps\Tests\TestCase;
+use BeegoodIT\EloquentUserstamps\HasUserStamps;
+use BeegoodIT\EloquentUserstamps\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;

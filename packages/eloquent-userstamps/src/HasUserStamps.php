@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\EloquentUserstamps;
+namespace BeegoodIT\EloquentUserstamps;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

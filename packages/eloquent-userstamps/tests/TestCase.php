@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\EloquentUserstamps\Tests;
+namespace BeegoodIT\EloquentUserstamps\Tests;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
