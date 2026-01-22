@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
+namespace BeegoodIT\FilamentUserProfile\Filament\Pages;
 
 use Filament\Facades\Filament;
 use Filament\Pages\Page;
@@ -31,7 +31,7 @@ class Notifications extends Page
      */
     public static function canAccess(): bool
     {
-        return class_exists(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class);
+        return class_exists(\BeegoodIT\LaravelPwa\Services\PushNotificationService::class);
     }
 
     public static function getNavigationLabel(): string
@@ -79,8 +79,8 @@ class Notifications extends Page
     public function mount(): void
     {
         // Check if push service is available and configured
-        if (class_exists(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class)) {
-            $pushService = resolve(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class);
+        if (class_exists(\BeegoodIT\LaravelPwa\Services\PushNotificationService::class)) {
+            $pushService = resolve(\BeegoodIT\LaravelPwa\Services\PushNotificationService::class);
             $this->pushSupported = true;
             $this->pushEnabled = $pushService->isEnabled();
             $this->vapidPublicKey = $pushService->getVapidPublicKey();

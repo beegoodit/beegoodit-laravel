@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Http\Middleware;
+namespace BeegoodIT\FilamentUserProfile\Http\Middleware;
 
 use Filament\Http\Middleware\Authenticate as Middleware;
 use Illuminate\Auth\AuthenticationException;

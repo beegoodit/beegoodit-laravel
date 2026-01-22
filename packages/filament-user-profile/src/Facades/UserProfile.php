@@ -1,13 +1,13 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Facades;
+namespace BeegoodIT\FilamentUserProfile\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static array getUserMenuItems()
  *
- * @see \BeeGoodIT\FilamentUserProfile\UserProfileHelper
+ * @see \BeegoodIT\FilamentUserProfile\UserProfileHelper
  */
 class UserProfile extends Facade
 {

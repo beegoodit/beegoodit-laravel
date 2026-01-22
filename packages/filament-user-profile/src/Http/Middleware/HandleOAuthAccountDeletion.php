@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Http\Middleware;
+namespace BeegoodIT\FilamentUserProfile\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

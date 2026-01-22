@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile;
+namespace BeegoodIT\FilamentUserProfile;
 
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
-use BeeGoodIT\FilamentUserProfile\Filament\UserProfilePanelProvider;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Profile;
+use BeegoodIT\FilamentUserProfile\Filament\UserProfilePanelProvider;
 use DutchCodingCompany\FilamentSocialite\Events\Login;
 use DutchCodingCompany\FilamentSocialite\Events\SocialiteUserConnected;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-user-profile');
 
         // Register Blade components
-        Blade::componentNamespace('BeeGoodIT\\FilamentUserProfile\\View\\Components', 'filament-user-profile');
+        Blade::componentNamespace('BeegoodIT\\FilamentUserProfile\\View\\Components', 'filament-user-profile');
 
         // Publish translations
         $this->publishes([

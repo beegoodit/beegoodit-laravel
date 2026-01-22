@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
+namespace BeegoodIT\FilamentUserProfile\Filament\Pages;
 
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
@@ -263,8 +263,8 @@ class Profile extends Page implements HasForms
 
         try {
             // Check if AvatarService is available (from filament-user-avatar package)
-            if (class_exists(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
-                $avatarService = resolve(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
+            if (class_exists(\BeegoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
+                $avatarService = resolve(\BeegoodIT\FilamentUserAvatar\Services\AvatarService::class);
 
                 // Get file content and extension
                 $fileContent = file_get_contents($this->avatarUpload->getRealPath());
@@ -311,8 +311,8 @@ class Profile extends Page implements HasForms
 
         try {
             // Check if AvatarService is available
-            if (class_exists(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
-                $avatarService = resolve(\BeeGoodIT\FilamentUserAvatar\Services\AvatarService::class);
+            if (class_exists(\BeegoodIT\FilamentUserAvatar\Services\AvatarService::class)) {
+                $avatarService = resolve(\BeegoodIT\FilamentUserAvatar\Services\AvatarService::class);
                 $avatarService->deleteAvatar($user);
             } else {
                 // Fallback: delete avatar directly

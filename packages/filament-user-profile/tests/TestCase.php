@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Tests;
+namespace BeegoodIT\FilamentUserProfile\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 

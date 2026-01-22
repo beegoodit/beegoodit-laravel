@@ -1,14 +1,14 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Filament;
+namespace BeegoodIT\FilamentUserProfile\Filament;
 
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Dashboard;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Notifications;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
-use BeeGoodIT\FilamentUserProfile\UserProfileHelper;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Appearance;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Dashboard;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Notifications;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Password;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Profile;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
+use BeegoodIT\FilamentUserProfile\UserProfileHelper;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -17,7 +17,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
-use BeeGoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
+use BeegoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
 use DutchCodingCompany\FilamentSocialite\Provider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -94,8 +94,8 @@ class UserProfilePanelProvider extends PanelProvider
                 ])
             ->authMiddleware(array_merge(
                     [Authenticate::class],
-                    class_exists(\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
-                    ? [\BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
+                    class_exists(\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
+                    ? [\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
                     : []
                 ))
             ->viteTheme('resources/css/filament/portal/theme.css');
@@ -159,7 +159,7 @@ class UserProfilePanelProvider extends PanelProvider
         ];
 
         // Register Notifications page if push notification service is available
-        if (class_exists(\BeeGoodIT\LaravelPwa\Services\PushNotificationService::class)) {
+        if (class_exists(\BeegoodIT\LaravelPwa\Services\PushNotificationService::class)) {
             $pages[] = Notifications::class;
         }
 
@@ -191,14 +191,14 @@ class UserProfilePanelProvider extends PanelProvider
      */
     protected function getSetLocaleMiddleware(): string
     {
-        // Try to use app's SetLocale middleware first
-        if (class_exists(\App\Http\Middleware\SetLocale::class)) {
-            return \App\Http\Middleware\SetLocale::class;
+        // Prioritize package's robust SetLocale middleware
+        if (class_exists(\BeegoodIT\FilamentI18n\Middleware\SetLocale::class)) {
+            return \BeegoodIT\FilamentI18n\Middleware\SetLocale::class;
         }
 
-        // Fall back to package's SetLocale middleware if available
-        if (class_exists(\BeeGoodIT\FilamentI18n\Middleware\SetLocale::class)) {
-            return \BeeGoodIT\FilamentI18n\Middleware\SetLocale::class;
+        // Fall back to app's SetLocale middleware if it exists (legacy)
+        if (class_exists(\App\Http\Middleware\SetLocale::class)) {
+            return \App\Http\Middleware\SetLocale::class;
         }
 
         return \Illuminate\Routing\Middleware\SubstituteBindings::class;

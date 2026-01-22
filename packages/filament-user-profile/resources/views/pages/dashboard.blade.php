@@ -20,7 +20,7 @@
                 <x-slot name="footer">
                     <div class="flex">
                         <x-filament::button tag="a"
-                            href="{{ \BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile::getUrl() }}" color="gray"
+                            href="{{ \BeegoodIT\FilamentUserProfile\Filament\Pages\Profile::getUrl() }}" color="gray"
                             outlined size="sm" class="w-full sm:w-auto">
                             {{ __('filament-user-profile::messages.Edit Profile') }}
                         </x-filament::button>
@@ -49,7 +49,7 @@
                 <x-slot name="footer">
                     <div class="flex">
                         <x-filament::button tag="a"
-                            href="{{ \BeeGoodIT\FilamentUserProfile\Filament\Pages\Password::getUrl() }}" color="gray"
+                            href="{{ \BeegoodIT\FilamentUserProfile\Filament\Pages\Password::getUrl() }}" color="gray"
                             outlined size="sm" class="w-full sm:w-auto">
                             {{ __('filament-user-profile::messages.Change Password') }}
                         </x-filament::button>
@@ -78,7 +78,7 @@
                 <x-slot name="footer">
                     <div class="flex">
                         <x-filament::button tag="a"
-                            href="{{ \BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance::getUrl() }}" color="gray"
+                            href="{{ \BeegoodIT\FilamentUserProfile\Filament\Pages\Appearance::getUrl() }}" color="gray"
                             outlined size="sm" class="w-full sm:w-auto">
                             {{ __('filament-user-profile::messages.Manage Appearance') }}
                         </x-filament::button>

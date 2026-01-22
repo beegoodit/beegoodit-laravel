@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
+namespace BeegoodIT\FilamentUserProfile\Filament\Pages;
 
-use BeeGoodIT\FilamentI18n\Facades\FilamentI18n;
-use BeeGoodIT\FilamentUserProfile\Filament\Forms\Components\TimezonePicker;
+use BeegoodIT\FilamentI18n\Facades\FilamentI18n;
+use BeegoodIT\FilamentUserProfile\Filament\Forms\Components\TimezonePicker;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Concerns\InteractsWithForms;

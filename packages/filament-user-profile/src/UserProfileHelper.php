@@ -1,10 +1,10 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile;
+namespace BeegoodIT\FilamentUserProfile;
 
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Appearance;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Password;
-use BeeGoodIT\FilamentUserProfile\Filament\Pages\Profile;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Appearance;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Password;
+use BeegoodIT\FilamentUserProfile\Filament\Pages\Profile;
 use Filament\Navigation\MenuItem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;

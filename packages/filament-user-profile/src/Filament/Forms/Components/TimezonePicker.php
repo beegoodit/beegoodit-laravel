@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Filament\Forms\Components;
+namespace BeegoodIT\FilamentUserProfile\Filament\Forms\Components;
 
 use Filament\Forms\Components\Field;
 

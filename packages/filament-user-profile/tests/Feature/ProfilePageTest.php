@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Tests\Feature;
+namespace BeegoodIT\FilamentUserProfile\Tests\Feature;
 
-use BeeGoodIT\FilamentUserProfile\Tests\TestCase;
+use BeegoodIT\FilamentUserProfile\Tests\TestCase;
 
 class ProfilePageTest extends TestCase
 {

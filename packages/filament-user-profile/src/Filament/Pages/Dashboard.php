@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Filament\Pages;
+namespace BeegoodIT\FilamentUserProfile\Filament\Pages;
 
 use Filament\Pages\Page;
 use Filament\Facades\Filament;

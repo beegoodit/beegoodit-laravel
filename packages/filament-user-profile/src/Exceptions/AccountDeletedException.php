@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentUserProfile\Exceptions;
+namespace BeegoodIT\FilamentUserProfile\Exceptions;
 
 use Exception;
 
