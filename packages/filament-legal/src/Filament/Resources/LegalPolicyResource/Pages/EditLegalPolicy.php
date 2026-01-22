@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
+namespace BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
 
-use BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
-use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
+use BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
+use BeegoodIT\FilamentLegal\Models\LegalPolicy;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

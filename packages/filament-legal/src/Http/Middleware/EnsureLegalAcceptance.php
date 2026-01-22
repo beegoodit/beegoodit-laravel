@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Http\Middleware;
+namespace BeegoodIT\FilamentLegal\Http\Middleware;
 
-use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
-use BeeGoodIT\FilamentLegal\Models\PolicyAcceptance;
+use BeegoodIT\FilamentLegal\Models\LegalPolicy;
+use BeegoodIT\FilamentLegal\Models\PolicyAcceptance;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +28,7 @@ class EnsureLegalAcceptance
         // Get the current active privacy policy
         $activePrivacyPolicy = LegalPolicy::getActive('privacy');
 
-        if (!$activePrivacyPolicy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (!$activePrivacyPolicy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return $next($request);
         }
 

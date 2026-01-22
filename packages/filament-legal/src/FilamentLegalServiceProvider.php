@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal;
+namespace BeegoodIT\FilamentLegal;
 
 use Illuminate\Support\ServiceProvider;
 

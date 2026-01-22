@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal;
+namespace BeegoodIT\FilamentLegal;
 
-use BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
+use BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 

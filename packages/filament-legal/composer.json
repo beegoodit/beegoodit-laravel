@@ -13,7 +13,7 @@
     ],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -27,18 +27,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\FilamentLegal\\": "src/"
+            "BeegoodIT\\FilamentLegal\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\FilamentLegal\\Tests\\": "tests/"
+            "BeegoodIT\\FilamentLegal\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\FilamentLegal\\FilamentLegalServiceProvider"
+                "BeegoodIT\\FilamentLegal\\FilamentLegalServiceProvider"
             ]
         }
     },

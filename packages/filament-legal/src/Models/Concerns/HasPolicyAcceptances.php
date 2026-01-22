@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Models\Concerns;
+namespace BeegoodIT\FilamentLegal\Models\Concerns;
 
-use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
-use BeeGoodIT\FilamentLegal\Models\PolicyAcceptance;
+use BeegoodIT\FilamentLegal\Models\LegalPolicy;
+use BeegoodIT\FilamentLegal\Models\PolicyAcceptance;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasPolicyAcceptances
@@ -23,7 +23,7 @@ trait HasPolicyAcceptances
     {
         $activePolicy = LegalPolicy::getActive($type);
 
-        if (!$activePolicy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (!$activePolicy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return true;
         }
 

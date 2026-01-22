@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Filament\Resources;
+namespace BeegoodIT\FilamentLegal\Filament\Resources;
 
-use BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
-use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
+use BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
+use BeegoodIT\FilamentLegal\Models\LegalPolicy;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -135,7 +135,7 @@ class LegalPolicyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            \BeeGoodIT\FilamentLegal\Filament\RelationManagers\PolicyAcceptancesRelationManager::class,
+            \BeegoodIT\FilamentLegal\Filament\RelationManagers\PolicyAcceptancesRelationManager::class,
         ];
     }
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Tests;
+namespace BeegoodIT\FilamentLegal\Tests;
 
-use BeeGoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance;
-use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
+use BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance;
+use BeegoodIT\FilamentLegal\Models\LegalPolicy;
 use Illuminate\Support\Facades\Route;
 
 class LegalGateTest extends TestCase

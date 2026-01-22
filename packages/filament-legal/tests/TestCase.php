@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Tests;
+namespace BeegoodIT\FilamentLegal\Tests;
 
-use BeeGoodIT\FilamentLegal\FilamentLegalServiceProvider;
+use BeegoodIT\FilamentLegal\FilamentLegalServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Http\Controllers;
+namespace BeegoodIT\FilamentLegal\Http\Controllers;
 
-use BeeGoodIT\FilamentLegal\Models\LegalPolicy;
-use BeeGoodIT\FilamentLegal\Models\PolicyAcceptance;
+use BeegoodIT\FilamentLegal\Models\LegalPolicy;
+use BeegoodIT\FilamentLegal\Models\PolicyAcceptance;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class LegalAcceptanceController extends Controller
     {
         $policy = LegalPolicy::getActive('privacy');
 
-        if (!$policy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (!$policy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return redirect()->intended();
         }
 
@@ -25,7 +25,7 @@ class LegalAcceptanceController extends Controller
     {
         $policy = LegalPolicy::getActive('privacy');
 
-        if (!$policy instanceof \BeeGoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (!$policy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return redirect()->intended();
         }
 

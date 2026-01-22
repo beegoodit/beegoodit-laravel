@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
+namespace BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
 
-use BeeGoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
+use BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
