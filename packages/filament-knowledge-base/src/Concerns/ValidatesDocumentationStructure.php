@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentKnowledgeBase\Concerns;
+namespace BeegoodIT\FilamentKnowledgeBase\Concerns;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;

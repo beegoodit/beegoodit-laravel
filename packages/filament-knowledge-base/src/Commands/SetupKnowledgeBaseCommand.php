@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentKnowledgeBase\Commands;
+namespace BeegoodIT\FilamentKnowledgeBase\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;

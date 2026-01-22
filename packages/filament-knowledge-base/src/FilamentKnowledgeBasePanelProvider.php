@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentKnowledgeBase;
+namespace BeegoodIT\FilamentKnowledgeBase;
 
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -36,7 +36,7 @@ class FilamentKnowledgeBasePanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \BeeGoodIT\FilamentI18n\Middleware\SetLocale::class,
+                \BeegoodIT\FilamentI18n\Middleware\SetLocale::class,
             ]);
     }
 }

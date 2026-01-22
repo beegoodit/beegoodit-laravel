@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentKnowledgeBase;
+namespace BeegoodIT\FilamentKnowledgeBase;
 
-use BeeGoodIT\FilamentKnowledgeBase\Commands\SetupKnowledgeBaseCommand;
-use BeeGoodIT\FilamentKnowledgeBase\Concerns\ValidatesDocumentationStructure;
+use BeegoodIT\FilamentKnowledgeBase\Commands\SetupKnowledgeBaseCommand;
+use BeegoodIT\FilamentKnowledgeBase\Concerns\ValidatesDocumentationStructure;
 use Illuminate\Support\ServiceProvider;
 
 class FilamentKnowledgeBaseServiceProvider extends ServiceProvider
