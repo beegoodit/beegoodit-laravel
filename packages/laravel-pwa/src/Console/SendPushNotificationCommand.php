@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Console;
+namespace BeegoodIT\LaravelPwa\Console;
 
-use BeeGoodIT\LaravelPwa\Notifications\GenericPushNotification;
-use BeeGoodIT\LaravelPwa\Services\PushNotificationService;
+use BeegoodIT\LaravelPwa\Notifications\GenericPushNotification;
+use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
 

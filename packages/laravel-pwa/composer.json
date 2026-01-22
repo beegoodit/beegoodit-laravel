@@ -16,7 +16,7 @@
     ],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -30,18 +30,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\LaravelPwa\\": "src/"
+            "BeegoodIT\\LaravelPwa\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\LaravelPwa\\Tests\\": "tests/"
+            "BeegoodIT\\LaravelPwa\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\LaravelPwa\\LaravelPwaServiceProvider"
+                "BeegoodIT\\LaravelPwa\\LaravelPwaServiceProvider"
             ]
         }
     },

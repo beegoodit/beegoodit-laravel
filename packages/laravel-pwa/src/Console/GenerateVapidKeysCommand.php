@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Console;
+namespace BeegoodIT\LaravelPwa\Console;
 
 use Illuminate\Console\Command;
 use Minishlink\WebPush\VAPID;

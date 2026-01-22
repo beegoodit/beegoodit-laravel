@@ -1,10 +1,10 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa;
+namespace BeegoodIT\LaravelPwa;
 
-use BeeGoodIT\LaravelPwa\Channels\WebPushChannel;
-use BeeGoodIT\LaravelPwa\Console\GenerateVapidKeysCommand;
-use BeeGoodIT\LaravelPwa\Services\PushNotificationService;
+use BeegoodIT\LaravelPwa\Channels\WebPushChannel;
+use BeegoodIT\LaravelPwa\Console\GenerateVapidKeysCommand;
+use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Notification;
@@ -68,7 +68,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 GenerateVapidKeysCommand::class,
-                \BeeGoodIT\LaravelPwa\Console\SendPushNotificationCommand::class,
+                \BeegoodIT\LaravelPwa\Console\SendPushNotificationCommand::class,
             ]);
         }
 
@@ -99,12 +99,12 @@ class LaravelPwaServiceProvider extends ServiceProvider
             'middleware' => config('pwa.push.middleware', ['web']),
         ], function (): void {
             Route::post('/push-subscriptions', [
-                \BeeGoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
+                \BeegoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
                 'store',
             ])->name('push-subscriptions.store');
 
             Route::delete('/push-subscriptions', [
-                \BeeGoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
+                \BeegoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
                 'destroy',
             ])->name('push-subscriptions.destroy');
         });

@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Channels;
+namespace BeegoodIT\LaravelPwa\Channels;
 
-use BeeGoodIT\LaravelPwa\Messages\WebPushMessage;
-use BeeGoodIT\LaravelPwa\Services\PushNotificationService;
+use BeegoodIT\LaravelPwa\Messages\WebPushMessage;
+use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Illuminate\Notifications\Notification;
 
 class WebPushChannel

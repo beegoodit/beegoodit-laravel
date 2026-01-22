@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Messages;
+namespace BeegoodIT\LaravelPwa\Messages;
 
 class WebPushMessage
 {

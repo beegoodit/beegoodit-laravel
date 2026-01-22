@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Tests;
+namespace BeegoodIT\LaravelPwa\Tests;
 
-use BeeGoodIT\LaravelPwa\LaravelPwaServiceProvider;
+use BeegoodIT\LaravelPwa\LaravelPwaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Services;
+namespace BeegoodIT\LaravelPwa\Services;
 
-use BeeGoodIT\LaravelPwa\Models\PushSubscription;
+use BeegoodIT\LaravelPwa\Models\PushSubscription;
 use Illuminate\Support\Facades\Log;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;

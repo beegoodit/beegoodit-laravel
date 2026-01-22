@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'subscription_model' => \BeeGoodIT\LaravelPwa\Models\PushSubscription::class,
+    'subscription_model' => \BeegoodIT\LaravelPwa\Models\PushSubscription::class,
     /*
     |--------------------------------------------------------------------------
     | Push Notification Teaser (Soft Prompts)

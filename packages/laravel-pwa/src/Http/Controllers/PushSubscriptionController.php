@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Http\Controllers;
+namespace BeegoodIT\LaravelPwa\Http\Controllers;
 
-use BeeGoodIT\LaravelPwa\Models\PushSubscription;
+use BeegoodIT\LaravelPwa\Models\PushSubscription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;

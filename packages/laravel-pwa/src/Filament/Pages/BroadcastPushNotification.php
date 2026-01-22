@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Filament\Pages;
+namespace BeegoodIT\LaravelPwa\Filament\Pages;
 
 use App\Models\User;
-use BeeGoodIT\LaravelPwa\Services\PushNotificationService;
+use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\LaravelPwa\Notifications;
+namespace BeegoodIT\LaravelPwa\Notifications;
 
-use BeeGoodIT\LaravelPwa\Messages\WebPushMessage;
+use BeegoodIT\LaravelPwa\Messages\WebPushMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
