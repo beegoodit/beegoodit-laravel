@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\Models\Concerns;
+namespace BeegoodIT\FilamentI18n\Models\Concerns;
 
 trait HasI18nPreferences
 {

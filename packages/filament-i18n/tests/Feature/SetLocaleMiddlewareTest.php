@@ -1,10 +1,10 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\Tests\Feature;
+namespace BeegoodIT\FilamentI18n\Tests\Feature;
 
-use BeeGoodIT\FilamentI18n\Middleware\SetLocale;
-use BeeGoodIT\FilamentI18n\Models\Concerns\HasI18nPreferences;
-use BeeGoodIT\FilamentI18n\Tests\TestCase;
+use BeegoodIT\FilamentI18n\Middleware\SetLocale;
+use BeegoodIT\FilamentI18n\Models\Concerns\HasI18nPreferences;
+use BeegoodIT\FilamentI18n\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class SetLocaleMiddlewareTest extends TestCase
         }
 
         $request = Request::create('/');
-        $request->setUserResolver(fn (): \BeeGoodIT\FilamentI18n\Tests\Feature\TestUser => $user);
+        $request->setUserResolver(fn (): \BeegoodIT\FilamentI18n\Tests\Feature\TestUser => $user);
 
         $middleware = new SetLocale;
         $middleware->handle($request, fn ($req) => $req);

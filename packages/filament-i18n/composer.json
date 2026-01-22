@@ -13,7 +13,7 @@
     ],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -28,21 +28,21 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\FilamentI18n\\": "src/"
+            "BeegoodIT\\FilamentI18n\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\FilamentI18n\\Tests\\": "tests/"
+            "BeegoodIT\\FilamentI18n\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\FilamentI18n\\FilamentI18nServiceProvider"
+                "BeegoodIT\\FilamentI18n\\FilamentI18nServiceProvider"
             ],
             "aliases": {
-                "FilamentI18n": "BeeGoodIT\\FilamentI18n\\Facades\\FilamentI18n"
+                "FilamentI18n": "BeegoodIT\\FilamentI18n\\Facades\\FilamentI18n"
             }
         }
     },

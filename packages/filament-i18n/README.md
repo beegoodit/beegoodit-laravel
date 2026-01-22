@@ -46,10 +46,20 @@ class User extends Authenticatable
 
 ### 3. Register Middleware
 
-Add to your Filament panel provider:
+To handle locale preferences globally (including URL prefixes like `/en`), it is recommended to register the middleware in your `bootstrap/app.php`:
 
 ```php
-use BeeGoodIT\FilamentI18n\Middleware\SetLocale;
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: [
+        \BeegoodIT\FilamentI18n\Middleware\SetLocale::class,
+    ]);
+})
+```
+
+Alternatively, you can add it only to specific Filament panels in your panel provider:
+
+```php
+use BeegoodIT\FilamentI18n\Middleware\SetLocale;
 
 public function panel(Panel $panel): Panel
 {
@@ -149,11 +159,12 @@ FilamentI18n::flag('de');               // '🇩🇪'
 
 ## Middleware Behavior
 
-The `SetLocale` middleware automatically:
-1. Checks if user is authenticated
-2. Reads user's locale preference
-3. Sets app locale: `App::setLocale($user->getLocale())`
-4. All subsequent translations use user's preferred language
+The `SetLocale` middleware automatically determines and sets the application locale based on the following priority:
+
+1. **URL Segment**: If the first segment of the URL is a valid locale (e.g., `/de/dashboard`), it uses that locale and persists it to the session.
+2. **User Preference**: If the user is authenticated and has a locale preference set, it uses that.
+3. **Session**: If a locale has been previously stored in the session, it uses that.
+4. **App Default**: Falls back to `config('app.locale')`.
 
 ## Translation
 

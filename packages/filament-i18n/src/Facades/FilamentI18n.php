@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\Facades;
+namespace BeegoodIT\FilamentI18n\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string nativeName(string $locale)
  * @method static string flag(string $locale)
  *
- * @see \BeeGoodIT\FilamentI18n\I18nHelper
+ * @see \BeegoodIT\FilamentI18n\I18nHelper
  */
 class FilamentI18n extends Facade
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n;
+namespace BeegoodIT\FilamentI18n;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -25,7 +25,7 @@ class FilamentI18nServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-i18n');
 
         // Register Blade components
-        Blade::componentNamespace('BeeGoodIT\\FilamentI18n\\View\\Components', 'filament-i18n');
+        Blade::componentNamespace('BeegoodIT\\FilamentI18n\\View\\Components', 'filament-i18n');
 
         // Publish config
         $this->publishes([

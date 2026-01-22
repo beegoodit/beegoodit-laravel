@@ -1,10 +1,10 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\Tests\Unit;
+namespace BeegoodIT\FilamentI18n\Tests\Unit;
 
-use BeeGoodIT\FilamentI18n\Facades\FilamentI18n;
-use BeeGoodIT\FilamentI18n\I18nHelper;
-use BeeGoodIT\FilamentI18n\Tests\TestCase;
+use BeegoodIT\FilamentI18n\Facades\FilamentI18n;
+use BeegoodIT\FilamentI18n\I18nHelper;
+use BeegoodIT\FilamentI18n\Tests\TestCase;
 
 class FilamentI18nTest extends TestCase
 {

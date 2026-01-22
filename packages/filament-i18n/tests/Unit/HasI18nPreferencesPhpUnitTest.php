@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\Tests\Unit;
+namespace BeegoodIT\FilamentI18n\Tests\Unit;
 
-use BeeGoodIT\FilamentI18n\Models\Concerns\HasI18nPreferences;
-use BeeGoodIT\FilamentI18n\Tests\TestCase;
+use BeegoodIT\FilamentI18n\Models\Concerns\HasI18nPreferences;
+use BeegoodIT\FilamentI18n\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 
 class HasI18nPreferencesPhpUnitTest extends TestCase

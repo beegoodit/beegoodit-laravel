@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n;
+namespace BeegoodIT\FilamentI18n;
 
 /**
  * Helper class for internationalization utilities.

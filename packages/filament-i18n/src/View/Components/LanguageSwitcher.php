@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\View\Components;
+namespace BeegoodIT\FilamentI18n\View\Components;
 
 use Illuminate\View\Component;
 

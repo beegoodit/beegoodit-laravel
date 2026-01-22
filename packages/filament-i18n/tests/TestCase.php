@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentI18n\Tests;
+namespace BeegoodIT\FilamentI18n\Tests;
 
-use BeeGoodIT\FilamentI18n\FilamentI18nServiceProvider;
+use BeegoodIT\FilamentI18n\FilamentI18nServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
