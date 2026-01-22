@@ -1,9 +1,9 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Tests\Unit;
+namespace BeegoodIT\FilamentOAuth\Tests\Unit;
 
-use BeeGoodIT\FilamentOAuth\Models\OAuthAccount;
-use BeeGoodIT\FilamentOAuth\Tests\TestCase;
+use BeegoodIT\FilamentOAuth\Models\OAuthAccount;
+use BeegoodIT\FilamentOAuth\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;

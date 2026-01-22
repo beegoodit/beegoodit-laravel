@@ -13,7 +13,7 @@
     ],
     "authors": [
         {
-            "name": "BeeGoodIT",
+            "name": "BeegoodIT",
             "email": "dev@beegoodit.de"
         }
     ],
@@ -33,18 +33,18 @@
     },
     "autoload": {
         "psr-4": {
-            "BeeGoodIT\\FilamentOAuth\\": "src/"
+            "BeegoodIT\\FilamentOAuth\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BeeGoodIT\\FilamentOAuth\\Tests\\": "tests/"
+            "BeegoodIT\\FilamentOAuth\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BeeGoodIT\\FilamentOAuth\\FilamentOAuthServiceProvider"
+                "BeegoodIT\\FilamentOAuth\\FilamentOAuthServiceProvider"
             ]
         }
     },

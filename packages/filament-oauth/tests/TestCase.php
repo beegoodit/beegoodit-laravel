@@ -1,10 +1,10 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Tests;
+namespace BeegoodIT\FilamentOAuth\Tests;
 
-use BeeGoodIT\FilamentOAuth\FilamentOAuthServiceProvider;
-use BeeGoodIT\FilamentUserAvatar\FilamentUserAvatarServiceProvider;
-use BeeGoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
+use BeegoodIT\FilamentOAuth\FilamentOAuthServiceProvider;
+use BeegoodIT\FilamentUserAvatar\FilamentUserAvatarServiceProvider;
+use BeegoodIT\LaravelFileStorage\LaravelFileStorageServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

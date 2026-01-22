@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Console\Commands;
+namespace BeegoodIT\FilamentOAuth\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;

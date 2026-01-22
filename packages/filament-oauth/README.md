@@ -80,7 +80,7 @@ Add to `config/services.php`:
 'microsoft' => [
     'client_id' => env('MICROSOFT_CLIENT_ID'),
     'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
-    'redirect' => env('APP_URL') . '/portal/oauth/callback/microsoft',
+    'redirect' => env('APP_URL') . '/me/oauth/callback/microsoft',
     'tenant' => env('MICROSOFT_TENANT_ID', 'common'),
 ],
 
@@ -267,7 +267,7 @@ This error occurs when the Microsoft provider is not configured in `config/servi
 'microsoft' => [
     'client_id' => env('MICROSOFT_CLIENT_ID'),
     'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
-    'redirect' => env('APP_URL') . '/portal/oauth/callback/microsoft',
+    'redirect' => env('APP_URL') . '/me/oauth/callback/microsoft',
     'tenant' => env('MICROSOFT_TENANT_ID', 'common'),
 ],
 ```

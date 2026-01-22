@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth;
+namespace BeegoodIT\FilamentOAuth;
 
-use BeeGoodIT\FilamentOAuth\Services\TeamAssignmentService;
+use BeegoodIT\FilamentOAuth\Services\TeamAssignmentService;
 use DutchCodingCompany\FilamentSocialite\Events\Registered;
 use DutchCodingCompany\FilamentSocialite\Events\SocialiteUserConnected;
 use Illuminate\Support\Facades\Event;
@@ -30,7 +30,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([
-                \BeeGoodIT\FilamentOAuth\Console\Commands\CreateTeamCommand::class,
+                \BeegoodIT\FilamentOAuth\Console\Commands\CreateTeamCommand::class,
             ]);
         }
 
@@ -168,7 +168,7 @@ class FilamentOAuthServiceProvider extends ServiceProvider
         $microsoftConfig = [
             'client_id' => config('filament-oauth.providers.microsoft.client_id', env('MICROSOFT_CLIENT_ID')),
             'client_secret' => config('filament-oauth.providers.microsoft.client_secret', env('MICROSOFT_CLIENT_SECRET')),
-            'redirect' => config('filament-oauth.providers.microsoft.redirect', env('APP_URL') . '/portal/oauth/callback/microsoft'),
+            'redirect' => config('filament-oauth.providers.microsoft.redirect', env('APP_URL') . '/me/oauth/callback/microsoft'),
             'tenant' => config('filament-oauth.providers.microsoft.tenant_id', env('MICROSOFT_TENANT_ID', 'common')),
         ];
 

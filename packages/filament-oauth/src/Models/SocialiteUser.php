@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Models;
+namespace BeegoodIT\FilamentOAuth\Models;
 
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser as BaseSocialiteUser;
 use Illuminate\Contracts\Auth\Authenticatable;

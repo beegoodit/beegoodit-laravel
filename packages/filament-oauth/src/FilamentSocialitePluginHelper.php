@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth;
+namespace BeegoodIT\FilamentOAuth;
 
-use BeeGoodIT\FilamentOAuth\Models\SocialiteUser;
+use BeegoodIT\FilamentOAuth\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 
 class FilamentSocialitePluginHelper
@@ -26,7 +26,7 @@ class FilamentSocialitePluginHelper
 
                 // Sync avatar if enabled
                 if (config('filament-oauth.sync_avatars', false)) {
-                    resolve(\BeeGoodIT\FilamentOAuth\Services\AvatarService::class)->syncAvatar($user, $oauthUser);
+                    resolve(\BeegoodIT\FilamentOAuth\Services\AvatarService::class)->syncAvatar($user, $oauthUser);
                 }
 
                 // Assign team DURING user creation (inside the transaction) if enabled for this provider
@@ -43,7 +43,7 @@ class FilamentSocialitePluginHelper
                     $accessToken = $oauthUser->token ?? null;
 
                     if ($tenantId) {
-                        $teamAssignmentService = resolve(\BeeGoodIT\FilamentOAuth\Services\TeamAssignmentService::class);
+                        $teamAssignmentService = resolve(\BeegoodIT\FilamentOAuth\Services\TeamAssignmentService::class);
                         $teamAssignmentService->assignUserToTeam($user, $provider, $tenantId, $accessToken);
 
                         // Critical: Ensure teams relationship is loaded on the user instance

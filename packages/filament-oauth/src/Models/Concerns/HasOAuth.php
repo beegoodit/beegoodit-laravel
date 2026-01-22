@@ -1,8 +1,8 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Models\Concerns;
+namespace BeegoodIT\FilamentOAuth\Models\Concerns;
 
-use BeeGoodIT\FilamentOAuth\Models\OAuthAccount;
+use BeegoodIT\FilamentOAuth\Models\OAuthAccount;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasOAuth

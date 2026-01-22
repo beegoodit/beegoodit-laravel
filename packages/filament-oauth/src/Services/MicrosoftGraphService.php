@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Services;
+namespace BeegoodIT\FilamentOAuth\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;

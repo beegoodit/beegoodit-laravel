@@ -1,10 +1,10 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Tests\Unit;
+namespace BeegoodIT\FilamentOAuth\Tests\Unit;
 
-use BeeGoodIT\FilamentOAuth\Services\AvatarService;
-use BeeGoodIT\FilamentOAuth\Services\TeamAssignmentService;
-use BeeGoodIT\FilamentOAuth\Tests\TestCase;
+use BeegoodIT\FilamentOAuth\Services\AvatarService;
+use BeegoodIT\FilamentOAuth\Services\TeamAssignmentService;
+use BeegoodIT\FilamentOAuth\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;

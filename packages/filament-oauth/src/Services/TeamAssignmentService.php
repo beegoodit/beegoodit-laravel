@@ -1,6 +1,6 @@
 <?php
 
-namespace BeeGoodIT\FilamentOAuth\Services;
+namespace BeegoodIT\FilamentOAuth\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
