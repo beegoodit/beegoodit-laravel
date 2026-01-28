@@ -23,7 +23,8 @@
             "BeegoodIT\\FilamentTenancy\\": "packages/filament-tenancy/src/",
             "BeegoodIT\\FilamentUserProfile\\": "packages/filament-user-profile/src/",
             "BeegoodIT\\FilamentKnowledgeBase\\": "packages/filament-knowledge-base/src/",
-            "BeegoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/"
+            "BeegoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/",
+            "BeegoodIT\\FilamentTenancyDomains\\": "packages/filament-tenancy-domains/src/"
         }
     },
     "autoload-dev": {
@@ -37,7 +38,8 @@
             "BeegoodIT\\FilamentOAuth\\Tests\\": "packages/filament-oauth/tests/",
             "BeegoodIT\\FilamentTenancy\\Tests\\": "packages/filament-tenancy/tests/",
             "BeegoodIT\\FilamentUserProfile\\Tests\\": "packages/filament-user-profile/tests/",
-            "BeegoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/"
+            "BeegoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/",
+            "BeegoodIT\\FilamentTenancyDomains\\Tests\\": "packages/filament-tenancy-domains/tests/"
         }
     },
     "scripts": {

@@ -12,6 +12,7 @@
 7. ✅ **filament-tenancy** - Complete with docs
 8. ✅ **filament-user-profile** - Complete with docs
 9. ✅ **laravel-pwa** - Complete with docs
+10. ✅ **filament-tenancy-domains** - Complete with tests
 
 ### Package Features
 - ✅ Complete documentation (README, CHANGELOG, LICENSE)
@@ -41,6 +42,7 @@
 - filament-oauth: 4/4 ✅
 - filament-tenancy: 3/3 ✅
 - laravel-pwa: 3/3 ✅
+- filament-tenancy-domains: 4/4 ✅
 - laravel-cookie-consent: 0/4 ⚠️ (needs Livewire testing setup)
 
 **Options:**
