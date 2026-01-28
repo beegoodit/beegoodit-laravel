@@ -11,7 +11,7 @@ return [
     'verification_token' => 'Verifizierungs-Token',
     'verified_at' => 'Verifiziert am',
     'platform' => 'Plattform-Subdomain',
-    'custom_subdomain' => 'Eigene Subdomain',
+    'custom' => 'Eigene Domain',
     'custom_domain' => 'Eigene Domain',
     'verification' => 'Verifizierung',
     'verification_description' => 'DNS-Verifizierung für eigene Domains',

@@ -11,7 +11,7 @@ return [
     'verification_token' => 'Token de verificación',
     'verified_at' => 'Verificado el',
     'platform' => 'Subdominio de la plataforma',
-    'custom_subdomain' => 'Subdominio propio',
+    'custom' => 'Dominio propio',
     'custom_domain' => 'Dominio propio',
     'verification' => 'Verificación',
     'verification_description' => 'Verificación DNS para dominios propios',

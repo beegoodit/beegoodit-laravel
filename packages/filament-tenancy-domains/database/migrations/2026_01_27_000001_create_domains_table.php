@@ -17,6 +17,8 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('verification_token')->nullable();
             $table->timestamp('verified_at')->nullable();
+            $table->timestamp('last_verification_attempt_at')->nullable();
+            $table->text('last_verification_error')->nullable();
             $table->timestamps();
 
             // Only one primary domain per model

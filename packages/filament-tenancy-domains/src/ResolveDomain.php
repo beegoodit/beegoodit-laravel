@@ -14,6 +14,7 @@ class ResolveDomain
 
         $resolvedDomain = Domain::where('domain', $host)
             ->where('is_active', true)
+            ->where(fn ($query) => $query->whereNotNull('verified_at')->orWhere('type', 'platform'))
             ->with('model')
             ->first();
 

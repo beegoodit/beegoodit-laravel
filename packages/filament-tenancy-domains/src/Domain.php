@@ -10,6 +10,20 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Domain extends Model
 {
     use HasUuids;
+    
+    protected static function booted(): void
+    {
+        static::saving(function (Domain $domain) {
+            if ($domain->is_primary) {
+                // Ensure only one domain is primary for the same model
+                static::where('model_type', $domain->model_type)
+                    ->where('model_id', $domain->model_id)
+                    ->where('is_primary', true)
+                    ->where('id', '!=', $domain->id)
+                    ->update(['is_primary' => false]);
+            }
+        });
+    }
 
     protected $fillable = [
         'domain',
@@ -35,7 +49,7 @@ class Domain extends Model
             return true;
         }
 
-        $verificationHostname = '_foosbeaver-verification.' . $this->domain;
+        $verificationHostname = '_foosbeaver-verification.'.$this->domain;
         $expectedToken = $this->verification_token;
 
         $this->update([
@@ -44,7 +58,7 @@ class Domain extends Model
 
         try {
             $records = dns_get_record($verificationHostname, DNS_TXT);
-            
+
             $verified = false;
             foreach ($records as $record) {
                 if (isset($record['txt']) && $record['txt'] === $expectedToken) {
@@ -58,27 +72,27 @@ class Domain extends Model
                     'verified_at' => now(),
                     'last_verification_error' => null,
                 ]);
-                
+
                 \Illuminate\Support\Facades\Log::info("Domain verification successful for: {$this->domain}");
-                
+
                 return true;
             }
 
             $this->update([
                 'last_verification_error' => 'Verification TXT record not found or mismatch.',
             ]);
-            
+
             \Illuminate\Support\Facades\Log::warning("Domain verification failed for: {$this->domain}. TXT record not found or mismatch.");
-            
+
             return false;
 
         } catch (\Exception $e) {
             $this->update([
                 'last_verification_error' => $e->getMessage(),
             ]);
-            
-            \Illuminate\Support\Facades\Log::error("Error during domain verification for {$this->domain}: " . $e->getMessage());
-            
+
+            \Illuminate\Support\Facades\Log::error("Error during domain verification for {$this->domain}: ".$e->getMessage());
+
             return false;
         }
     }
@@ -86,7 +100,7 @@ class Domain extends Model
     protected function isVerified(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->verified_at !== null || $this->type === 'platform',
+            get: fn (): bool => $this->verified_at !== null || $this->type === 'platform',
         );
     }
 

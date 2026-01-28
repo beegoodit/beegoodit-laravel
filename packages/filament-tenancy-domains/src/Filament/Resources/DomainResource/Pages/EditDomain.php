@@ -18,7 +18,7 @@ class EditDomain extends EditRecord
                 ->label(__('filament-tenancy-domains::domains.verify_now'))
                 ->icon('heroicon-o-check-badge')
                 ->color('success')
-                ->action(function () {
+                ->action(function (): void {
                     if ($this->record->verify()) {
                         Notification::make()
                             ->title(__('filament-tenancy-domains::domains.verification_success'))
@@ -32,8 +32,15 @@ class EditDomain extends EditRecord
                             ->send();
                     }
                 })
-                ->visible(fn () => $this->record->type !== 'platform' && !$this->record->is_verified),
-            Actions\DeleteAction::make(),
+                ->visible(function (): bool {
+                    try {
+                        return $this->record->type !== 'platform' && ! $this->record->is_verified;
+                    } catch (\Error) {
+                        return false;
+                    }
+                }),
+            Actions\DeleteAction::make()
+                ->after(fn () => $this->redirect(static::$resource::getUrl('index'))),
         ];
     }
 }
