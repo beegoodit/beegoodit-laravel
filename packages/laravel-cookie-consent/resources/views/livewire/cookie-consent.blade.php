@@ -4,12 +4,19 @@
         $policyUrl = config("cookie-consent.policy_url_{$locale}", config('cookie-consent.policy_url_en'));
     @endphp
 
+    {{-- Main Banner Backdrop --}}
+    <div x-data="{ showBackdrop: @entangle('show') }" x-show="showBackdrop"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm" style="z-index: 999998 !important;"></div>
+
     {{-- Main Alert Banner --}}
     <div x-data="{ show: @entangle('show') }" x-show="show" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="transform translate-y-full" x-transition:enter-end="transform translate-y-0"
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="transform translate-y-0"
-        x-transition:leave-end="transform translate-y-full"
-        class="fixed bottom-0 left-0 right-0 z-[9999] px-8 md:px-4 mb-4">
+        x-transition:leave-end="transform translate-y-full" class="fixed bottom-0 left-0 right-0 px-8 md:px-4 mb-4"
+        style="z-index: 999999 !important;">
 
         <div role="dialog" aria-labelledby="cookie-banner-title" aria-describedby="cookie-banner-desc"
             class="mx-auto max-w-4xl rounded-2xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900 overflow-hidden">
@@ -61,12 +68,13 @@
         </div>
     </div>
 
-    {{-- Backdrop for Main Banner --}}
-    <div x-data="{ showBackdrop: @entangle('show') }" x-show="showBackdrop"
-        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+    {{-- Settings Modal Backdrop --}}
+    <div x-data="{ showBackdrop: @entangle('showSettings') }" x-show="showBackdrop"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]"></div>
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm" style="z-index: 9999998 !important;"
+        @click="$wire.closeSettings()"></div>
 
     {{-- Settings Modal --}}
     <div x-data="{ showSettings: @entangle('showSettings') }" x-show="showSettings"
@@ -74,7 +82,7 @@
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" role="dialog"
         aria-labelledby="cookie-settings-title" aria-describedby="cookie-settings-desc"
-        class="fixed inset-0 overflow-y-auto bg-black/50 backdrop-blur-sm z-[9999]">
+        class="fixed inset-0 overflow-y-auto" style="z-index: 9999999 !important;">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div
                 class="relative w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
@@ -91,7 +99,7 @@
 
                 {{-- Modal Header (Sticky on scroll) --}}
                 <div
-                    class="sticky top-0 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 p-4 sm:p-6 rounded-t-xl z-10">
+                    class="sticky top-0 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 p-4 sm:p-6 rounded-t-xl z-20">
                     <div class="flex items-center gap-3 mb-3 pr-10">
                         <svg class="w-8 h-8 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -203,11 +211,4 @@
             </div>
         </div>
     </div>
-
-    {{-- Backdrop Overlay --}}
-    <div x-data="{ showBackdrop: @entangle('showSettings') }" x-show="showBackdrop"
-        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]" @click="$wire.closeSettings()"></div>
 </div>
