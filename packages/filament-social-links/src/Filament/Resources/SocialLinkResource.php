@@ -10,7 +10,6 @@ use BeegoodIT\FilamentSocialLinks\Models\SocialPlatform;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -23,7 +22,7 @@ class SocialLinkResource extends Resource
 {
     protected static ?string $model = SocialLink::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-link';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-link';
 
     protected static UnitEnum|string|null $navigationGroup = 'filament-social-links::social.navigation_group';
 
@@ -52,33 +51,35 @@ class SocialLinkResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(2)
             ->components([
-                Section::make()
-                    ->schema([
-                        Select::make('social_platform_id')
-                            ->label(__('filament-social-links::social.platform'))
-                            ->options(SocialPlatform::query()->where('is_active', true)->pluck('name', 'id'))
-                            ->required()
-                            ->searchable(),
+                Select::make('social_platform_id')
+                    ->label(__('filament-social-links::social.platform'))
+                    ->options(SocialPlatform::query()->where('is_active', true)->pluck('name', 'id'))
+                    ->required()
+                    ->searchable()
+                    ->columnSpan(1),
 
-                        TextInput::make('handle')
-                            ->label(__('filament-social-links::social.handle'))
-                            ->required()
-                            ->maxLength(255)
-                            ->placeholder('@username'),
+                TextInput::make('handle')
+                    ->label(__('filament-social-links::social.handle'))
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder('@username')
+                    ->columnSpan(1),
 
-                        TextInput::make('linkable_type')
-                            ->label(__('filament-social-links::social.linkable_type'))
-                            ->required()
-                            ->disabled()
-                            ->dehydrated(),
+                TextInput::make('linkable_type')
+                    ->label(__('filament-social-links::social.linkable_type'))
+                    ->required()
+                    ->disabled()
+                    ->dehydrated()
+                    ->columnSpan(1),
 
-                        TextInput::make('linkable_id')
-                            ->label(__('filament-social-links::social.linkable_id'))
-                            ->required()
-                            ->disabled()
-                            ->dehydrated(),
-                    ])->columns(2),
+                TextInput::make('linkable_id')
+                    ->label(__('filament-social-links::social.linkable_id'))
+                    ->required()
+                    ->disabled()
+                    ->dehydrated()
+                    ->columnSpan(1),
             ]);
     }
 
