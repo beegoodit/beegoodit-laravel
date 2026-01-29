@@ -24,6 +24,9 @@
             "BeegoodIT\\FilamentUserProfile\\": "packages/filament-user-profile/src/",
             "BeegoodIT\\FilamentKnowledgeBase\\": "packages/filament-knowledge-base/src/",
             "BeegoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/",
+            "BeegoodIT\\FilamentSocialLinks\\": "packages/filament-social-links/src/",
+            "BeegoodIT\\FilamentSocialLinks\\Database\\Seeders\\": "packages/filament-social-links/database/seeders/",
+            "BeegoodIT\\FilamentSocialLinks\\Database\\Factories\\": "packages/filament-social-links/database/factories/",
             "BeegoodIT\\FilamentTenancyDomains\\": "packages/filament-tenancy-domains/src/"
         }
     },
@@ -39,7 +42,8 @@
             "BeegoodIT\\FilamentTenancy\\Tests\\": "packages/filament-tenancy/tests/",
             "BeegoodIT\\FilamentUserProfile\\Tests\\": "packages/filament-user-profile/tests/",
             "BeegoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/",
-            "BeegoodIT\\FilamentTenancyDomains\\Tests\\": "packages/filament-tenancy-domains/tests/"
+            "BeegoodIT\\FilamentTenancyDomains\\Tests\\": "packages/filament-tenancy-domains/tests/",
+            "BeegoodIT\\FilamentSocialLinks\\Tests\\": "packages/filament-social-links/tests/"
         }
     },
     "scripts": {
