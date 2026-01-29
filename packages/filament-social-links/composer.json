@@ -1,0 +1,52 @@
+{
+    "name": "beegoodit/filament-social-links",
+    "description": "Polymorphic social media link management for Filament.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "filament",
+        "social-media",
+        "polymorphic",
+        "beegoodit"
+    ],
+    "authors": [
+        {
+            "name": "BeegoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "beegoodit/eloquent-userstamps": "@dev",
+        "filament/filament": "^4.0",
+        "illuminate/database": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\FilamentSocialLinks\\": "src/",
+            "BeegoodIT\\FilamentSocialLinks\\Database\\Seeders\\": "database/seeders/",
+            "BeegoodIT\\FilamentSocialLinks\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\FilamentSocialLinks\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeegoodIT\\FilamentSocialLinks\\FilamentSocialLinksServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

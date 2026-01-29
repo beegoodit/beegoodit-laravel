@@ -1,0 +1,22 @@
+# Task: Implement User Registration and Social Login for Foosbeaver
+
+- [x] Research `filament-user-profile` registration and team creation logic
+- [x] Research `filament-oauth` integration and Discord support
+- [x] Discuss approach with user to avoid unwanted team creation
+- [x] Phase 1: User Registration (Core)
+    - [x] Add config to `filament-user-profile` for toggleable registration
+    - [x] Update README and add tests for registration in package
+    - [x] Publish and update configuration in `foosbeaver`
+    - [x] Add Knowledge Base entry for registration in `foosbeaver`
+    - [x] Verify core registration flow
+- [ ] Phase 2: Social Login (Discord)
+    - [x] Add Discord support to `filament-oauth`
+    - [x] Update README and add tests for Discord in package
+    - [x] Configure Discord credentials in `foosbeaver`
+    - [/] Verify Discord login flow
+- [ ] Phase 3: Avatar Sync and Team Assignment Refactoring
+    - [ ] Implement avatar sync from OAuth to `User` model
+    - [ ] Refactor `TeamAssignmentService` to be provider-agnostic
+    - [ ] Add per-provider `team_assignment` config
+    - [ ] Deactivate auto team assignment in `foosbeaver`
+    - [ ] Update README with new configuration options
