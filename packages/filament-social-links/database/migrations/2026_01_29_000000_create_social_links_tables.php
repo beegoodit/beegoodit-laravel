@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->integer('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
-            
+
             // Userstamps
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
-            
+
             $table->timestamps();
         });
 
@@ -30,11 +30,11 @@ return new class extends Migration
             $table->foreignUuid('social_platform_id')->constrained()->cascadeOnDelete();
             $table->string('handle');
             $table->integer('sort_order')->default(0);
-            
+
             // Userstamps
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
-            
+
             $table->timestamps();
         });
     }

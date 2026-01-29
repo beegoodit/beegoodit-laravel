@@ -22,7 +22,7 @@ class SocialPlatformTest extends TestCase
 
     public function test_seeder_populates_default_platforms()
     {
-        $seeder = new SocialPlatformSeeder();
+        $seeder = new SocialPlatformSeeder;
         $seeder->run();
 
         $this->assertDatabaseHas('social_platforms', ['slug' => 'facebook']);

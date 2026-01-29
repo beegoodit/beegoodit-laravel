@@ -9,6 +9,7 @@ use BeegoodIT\FilamentSocialLinks\Models\SocialPlatform;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -76,21 +77,37 @@ class SocialPlatformResource extends Resource
                     ->placeholder('https://instagram.com/')
                     ->columnSpan(1),
 
-                TextInput::make('icon')
+                Select::make('icon')
                     ->label(__('filament-social-links::social.icon'))
-                    ->placeholder('fab-instagram')
-                    ->columnSpan(1),
+                    ->options(function () {
+                        $icons = [];
 
-                TextInput::make('sort_order')
-                    ->label(__('filament-social-links::social.sort_order'))
-                    ->numeric()
-                    ->default(0)
+                        // FontAwesome Brand icons only (social media)
+                        $faPath = base_path('vendor/owenvoke/blade-fontawesome/resources/svg/brands');
+                        if (is_dir($faPath)) {
+                            foreach (glob($faPath.'/*.svg') as $file) {
+                                $iconName = basename($file, '.svg');
+                                $fabName = 'fab-'.$iconName;
+                                $label = ucwords(str_replace('-', ' ', $iconName));
+                                $icons[$fabName] = $label;
+                            }
+                        }
+
+                        asort($icons);
+
+                        return collect($icons)->mapWithKeys(fn ($label, $icon): array => [
+                            $icon => view('filament-social-links::components.icon-option', ['icon' => $icon, 'label' => $label])->render(),
+                        ])->all();
+                    })
+                    ->allowHtml()
+                    ->searchable()
+                    ->placeholder(__('filament-social-links::social.select_icon'))
                     ->columnSpan(1),
 
                 Toggle::make('is_active')
                     ->label(__('filament-social-links::social.is_active'))
                     ->default(true)
-                    ->columnSpan(1),
+                    ->columnSpan(2),
             ]);
     }
 
@@ -108,17 +125,16 @@ class SocialPlatformResource extends Resource
                     ->limit(30),
 
                 TextColumn::make('icon')
-                    ->label(__('filament-social-links::social.icon')),
+                    ->label(__('filament-social-links::social.icon'))
+                    ->icon(fn (SocialPlatform $record): string => $record->icon ?? 'heroicon-o-share')
+                    ->iconPosition('before'),
 
                 IconColumn::make('is_active')
                     ->label(__('filament-social-links::social.is_active'))
                     ->boolean(),
-
-                TextColumn::make('sort_order')
-                    ->label(__('filament-social-links::social.sort_order'))
-                    ->sortable(),
             ])
             ->defaultSort('sort_order')
+            ->reorderable('sort_order')
             ->filters([
                 //
             ])

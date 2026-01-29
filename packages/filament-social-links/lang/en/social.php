@@ -16,4 +16,8 @@ return [
     'sort_order' => 'Sort Order',
     'linkable_type' => 'Entity Type',
     'linkable_id' => 'Entity ID',
+    'entity' => 'Entity',
+    'entity_type' => 'Entity Type',
+    'team' => 'Team',
+    'select_icon' => 'Select an icon...',
 ];

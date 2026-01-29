@@ -55,15 +55,16 @@ class TestCase extends Orchestra
 class User extends \Illuminate\Foundation\Auth\User
 {
     use \Illuminate\Database\Eloquent\Concerns\HasUuids;
-    
+
     protected $table = 'users';
+
     protected $guarded = [];
 }
 
 class TestModel extends \Illuminate\Database\Eloquent\Model
 {
-    use \Illuminate\Database\Eloquent\Concerns\HasUuids;
     use \BeegoodIT\FilamentSocialLinks\Models\Concerns\HasSocialLinks;
-    
+    use \Illuminate\Database\Eloquent\Concerns\HasUuids;
+
     protected $guarded = [];
 }
