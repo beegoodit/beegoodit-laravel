@@ -16,27 +16,27 @@ class BrandingSchema
      */
     public static function getBrandingSection(): Section
     {
-        return Section::make('Branding')
+        return Section::make(__('filament-tenancy::messages.Branding'))
             ->schema([
                 FileUpload::make('logo')
-                    ->label('Team Logo')
+                    ->label(__('filament-tenancy::messages.Team Logo'))
                     ->image()
                     ->disk(config('filesystems.default') === 's3' ? 's3' : 'public')
                     ->directory(fn (): string => sprintf('teams/logo/%s', Filament::getTenant()->id))
                     ->maxSize(2048)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'])
-                    ->helperText('Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)')
+                    ->helperText(__('filament-tenancy::messages.Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)'))
                     ->visibility('public')
                     ->deletable()
                     ->moveFiles(),
 
                 ColorPicker::make('primary_color')
-                    ->label('Primary Brand Color')
-                    ->helperText('Main color for buttons, links, and accents'),
+                    ->label(__('filament-tenancy::messages.Primary Brand Color'))
+                    ->helperText(__('filament-tenancy::messages.Main color for buttons, links, and accents')),
 
                 ColorPicker::make('secondary_color')
-                    ->label('Secondary Color')
-                    ->helperText('Additional brand color if needed'),
+                    ->label(__('filament-tenancy::messages.Secondary Color'))
+                    ->helperText(__('filament-tenancy::messages.Additional brand color if needed')),
             ]);
     }
 
@@ -49,16 +49,18 @@ class BrandingSchema
     {
         return [
             TextInput::make('name')
+                ->label(fn () => __('models.team.attributes.name'))
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
 
             TextInput::make('slug')
+                ->label(fn () => __('models.team.attributes.slug'))
                 ->required()
                 ->maxLength(255)
                 ->unique($teamModelClass, 'slug', ignoreRecord: true)
-                ->helperText('URL-friendly identifier. Auto-generated from name, but can be customized.'),
+                ->helperText(__('filament-tenancy::messages.URL-friendly identifier. Auto-generated from name, but can be customized.')),
 
             self::getBrandingSection(),
         ];

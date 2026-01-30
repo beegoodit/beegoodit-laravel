@@ -8,6 +8,9 @@ class FilamentTenancyServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-tenancy');
+
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([

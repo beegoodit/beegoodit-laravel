@@ -10,7 +10,7 @@ class EditTeamProfile extends EditTenantProfile
 {
     public static function getLabel(): string
     {
-        return 'Team Profile';
+        return __('filament-tenancy::messages.Team Profile');
     }
 
     public function form(Schema $schema): Schema

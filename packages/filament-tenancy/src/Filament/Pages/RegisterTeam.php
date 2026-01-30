@@ -11,7 +11,7 @@ class RegisterTeam extends RegisterTenant
 {
     public static function getLabel(): string
     {
-        return 'Register team';
+        return __('filament-tenancy::messages.Register team');
     }
 
     public function form(Schema $schema): Schema
