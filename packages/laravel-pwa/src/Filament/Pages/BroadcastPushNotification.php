@@ -2,19 +2,16 @@
 
 namespace BeegoodIT\LaravelPwa\Filament\Pages;
 
+use App\Filament\Traits\HasModelTranslations;
 use App\Models\User;
-use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Notifications\Notification as FilamentNotification;
-
 use Filament\Pages\Page;
-use UnitEnum;
-use App\Filament\Traits\HasModelTranslations;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 
 class BroadcastPushNotification extends Page
 {
@@ -81,25 +78,25 @@ class BroadcastPushNotification extends Page
     {
         $data = $this->form->getState();
 
-        $pushService = resolve(PushNotificationService::class);
-
-        $payload = [
-            'title' => $data['title_input'],
-            'body' => $data['body'],
-            'data' => [
-                'url' => $data['action_url'] ?: null,
+        $broadcast = \BeegoodIT\LaravelPwa\Models\Notifications\Broadcast::create([
+            'trigger_type' => 'manual',
+            'target_ids' => $data['target_type'] === 'users' ? $data['users'] : null,
+            'payload' => [
+                'title' => $data['title_input'],
+                'body' => $data['body'],
+                'data' => [
+                    'url' => $data['action_url'] ?: null,
+                ],
             ],
-        ];
+            'status' => 'pending',
+        ]);
 
-        if ($data['target_type'] === 'all') {
-            $count = $pushService->sendToAll($payload);
-        } else {
-            $count = $pushService->sendToUsers($data['users'], $payload);
-        }
+        dispatch(new \BeegoodIT\LaravelPwa\Notifications\Jobs\ProcessBroadcastJob($broadcast))
+            ->onQueue(config('pwa.notifications.queue', 'default'));
 
         FilamentNotification::make()
             ->title(__('laravel-pwa::broadcast.notifications.success.title'))
-            ->body(__('laravel-pwa::broadcast.notifications.success.body', ['count' => $count]))
+            ->body(__('laravel-pwa::broadcast.notifications.success.body'))
             ->success()
             ->send();
 
@@ -109,11 +106,23 @@ class BroadcastPushNotification extends Page
         ]);
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'navigation.groups.settings';
+    public static function getNavigationIcon(): ?string
+    {
+        return 'heroicon-o-megaphone';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation.groups.settings');
+    }
 
     public static function getNavigationLabel(): string
     {
         return __('laravel-pwa::broadcast.navigation_label');
     }
-}
 
+    public static function getNavigationSort(): ?int
+    {
+        return 130;
+    }
+}

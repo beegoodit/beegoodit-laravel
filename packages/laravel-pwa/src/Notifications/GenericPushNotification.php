@@ -19,8 +19,7 @@ class GenericPushNotification extends Notification implements ShouldQueue
         protected string $body,
         protected ?string $actionUrl = null,
         protected ?string $icon = null
-    ) {
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.

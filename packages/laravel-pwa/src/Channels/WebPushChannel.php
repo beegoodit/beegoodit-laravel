@@ -10,29 +10,28 @@ class WebPushChannel
 {
     public function __construct(
         protected PushNotificationService $pushService
-    ) {
-    }
+    ) {}
 
     /**
      * Send the given notification.
      */
     public function send($notifiable, Notification $notification): void
     {
-        if (!$this->pushService->isEnabled()) {
+        if (! $this->pushService->isEnabled()) {
             return;
         }
 
         // Get subscriptions via the routeNotificationFor method
         $subscriptions = $notifiable->routeNotificationFor('webPush', $notification);
 
-        if (!$subscriptions || $subscriptions->isEmpty()) {
+        if (! $subscriptions || $subscriptions->isEmpty()) {
             return;
         }
 
         // Get the message from the notification
         $message = $notification->toWebPush($notifiable);
 
-        if (!$message instanceof WebPushMessage) {
+        if (! $message instanceof WebPushMessage) {
             $message = (new WebPushMessage)->title($message);
         }
 

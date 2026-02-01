@@ -21,8 +21,8 @@ class GenerateVapidKeysCommand extends Command
         $this->line('Add the following to your <comment>.env</comment> file:');
         $this->newLine();
 
-        $this->line('<fg=green>VAPID_PUBLIC_KEY=</>' . $keys['publicKey']);
-        $this->line('<fg=green>VAPID_PRIVATE_KEY=</>' . $keys['privateKey']);
+        $this->line('<fg=green>VAPID_PUBLIC_KEY=</>'.$keys['publicKey']);
+        $this->line('<fg=green>VAPID_PRIVATE_KEY=</>'.$keys['privateKey']);
         $this->line('<fg=green>VAPID_SUBJECT=</>mailto:your-email@example.com');
 
         $this->newLine();

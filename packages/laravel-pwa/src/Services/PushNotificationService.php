@@ -2,7 +2,7 @@
 
 namespace BeegoodIT\LaravelPwa\Services;
 
-use BeegoodIT\LaravelPwa\Models\PushSubscription;
+use BeegoodIT\LaravelPwa\Models\Notifications\PushSubscription;
 use Illuminate\Support\Facades\Log;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
@@ -16,7 +16,7 @@ class PushNotificationService
      */
     protected function getWebPush(): WebPush
     {
-        if (!$this->webPush instanceof \Minishlink\WebPush\WebPush) {
+        if (! $this->webPush instanceof \Minishlink\WebPush\WebPush) {
             $vapidConfig = config('pwa.push.vapid');
 
             $auth = [
@@ -41,7 +41,7 @@ class PushNotificationService
     {
         $vapid = config('pwa.push.vapid');
 
-        return !empty($vapid['public_key']) && !empty($vapid['private_key']);
+        return ! empty($vapid['public_key']) && ! empty($vapid['private_key']);
     }
 
     /**
@@ -57,7 +57,7 @@ class PushNotificationService
      */
     public function send(PushSubscription $subscription, array $payload): bool
     {
-        if (!$this->isEnabled()) {
+        if (! $this->isEnabled()) {
             Log::warning('Push notifications are not enabled or configured.');
 
             return false;
@@ -67,7 +67,7 @@ class PushNotificationService
             $webPushSubscription = Subscription::create($subscription->toWebPush());
 
             Log::debug('Sending push notification', [
-                'endpoint' => substr($subscription->endpoint, 0, 50) . '...',
+                'endpoint' => substr($subscription->endpoint, 0, 50).'...',
                 'vapid_subject' => config('pwa.push.vapid.subject'),
                 'vapid_public_key_length' => strlen((string) config('pwa.push.vapid.public_key', '')),
             ]);
@@ -108,7 +108,7 @@ class PushNotificationService
      */
     public function sendToUser($user, array $payload): int
     {
-        if (!method_exists($user, 'pushSubscriptions')) {
+        if (! method_exists($user, 'pushSubscriptions')) {
             Log::warning('User model does not have pushSubscriptions relationship.');
 
             return 0;
@@ -157,7 +157,6 @@ class PushNotificationService
 
         return $sent;
     }
-
 
     /**
      * Get the VAPID public key for JavaScript.

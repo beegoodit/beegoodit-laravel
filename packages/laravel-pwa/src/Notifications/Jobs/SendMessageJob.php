@@ -1,0 +1,70 @@
+<?php
+
+namespace BeegoodIT\LaravelPwa\Notifications\Jobs;
+
+use BeegoodIT\LaravelPwa\Models\Notifications\Message;
+use BeegoodIT\LaravelPwa\Services\PushNotificationService;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\RateLimited;
+use Illuminate\Queue\SerializesModels;
+
+class SendMessageJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
+    /**
+     * The number of seconds to wait before retrying the job.
+     *
+     * @var int
+     */
+    public $backoff = 60;
+
+    public function __construct(public Message $message) {}
+
+    /**
+     * Get the middleware the job should pass through.
+     */
+    public function middleware(): array
+    {
+        return [new RateLimited('pwa-notifications')];
+    }
+
+    public function handle(PushNotificationService $pushService): void
+    {
+        $this->message->load(['broadcast', 'pushSubscription']);
+
+        if (! $this->message->pushSubscription) {
+            $this->message->update(['delivery_status' => 'failed', 'error_message' => 'Subscription not found']);
+
+            return;
+        }
+
+        $payload = $this->message->content ?? $this->message->broadcast->payload ?? [];
+        $payload['data']['message_id'] = $this->message->id;
+
+        $success = $pushService->send(
+            $this->message->pushSubscription,
+            $payload
+        );
+
+        if ($success) {
+            $this->message->update(['delivery_status' => 'sent']);
+            $this->message->broadcast()->increment('total_sent');
+        } else {
+            $this->message->update([
+                'delivery_status' => 'failed',
+                'error_message' => 'Push service returned false (check logs for details)',
+            ]);
+        }
+    }
+}
