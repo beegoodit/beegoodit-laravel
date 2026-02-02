@@ -1,40 +1,32 @@
 <?php
 
-namespace BeegoodIT\LaravelPwa\Filament\Pages;
+namespace BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\Pages;
 
-use App\Filament\Traits\HasModelTranslations;
 use App\Models\User;
+use BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource;
+use BeegoodIT\LaravelPwa\Models\Notifications\Broadcast;
+use BeegoodIT\LaravelPwa\Notifications\Jobs\ProcessBroadcastJob;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Notifications\Notification as FilamentNotification;
-use Filament\Pages\Page;
+use Filament\Resources\Pages\CreateRecord;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
-class BroadcastPushNotification extends Page
+class CreateBroadcast extends CreateRecord
 {
-    use HasModelTranslations;
-    use InteractsWithForms;
-
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-megaphone';
-
-    protected string $view = 'laravel-pwa::filament.pages.broadcast-push-notification';
-
-    public ?array $data = [];
-
-    public function mount(): void
-    {
-        $this->form->fill([
-            'target_type' => 'all',
-        ]);
-    }
+    protected static string $resource = BroadcastResource::class;
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
+                TextInput::make('title_input')
+                    ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder(__('laravel-pwa::broadcast.fields.title.placeholder')),
 
                 Select::make('target_type')
                     ->label(__('laravel-pwa::broadcast.fields.target_type.label'))
@@ -53,12 +45,6 @@ class BroadcastPushNotification extends Page
                     ->required()
                     ->visible(fn (Get $get): bool => $get('target_type') === 'users'),
 
-                TextInput::make('title_input')
-                    ->label(__('laravel-pwa::broadcast.fields.title.label'))
-                    ->required()
-                    ->maxLength(255)
-                    ->placeholder(__('laravel-pwa::broadcast.fields.title.placeholder')),
-
                 Textarea::make('body')
                     ->label(__('laravel-pwa::broadcast.fields.body.label'))
                     ->required()
@@ -71,14 +57,12 @@ class BroadcastPushNotification extends Page
                     ->url()
                     ->placeholder(__('laravel-pwa::broadcast.fields.action_url.placeholder')),
             ])
-            ->statePath('data');
+            ->columns(1);
     }
 
-    public function submit(): void
+    protected function handleRecordCreation(array $data): Model
     {
-        $data = $this->form->getState();
-
-        $broadcast = \BeegoodIT\LaravelPwa\Models\Notifications\Broadcast::create([
+        $broadcast = Broadcast::create([
             'trigger_type' => 'manual',
             'target_ids' => $data['target_type'] === 'users' ? $data['users'] : null,
             'payload' => [
@@ -91,38 +75,19 @@ class BroadcastPushNotification extends Page
             'status' => 'pending',
         ]);
 
-        dispatch(new \BeegoodIT\LaravelPwa\Notifications\Jobs\ProcessBroadcastJob($broadcast))
+        dispatch(new ProcessBroadcastJob($broadcast))
             ->onQueue(config('pwa.notifications.queue', 'default'));
 
-        FilamentNotification::make()
-            ->title(__('laravel-pwa::broadcast.notifications.success.title'))
-            ->body(__('laravel-pwa::broadcast.notifications.success.body'))
-            ->success()
-            ->send();
-
-        $this->form->fill([
-            'target_type' => $data['target_type'],
-            'users' => $data['users'] ?? [],
-        ]);
+        return $broadcast;
     }
 
-    public static function getNavigationIcon(): ?string
+    protected function getCreatedNotificationTitle(): ?string
     {
-        return 'heroicon-o-megaphone';
+        return __('laravel-pwa::broadcast.notifications.success.title');
     }
 
-    public static function getNavigationGroup(): ?string
+    protected function getRedirectUrl(): string
     {
-        return __('navigation.groups.settings');
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return __('laravel-pwa::broadcast.navigation_label');
-    }
-
-    public static function getNavigationSort(): ?int
-    {
-        return 130;
+        return $this->getResource()::getUrl('index');
     }
 }

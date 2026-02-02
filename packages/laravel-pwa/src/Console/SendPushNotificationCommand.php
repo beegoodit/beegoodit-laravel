@@ -5,7 +5,6 @@ namespace BeegoodIT\LaravelPwa\Console;
 use BeegoodIT\LaravelPwa\Notifications\GenericPushNotification;
 use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Notification;
 
 class SendPushNotificationCommand extends Command
 {
@@ -33,7 +32,7 @@ class SendPushNotificationCommand extends Command
     public function handle(PushNotificationService $pushService): int
     {
         $title = $this->option('title') ?: 'Test Notification';
-        $body = $this->option('body') ?: 'This is a test push notification from ' . config('app.name');
+        $body = $this->option('body') ?: 'This is a test push notification from '.config('app.name');
 
         $notification = new GenericPushNotification($title, $body);
 
@@ -44,21 +43,24 @@ class SendPushNotificationCommand extends Command
                 'body' => $body,
             ]);
             $this->info("Successfully sent to {$count} subscriptions.");
+
             return self::SUCCESS;
         }
 
         $userId = $this->argument('user');
 
-        if (!$userId) {
+        if (! $userId) {
             $this->error('Please provide a user ID or use the --all option.');
+
             return self::FAILURE;
         }
 
-        $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+        $userModel = config('auth.providers.users.model', \App\Models\User::class);
         $user = $userModel::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("User with ID {$userId} not found.");
+
             return self::FAILURE;
         }
 

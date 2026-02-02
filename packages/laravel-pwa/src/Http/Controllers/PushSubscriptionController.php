@@ -2,7 +2,7 @@
 
 namespace BeegoodIT\LaravelPwa\Http\Controllers;
 
-use BeegoodIT\LaravelPwa\Models\PushSubscription;
+use BeegoodIT\LaravelPwa\Models\Notifications\PushSubscription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -58,7 +58,7 @@ class PushSubscriptionController extends Controller
         $model = config('pwa.subscription_model', PushSubscription::class);
 
         $deleted = $model::where('endpoint', $request->input('endpoint'))
-            ->when(Auth::check(), fn($q) => $q->where('user_id', Auth::id()))
+            ->when(Auth::check(), fn ($q) => $q->where('user_id', Auth::id()))
             ->delete();
 
         return response()->json([

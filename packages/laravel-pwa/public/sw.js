@@ -142,20 +142,33 @@ self.addEventListener('notificationclick', (event) => {
     }
   }
 
+  const trackingPromise = notificationData.message_id
+    ? fetch(`/api/pwa/notifications/${notificationData.message_id}/open`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    }).catch(err => console.warn('[ServiceWorker] Tracking failed:', err))
+    : Promise.resolve();
+
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientList) => {
-        // Try to focus an existing window
-        for (const client of clientList) {
-          if (client.url === urlToOpen && 'focus' in client) {
-            return client.focus();
+    Promise.all([
+      trackingPromise,
+      clients.matchAll({ type: 'window', includeUncontrolled: true })
+        .then((clientList) => {
+          // Try to focus an existing window
+          for (const client of clientList) {
+            if (client.url === urlToOpen && 'focus' in client) {
+              return client.focus();
+            }
           }
-        }
-        // Open new window if none found
-        if (clients.openWindow) {
-          return clients.openWindow(urlToOpen);
-        }
-      })
+          // Open new window if none found
+          if (clients.openWindow) {
+            return clients.openWindow(urlToOpen);
+          }
+        })
+    ])
   );
 });
 

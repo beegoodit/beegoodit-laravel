@@ -42,7 +42,23 @@ return [
     |
     */
 
-    'subscription_model' => \BeegoodIT\LaravelPwa\Models\PushSubscription::class,
+    'subscription_model' => \BeegoodIT\LaravelPwa\Models\Notifications\PushSubscription::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications Infrastructure
+    |--------------------------------------------------------------------------
+    */
+
+    'notifications' => [
+        'delivery_retention_days' => 30,
+
+        'queue' => 'default',
+
+        'rate_limit' => [
+            'pushes_per_minute' => 50,
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | Push Notification Teaser (Soft Prompts)
