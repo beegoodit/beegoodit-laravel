@@ -50,7 +50,7 @@ return [
             'placeholder' => 'z.B. Ein neues Turnier ist in deiner Stadt verfügbar.',
         ],
         'action_url' => [
-            'label' => 'Aktions-URL (optional)',
+            'label' => 'Aktions-URL',
             'placeholder' => 'https://...',
         ],
         'created_at' => [

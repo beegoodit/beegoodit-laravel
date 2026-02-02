@@ -2,8 +2,8 @@
 
 namespace BeegoodIT\LaravelPwa\Filament;
 
-use BeegoodIT\LaravelPwa\Filament\Pages\BroadcastPushNotification;
 use BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource;
+use BeegoodIT\LaravelPwa\Filament\Resources\MessageResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
@@ -19,9 +19,11 @@ class LaravelPwaPlugin implements Plugin
         $panel
             ->resources([
                 BroadcastResource::class,
+                MessageResource::class,
+                \BeegoodIT\LaravelPwa\Filament\Resources\PushSubscriptionResource::class,
             ])
             ->pages([
-                BroadcastPushNotification::class,
+                \BeegoodIT\LaravelPwa\Filament\Pages\ManageNotificationSettings::class,
             ]);
     }
 
@@ -32,7 +34,7 @@ class LaravelPwaPlugin implements Plugin
 
     public static function make(): static
     {
-        return app(static::class);
+        return resolve(static::class);
     }
 
     public static function get(): static

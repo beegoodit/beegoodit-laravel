@@ -4,35 +4,34 @@ namespace BeegoodIT\LaravelPwa\Filament\Resources;
 
 use BeegoodIT\LaravelPwa\Filament\Resources\MessageResource\Pages;
 use BeegoodIT\LaravelPwa\Models\Notifications\Message;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Infolists\Components\TextEntry;
 
 class MessageResource extends Resource
 {
     protected static ?string $model = Message::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-paper-airplane';
 
     public static function getModelLabel(): string
     {
-        return __('laravel-pwa::notifications.messages.title');
+        return __('laravel-pwa::notifications.messages.resource_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('laravel-pwa::notifications.messages.title');
+        return __('laravel-pwa::notifications.messages.resource_label_plural');
     }
 
     public static function getNavigationLabel(): string
@@ -42,17 +41,17 @@ class MessageResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('navigation.groups.settings');
+        return __('laravel-pwa::notifications.nav.group');
     }
 
     public static function getNavigationSort(): ?int
     {
-        return 125;
+        return 30;
     }
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) static::getModel()::count();
+        return (string) static::getEloquentQuery()->count();
     }
 
     public static function form(Schema $schema): Schema
@@ -85,12 +84,14 @@ class MessageResource extends Resource
 
                 Section::make('Content')
                     ->schema([
-                        TextInput::make('content.title')
+                        TextInput::make('title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                            ->state(fn ($record) => $record->resolveContent()->title ?? '-')
                             ->disabled(),
 
-                        Textarea::make('content.body')
+                        Textarea::make('body')
                             ->label(__('laravel-pwa::broadcast.fields.body.label'))
+                            ->state(fn ($record) => $record->resolveContent()->body ?? '-')
                             ->disabled(),
                     ])->columns(1),
             ])->columns(1);
@@ -100,24 +101,22 @@ class MessageResource extends Resource
     {
         return $schema
             ->components([
-                Section::make(__('laravel-pwa::notifications.messages.title'))
+                Section::make(__('laravel-pwa::notifications.messages.resource_label'))
                     ->schema([
-                        TextEntry::make('broadcast_id')
-                            ->label(__('laravel-pwa::broadcast.fields.broadcast_id.label')),
-
-                        TextEntry::make('push_subscription_id')
-                            ->label(__('laravel-pwa::broadcast.fields.push_subscription_id.label')),
-
                         TextEntry::make('delivery_status')
                             ->label(__('laravel-pwa::broadcast.fields.status.label'))
                             ->badge()
                             ->color(fn (string $state): string => match ($state) {
                                 'pending' => 'gray',
+                                'on_hold' => 'warning',
                                 'sent' => 'success',
                                 'failed' => 'danger',
                                 default => 'gray',
                             })
                             ->formatStateUsing(fn (string $state): string => __("laravel-pwa::broadcast.fields.status.options.{$state}")),
+
+                        TextEntry::make('pushSubscription.user.name')
+                            ->label(__('laravel-pwa::broadcast.fields.user.label')),
 
                         TextEntry::make('opened_at')
                             ->label(__('laravel-pwa::broadcast.fields.opened_at.label'))
@@ -125,20 +124,28 @@ class MessageResource extends Resource
 
                         TextEntry::make('error_message')
                             ->label(__('laravel-pwa::broadcast.fields.error_message.label'))
-                            ->visible(fn ($record) => $record->error_message !== null)
+                            ->visible(fn ($record): bool => $record->error_message !== null)
                             ->columnSpanFull(),
                     ])
-                    ->columns(2)
+                    ->columns(3)
                     ->columnSpanFull(),
 
-                Section::make('Content')
+                Section::make(__('laravel-pwa::notifications.broadcasts.content'))
                     ->schema([
-                        TextEntry::make('content.title')
+                        TextEntry::make('title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                            ->state(fn ($record) => $record->resolveContent()->title ?? '-')
                             ->weight('bold'),
 
-                        TextEntry::make('content.body')
-                            ->label(__('laravel-pwa::broadcast.fields.body.label')),
+                        TextEntry::make('body')
+                            ->label(__('laravel-pwa::broadcast.fields.body.label'))
+                            ->state(fn ($record) => $record->resolveContent()->body ?? '-'),
+
+                        TextEntry::make('action_url')
+                            ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
+                            ->state(fn ($record) => $record->resolveContent()->data['url'] ?? null)
+                            ->url(fn ($record) => $record->resolveContent()->data['url'] ?? null, true)
+                            ->placeholder('-'),
                     ])
                     ->columns(1)
                     ->columnSpanFull(),
@@ -152,22 +159,37 @@ class MessageResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('laravel-pwa::broadcast.fields.created_at.label'))
                     ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('title')
+                    ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                    ->state(fn ($record) => $record->resolveContent()->title ?? '-')
+                    ->weight('bold')
+                    ->description(fn ($record): ?string => $record->resolveContent()->body ?? null)
+                    ->searchable()
                     ->sortable(),
+
+                TextColumn::make('pushSubscription.user.name')
+                    ->label(__('laravel-pwa::broadcast.fields.user.label'))
+                    ->size('xs')
+                    ->color('gray'),
+
+                TextColumn::make('action_url')
+                    ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
+                    ->state(fn ($record) => $record->resolveContent()->data['url'] ?? null)
+                    ->icon('heroicon-o-link')
+                    ->url(fn ($record) => $record->resolveContent()->data['url'] ?? null, true)
+                    ->color('primary')
+                    ->size('xs')
+                    ->limit(20)
+                    ->placeholder('-')
+                    ->toggleable(),
 
                 TextColumn::make('broadcast.payload.title')
                     ->label(__('laravel-pwa::broadcast.fields.broadcast.label'))
                     ->searchable()
-                    ->limit(30),
-
-                TextColumn::make('pushSubscription.user.name')
-                    ->label(__('laravel-pwa::broadcast.fields.user.label'))
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('pushSubscription.endpoint')
-                    ->label(__('laravel-pwa::broadcast.fields.recipient.label'))
-                    ->searchable()
-                    ->limit(20)
+                    ->limit(30)
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('delivery_status')
@@ -175,6 +197,7 @@ class MessageResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'gray',
+                        'on_hold' => 'warning',
                         'sent' => 'success',
                         'failed' => 'danger',
                         default => 'gray',
@@ -184,22 +207,35 @@ class MessageResource extends Resource
                 TextColumn::make('opened_at')
                     ->label(__('laravel-pwa::broadcast.fields.opened_at.label'))
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Action::make('hold')
+                    ->label(__('laravel-pwa::notifications.messages.actions.hold'))
+                    ->icon('heroicon-o-pause-circle')
+                    ->color('warning')
+                    ->visible(fn (Message $record): bool => $record->delivery_status === 'pending')
+                    ->action(fn (Message $record) => $record->hold()),
+
+                Action::make('release')
+                    ->label(__('laravel-pwa::notifications.messages.actions.release'))
+                    ->icon('heroicon-o-play-circle')
+                    ->color('success')
+                    ->visible(fn (Message $record): bool => $record->delivery_status === 'on_hold')
+                    ->action(fn (Message $record) => $record->release()),
+
                 Action::make('resend')
                     ->label(__('laravel-pwa::broadcast.buttons.resend'))
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
                     ->requiresConfirmation()
-                    ->action(function (Message $record) {
-                        $record->update([
-                            'delivery_status' => 'pending',
-                            'error_message' => null,
-                        ]);
+                    ->visible(fn (Message $record): bool => in_array($record->delivery_status, ['sent', 'failed']))
+                    ->action(function (Message $record): void {
+                        $record->release(); // Set to pending
 
                         dispatch(new \BeegoodIT\LaravelPwa\Notifications\Jobs\SendMessageJob($record))
                             ->onQueue(config('pwa.notifications.queue', 'default'));
@@ -208,8 +244,7 @@ class MessageResource extends Resource
                             ->title(__('laravel-pwa::broadcast.notifications.requeued.title'))
                             ->success()
                             ->send();
-                    })
-                    ->visible(fn (Message $record) => $record->delivery_status === 'failed'),
+                    }),
                 ViewAction::make(),
             ])
             ->bulkActions([

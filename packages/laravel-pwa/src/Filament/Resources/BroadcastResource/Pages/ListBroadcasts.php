@@ -3,7 +3,6 @@
 namespace BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\Pages;
 
 use BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListBroadcasts extends ListRecords
@@ -13,7 +12,7 @@ class ListBroadcasts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // Actions\CreateAction::make(), // We create broadcasts via the custom page
+            \Filament\Actions\CreateAction::make(),
         ];
     }
 }

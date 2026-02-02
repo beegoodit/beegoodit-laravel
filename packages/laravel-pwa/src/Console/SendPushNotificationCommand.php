@@ -55,7 +55,7 @@ class SendPushNotificationCommand extends Command
             return self::FAILURE;
         }
 
-        $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+        $userModel = config('auth.providers.users.model', \App\Models\User::class);
         $user = $userModel::find($userId);
 
         if (! $user) {

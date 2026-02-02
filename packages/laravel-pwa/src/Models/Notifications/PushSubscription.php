@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PushSubscription extends Model
 {
-    use HasUuids;
+    use HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory;
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\PushSubscriptionFactory::new();
+    }
 
     protected $table = 'pwa_notifications_push_subscriptions';
 
@@ -25,7 +30,7 @@ class PushSubscription extends Model
      */
     public function user(): BelongsTo
     {
-        $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+        $userModel = config('auth.providers.users.model', \App\Models\User::class);
 
         return $this->belongsTo($userModel);
     }

@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Broadcast extends Model
 {
-    use HasUuids;
+    use HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory;
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\BroadcastFactory::new();
+    }
 
     protected $table = 'pwa_notifications_broadcasts';
 
@@ -22,13 +27,16 @@ class Broadcast extends Model
         'total_opened',
     ];
 
-    protected $casts = [
-        'payload' => 'array',
-        'target_ids' => 'array',
-    ];
-
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'payload' => 'array',
+            'target_ids' => 'array',
+        ];
     }
 }

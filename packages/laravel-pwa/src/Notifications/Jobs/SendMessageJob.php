@@ -39,7 +39,7 @@ class SendMessageJob implements ShouldQueue
         return [new RateLimited('pwa-notifications')];
     }
 
-    public function handle(PushNotificationService $pushService): void
+    public function handle(PushNotificationService $pushService, \BeegoodIT\LaravelPwa\Settings\NotificationSettings $settings): void
     {
         $this->message->load(['broadcast', 'pushSubscription']);
 
@@ -49,7 +49,26 @@ class SendMessageJob implements ShouldQueue
             return;
         }
 
-        $payload = $this->message->content ?? $this->message->broadcast->payload ?? [];
+        // Check for Manual Hold
+        if ($this->message->delivery_status === 'on_hold') {
+            return;
+        }
+
+        // Check for Global Delivery System Status
+        if (! $settings->pwa_deliver_notifications) {
+            $this->release(60);
+
+            return;
+        }
+
+        // Resolve Content
+        $content = $this->message->resolveContent();
+        $payload = (array) $content;
+
+        // Ensure we have a data key and message_id for tracking
+        if (! isset($payload['data'])) {
+            $payload['data'] = [];
+        }
         $payload['data']['message_id'] = $this->message->id;
 
         $success = $pushService->send(
@@ -59,7 +78,9 @@ class SendMessageJob implements ShouldQueue
 
         if ($success) {
             $this->message->update(['delivery_status' => 'sent']);
-            $this->message->broadcast()->increment('total_sent');
+            if ($this->message->broadcast) {
+                $this->message->broadcast()->increment('total_sent');
+            }
         } else {
             $this->message->update([
                 'delivery_status' => 'failed',

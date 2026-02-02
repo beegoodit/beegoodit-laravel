@@ -34,6 +34,8 @@ return new class extends Migration
             $table->foreignUuid('broadcast_id')->constrained('pwa_notifications_broadcasts')->cascadeOnDelete();
             $table->foreignUuid('push_subscription_id')->constrained('pwa_notifications_push_subscriptions')->cascadeOnDelete();
             
+            $table->string('notification_type')->nullable()->index();
+            $table->json('data')->nullable();
             $table->json('content')->nullable();
             $table->string('delivery_status')->default('pending');
             $table->timestamp('opened_at')->nullable();

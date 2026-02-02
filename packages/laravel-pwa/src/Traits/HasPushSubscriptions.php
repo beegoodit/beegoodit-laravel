@@ -2,7 +2,7 @@
 
 namespace BeegoodIT\LaravelPwa\Traits;
 
-use BeegoodIT\LaravelPwa\Models\PushSubscription;
+use BeegoodIT\LaravelPwa\Models\Notifications\PushSubscription;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 

@@ -3,16 +3,15 @@
 namespace BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\RelationManagers;
 
 use BeegoodIT\LaravelPwa\Notifications\Jobs\SendMessageJob;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Actions\Action;
-use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class MessagesRelationManager extends RelationManager
 {
@@ -49,7 +48,7 @@ class MessagesRelationManager extends RelationManager
 
                         \Filament\Infolists\Components\TextEntry::make('error_message')
                             ->label(__('laravel-pwa::broadcast.fields.error_message.label'))
-                            ->visible(fn ($record) => $record->error_message !== null)
+                            ->visible(fn ($record): bool => $record->error_message !== null)
                             ->columnSpanFull(),
                     ])
                     ->columns(2)
@@ -57,12 +56,20 @@ class MessagesRelationManager extends RelationManager
 
                 \Filament\Schemas\Components\Section::make('Content')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('content.title')
+                        \Filament\Infolists\Components\TextEntry::make('title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                            ->state(fn ($record) => $record->resolveContent()->title ?? '-')
                             ->weight('bold'),
 
-                        \Filament\Infolists\Components\TextEntry::make('content.body')
-                            ->label(__('laravel-pwa::broadcast.fields.body.label')),
+                        \Filament\Infolists\Components\TextEntry::make('body')
+                            ->label(__('laravel-pwa::broadcast.fields.body.label'))
+                            ->state(fn ($record) => $record->resolveContent()->body ?? '-'),
+
+                        \Filament\Infolists\Components\TextEntry::make('action_url')
+                            ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
+                            ->state(fn ($record) => $record->resolveContent()->data['url'] ?? null)
+                            ->url(fn ($record) => $record->resolveContent()->data['url'] ?? null, true)
+                            ->placeholder('-'),
                     ])
                     ->columns(1)
                     ->columnSpanFull(),
@@ -79,15 +86,29 @@ class MessagesRelationManager extends RelationManager
                     ->dateTime()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('pushSubscription.user.name')
-                    ->label(__('laravel-pwa::broadcast.fields.user.label'))
+                Tables\Columns\TextColumn::make('title')
+                    ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                    ->state(fn ($record) => $record->resolveContent()->title ?? '-')
+                    ->weight('bold')
+                    ->description(fn ($record): ?string => $record->resolveContent()->body ?? null)
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('pushSubscription.endpoint')
-                    ->label(__('laravel-pwa::broadcast.fields.recipient.label'))
-                    ->searchable()
-                    ->limit(30),
+                Tables\Columns\TextColumn::make('pushSubscription.user.name')
+                    ->label(__('laravel-pwa::broadcast.fields.user.label'))
+                    ->size('xs')
+                    ->color('gray'),
+
+                Tables\Columns\TextColumn::make('action_url')
+                    ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
+                    ->state(fn ($record) => $record->resolveContent()->data['url'] ?? null)
+                    ->icon('heroicon-o-link')
+                    ->url(fn ($record) => $record->resolveContent()->data['url'] ?? null, true)
+                    ->color('primary')
+                    ->size('xs')
+                    ->limit(20)
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('delivery_status')
                     ->label(__('laravel-pwa::broadcast.fields.status.label'))
@@ -117,7 +138,7 @@ class MessagesRelationManager extends RelationManager
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
                     ->requiresConfirmation()
-                    ->action(function ($record) {
+                    ->action(function ($record): void {
                         $record->update([
                             'delivery_status' => 'pending',
                             'error_message' => null,
@@ -130,8 +151,7 @@ class MessagesRelationManager extends RelationManager
                             ->title(__('laravel-pwa::broadcast.notifications.requeued.title'))
                             ->success()
                             ->send();
-                    })
-                    ->visible(fn ($record) => $record->delivery_status === 'failed'),
+                    }),
                 ViewAction::make(),
             ])
             ->bulkActions([

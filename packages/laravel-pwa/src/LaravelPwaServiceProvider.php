@@ -56,6 +56,12 @@ class LaravelPwaServiceProvider extends ServiceProvider
             ], 'pwa-migrations');
         }
 
+        if (! $this->migrationExists('create_pwa_settings')) {
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_pwa_settings_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time() + 2).'_create_pwa_settings.php'),
+            ], 'pwa-migrations');
+        }
+
         // Publish translations
         $this->publishes([
             __DIR__.'/../resources/lang' => lang_path('vendor/laravel-pwa'),
@@ -79,6 +85,8 @@ class LaravelPwaServiceProvider extends ServiceProvider
             $this->commands([
                 GenerateVapidKeysCommand::class,
                 \BeegoodIT\LaravelPwa\Console\SendPushNotificationCommand::class,
+                \BeegoodIT\LaravelPwa\Console\ReleaseOnHoldMessagesCommand::class,
+                \BeegoodIT\LaravelPwa\Console\ToggleDeliverySystemCommand::class,
             ]);
         }
 
@@ -93,9 +101,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         $this->registerBladeDirectives();
 
         // Register rate limiter for notifications
-        RateLimiter::for('pwa-notifications', function (object $job) {
-            return Limit::perMinute(config('pwa.notifications.rate_limit.pushes_per_minute', 50));
-        });
+        RateLimiter::for('pwa-notifications', fn (object $job) => Limit::perMinute(config('pwa.notifications.rate_limit.pushes_per_minute', 50)));
     }
 
     public function register(): void
@@ -104,7 +110,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/pwa.php', 'pwa');
 
         // Register push notification service
-        $this->app->singleton(PushNotificationService::class, fn ($app) => new PushNotificationService);
+        $this->app->singleton(PushNotificationService::class, fn ($app): \BeegoodIT\LaravelPwa\Services\PushNotificationService => new PushNotificationService);
     }
 
     protected function registerRoutes(): void
@@ -139,11 +145,11 @@ class LaravelPwaServiceProvider extends ServiceProvider
 
     protected function registerBladeDirectives(): void
     {
-        Blade::directive('pwaHead', fn () => "<?php echo view('laravel-pwa::partials.pwa-meta')->render(); ?>");
+        Blade::directive('pwaHead', fn (): string => "<?php echo view('laravel-pwa::partials.pwa-meta')->render(); ?>");
 
-        Blade::directive('pwaScripts', fn () => "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>");
+        Blade::directive('pwaScripts', fn (): string => "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>");
 
-        Blade::directive('pwaStyles', fn () => "<?php echo \"<link rel='stylesheet' href='\" . asset('css/push-prompt.css') . \"'>\"; ?>");
+        Blade::directive('pwaStyles', fn (): string => "<?php echo \"<link rel='stylesheet' href='\" . asset('css/push-prompt.css') . \"'>\"; ?>");
     }
 
     protected function registerBladeComponents(): void
@@ -159,7 +165,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
 
         foreach ($files as $file) {
             foreach ($migrationNames as $name) {
-                if (str_contains($file, $name)) {
+                if (str_contains($file, (string) $name)) {
                     return true;
                 }
             }

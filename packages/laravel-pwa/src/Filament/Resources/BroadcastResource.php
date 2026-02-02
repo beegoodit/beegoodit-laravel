@@ -4,19 +4,18 @@ namespace BeegoodIT\LaravelPwa\Filament\Resources;
 
 use BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\Pages;
 use BeegoodIT\LaravelPwa\Models\Notifications\Broadcast;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Infolists\Components\TextEntry;
 
 class BroadcastResource extends Resource
 {
@@ -44,17 +43,17 @@ class BroadcastResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('navigation.groups.settings');
+        return __('laravel-pwa::notifications.nav.group');
     }
 
     public static function getNavigationSort(): ?int
     {
-        return 120;
+        return 20;
     }
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) static::getModel()::count();
+        return (string) static::getEloquentQuery()->count();
     }
 
     public static function getLabel(): string
@@ -99,17 +98,19 @@ class BroadcastResource extends Resource
 
                 Section::make('Content')
                     ->schema([
-                        TextInput::make('payload.title')
+                        TextInput::make('display_title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                            ->state(fn ($record) => $record->payload['title'] ?? Str::afterLast($record->trigger_type, '\\'))
                             ->disabled(),
 
-                        Textarea::make('payload.body')
+                        Textarea::make('display_body')
                             ->label(__('laravel-pwa::broadcast.fields.body.label'))
+                            ->state(fn ($record) => $record->payload['body'] ?? __('laravel-pwa::broadcast.fields.status.options.automated'))
                             ->disabled(),
 
-                        TextInput::make('payload.data.url')
+                        TextInput::make('display_url')
                             ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
-                            ->placeholder('N/A')
+                            ->state(fn ($record) => $record->payload['data']['url'] ?? '-')
                             ->disabled(),
                     ])->columns(1),
             ])->columns(1);
@@ -121,9 +122,6 @@ class BroadcastResource extends Resource
             ->components([
                 Section::make(__('laravel-pwa::notifications.broadcasts.stats'))
                     ->schema([
-                        TextEntry::make('trigger_type')
-                            ->label(__('laravel-pwa::broadcast.fields.target_type.label')),
-
                         TextEntry::make('status')
                             ->label(__('laravel-pwa::broadcast.fields.status.label'))
                             ->badge()
@@ -145,22 +143,28 @@ class BroadcastResource extends Resource
                         TextEntry::make('total_opened')
                             ->label(__('laravel-pwa::broadcast.fields.total_opened.label')),
                     ])
-                    ->columns(2)
+                    ->columns(4)
                     ->columnSpanFull(),
 
-                Section::make('Content')
+                Section::make(__('laravel-pwa::notifications.broadcasts.content'))
                     ->schema([
-                        TextEntry::make('payload.title')
+                        TextEntry::make('display_title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                            ->state(fn ($record) => $record->payload['title'] ?? Str::afterLast($record->trigger_type, '\\'))
                             ->weight('bold'),
 
-                        TextEntry::make('payload.body')
-                            ->label(__('laravel-pwa::broadcast.fields.body.label')),
+                        TextEntry::make('trigger_type_display')
+                            ->label(__('laravel-pwa::broadcast.fields.target_type.label'))
+                            ->state(fn ($record) => $record->status === 'automated' ? __('laravel-pwa::broadcast.fields.status.options.automated') : ($record->target_ids ? __('laravel-pwa::broadcast.fields.target_type.options.users') : __('laravel-pwa::broadcast.fields.target_type.options.all'))),
 
-                        TextEntry::make('payload.data.url')
+                        TextEntry::make('display_body')
+                            ->label(__('laravel-pwa::broadcast.fields.body.label'))
+                            ->state(fn ($record) => $record->payload['body'] ?? '-'),
+
+                        TextEntry::make('display_url')
                             ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
-                            ->url(fn ($record) => $record->payload['data']['url'] ?? null, true)
-                            ->placeholder('N/A'),
+                            ->state(fn ($record) => $record->payload['data']['url'] ?? '-')
+                            ->url(fn ($record) => $record->payload['data']['url'] ?? null, true),
                     ])
                     ->columns(1)
                     ->columnSpanFull(),
@@ -174,7 +178,33 @@ class BroadcastResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('laravel-pwa::broadcast.fields.created_at.label'))
                     ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('display_title')
+                    ->label(__('laravel-pwa::broadcast.fields.title.label'))
+                    ->state(fn ($record) => $record->payload['title'] ?? Str::afterLast($record->trigger_type, '\\'))
+                    ->weight('bold')
+                    ->description(fn ($record): ?string => $record->payload['body'] ?? ($record->status === 'automated' ? $record::class : null))
+                    ->searchable()
                     ->sortable(),
+
+                TextColumn::make('trigger_type_display')
+                    ->label(__('laravel-pwa::broadcast.fields.target_type.label'))
+                    ->state(fn ($record) => $record->target_ids ? __('laravel-pwa::broadcast.fields.target_type.options.users') : __('laravel-pwa::broadcast.fields.target_type.options.all'))
+                    ->size('xs')
+                    ->color('gray'),
+
+                TextColumn::make('display_url')
+                    ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
+                    ->state(fn ($record) => $record->payload['data']['url'] ?? '-')
+                    ->icon('heroicon-o-link')
+                    ->url(fn ($record) => $record->payload['data']['url'] ?? null, true)
+                    ->color('primary')
+                    ->size('xs')
+                    ->limit(20)
+                    ->placeholder('-')
+                    ->toggleable(),
 
                 TextColumn::make('status')
                     ->label(__('laravel-pwa::broadcast.fields.status.label'))
@@ -191,17 +221,20 @@ class BroadcastResource extends Resource
                 TextColumn::make('total_recipients')
                     ->label(__('laravel-pwa::broadcast.fields.total_recipients.label'))
                     ->numeric()
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('total_sent')
                     ->label(__('laravel-pwa::broadcast.fields.total_sent.label'))
                     ->numeric()
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('total_opened')
                     ->label(__('laravel-pwa::broadcast.fields.total_opened.label'))
                     ->numeric()
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -212,9 +245,9 @@ class BroadcastResource extends Resource
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
                     ->requiresConfirmation()
-                    ->action(function (Broadcast $record) {
+                    ->action(function (Broadcast $record): void {
                         $record->update(['status' => 'pending']);
-                        
+
                         dispatch(new \BeegoodIT\LaravelPwa\Notifications\Jobs\ProcessBroadcastJob($record))
                             ->onQueue(config('pwa.notifications.queue', 'default'));
 
@@ -223,7 +256,7 @@ class BroadcastResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn (Broadcast $record) => in_array($record->status, ['completed', 'failed'])),
+                    ->visible(fn (Broadcast $record): bool => in_array($record->status, ['completed', 'failed'])),
                 ViewAction::make(),
             ])
             ->bulkActions([
@@ -245,6 +278,7 @@ class BroadcastResource extends Resource
     {
         return [
             'index' => Pages\ListBroadcasts::route('/'),
+            'create' => Pages\CreateBroadcast::route('/create'),
             'view' => Pages\ViewBroadcast::route('/{record}'),
         ];
     }

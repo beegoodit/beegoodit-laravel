@@ -13,6 +13,7 @@ return [
             'label' => 'Status',
             'options' => [
                 'pending' => 'Pending',
+                'on_hold' => 'On Hold',
                 'processing' => 'Processing',
                 'completed' => 'Completed',
                 'failed' => 'Failed',
@@ -50,7 +51,7 @@ return [
             'placeholder' => 'e.g. A new tournament is available in your city.',
         ],
         'action_url' => [
-            'label' => 'Action URL (optional)',
+            'label' => 'Action URL',
             'placeholder' => 'https://...',
         ],
         'created_at' => [
@@ -74,10 +75,18 @@ return [
         'push_subscription_id' => [
             'label' => 'Subscription ID',
         ],
+        'endpoint' => [
+            'label' => 'Endpoint',
+        ],
+        'encoding' => [
+            'label' => 'Encoding',
+        ],
     ],
     'buttons' => [
         'send' => 'Send Notification',
         'resend' => 'Resend',
+        'view' => 'View',
+        'test_notification' => 'Send Test Notification',
     ],
     'notifications' => [
         'success' => [
@@ -87,6 +96,14 @@ return [
         'requeued' => [
             'title' => 'Messages Re-queued',
             'body' => 'The messages have been added back to the delivery queue.',
+        ],
+        'test_sent' => [
+            'title' => 'Test Notification Sent',
+            'body' => 'The test notification has been sent to the push service.',
+        ],
+        'test_failed' => [
+            'title' => 'Test Notification Failed',
+            'body' => 'Failed to send the test notification. Check the logs for details.',
         ],
         'new_tournament' => [
             'title' => '🏆 New Tournament',
