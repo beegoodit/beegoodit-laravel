@@ -50,7 +50,7 @@ class SendMessageJob implements ShouldQueue
         }
 
         // Check for Manual Hold
-        if ($this->message->delivery_status === 'on_hold') {
+        if ($this->message->delivery_status->equals(\BeegoodIT\LaravelPwa\States\Messages\OnHold::class)) {
             return;
         }
 

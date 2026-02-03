@@ -2,11 +2,11 @@
 
 namespace BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\RelationManagers;
 
+use BeegoodIT\LaravelPwa\Filament\Resources\MessageResource;
 use BeegoodIT\LaravelPwa\Notifications\Jobs\SendMessageJob;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -54,7 +54,7 @@ class MessagesRelationManager extends RelationManager
                     ->columns(2)
                     ->columnSpanFull(),
 
-                \Filament\Schemas\Components\Section::make('Content')
+                \Filament\Schemas\Components\Section::make(__('laravel-pwa::notifications.broadcasts.content'))
                     ->schema([
                         \Filament\Infolists\Components\TextEntry::make('title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
@@ -138,11 +138,9 @@ class MessagesRelationManager extends RelationManager
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
                     ->requiresConfirmation()
+                    ->visible(fn ($record): bool => $record->delivery_status->canTransitionTo(\BeegoodIT\LaravelPwa\States\Messages\Pending::class) && ! $record->delivery_status->equals(\BeegoodIT\LaravelPwa\States\Messages\OnHold::class) && ! $record->delivery_status->equals(\BeegoodIT\LaravelPwa\States\Messages\Pending::class))
                     ->action(function ($record): void {
-                        $record->update([
-                            'delivery_status' => 'pending',
-                            'error_message' => null,
-                        ]);
+                        $record->resend();
 
                         dispatch(new SendMessageJob($record))
                             ->onQueue(config('pwa.notifications.queue', 'default'));
@@ -152,7 +150,8 @@ class MessagesRelationManager extends RelationManager
                             ->success()
                             ->send();
                     }),
-                ViewAction::make(),
+                \Filament\Actions\EditAction::make()
+                    ->url(fn ($record): string => MessageResource::getUrl('edit', ['record' => $record])),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

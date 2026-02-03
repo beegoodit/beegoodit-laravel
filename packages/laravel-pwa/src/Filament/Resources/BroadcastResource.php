@@ -6,8 +6,7 @@ use BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\Pages;
 use BeegoodIT\LaravelPwa\Models\Notifications\Broadcast;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
@@ -16,6 +15,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class BroadcastResource extends Resource
@@ -70,48 +70,55 @@ class BroadcastResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->disabled(fn ($record) => $record?->status->equals(\BeegoodIT\LaravelPwa\States\Broadcasts\Completed::class))
             ->components([
                 Section::make()
                     ->schema([
-                        TextInput::make('trigger_type')
+                        Placeholder::make('trigger_type')
                             ->label(__('laravel-pwa::broadcast.fields.target_type.label'))
-                            ->disabled(),
+                            ->content(fn ($record) => $record?->target_ids ? __('laravel-pwa::broadcast.fields.target_type.options.users') : __('laravel-pwa::broadcast.fields.target_type.options.all')),
 
-                        TextInput::make('status')
+                        Placeholder::make('status')
                             ->label(__('laravel-pwa::broadcast.fields.status.label'))
-                            ->disabled(),
+                            ->content(fn ($record) => new HtmlString(view('filament::components.badge', [
+                                'color' => match ($record?->status->getValue()) {
+                                    'pending' => 'gray',
+                                    'processing' => 'warning',
+                                    'completed' => 'success',
+                                    'failed' => 'danger',
+                                    default => 'gray',
+                                },
+                                'slot' => __("laravel-pwa::broadcast.fields.status.options.{$record?->status->getValue()}"),
+                            ])->render())),
 
-                        TextInput::make('total_recipients')
+                        Placeholder::make('total_recipients')
                             ->label(__('laravel-pwa::broadcast.fields.total_recipients.label'))
-                            ->numeric()
-                            ->disabled(),
+                            ->content(fn ($record) => $record?->total_recipients ?? 0),
 
-                        TextInput::make('total_sent')
+                        Placeholder::make('total_sent')
                             ->label(__('laravel-pwa::broadcast.fields.total_sent.label'))
-                            ->numeric()
-                            ->disabled(),
+                            ->content(fn ($record) => $record?->total_sent ?? 0),
 
-                        TextInput::make('total_opened')
+                        Placeholder::make('total_opened')
                             ->label(__('laravel-pwa::broadcast.fields.total_opened.label'))
-                            ->numeric()
-                            ->disabled(),
+                            ->content(fn ($record) => $record?->total_opened ?? 0),
                     ])->columns(1),
 
-                Section::make('Content')
+                Section::make(__('laravel-pwa::notifications.broadcasts.content'))
                     ->schema([
                         TextInput::make('display_title')
                             ->label(__('laravel-pwa::broadcast.fields.title.label'))
-                            ->state(fn ($record) => $record->payload['title'] ?? Str::afterLast($record->trigger_type, '\\'))
+                            ->placeholder(fn ($record) => $record?->payload['title'] ?? Str::afterLast($record?->trigger_type, '\\'))
                             ->disabled(),
 
                         Textarea::make('display_body')
                             ->label(__('laravel-pwa::broadcast.fields.body.label'))
-                            ->state(fn ($record) => $record->payload['body'] ?? __('laravel-pwa::broadcast.fields.status.options.automated'))
+                            ->placeholder(fn ($record) => $record?->payload['body'] ?? '-')
                             ->disabled(),
 
                         TextInput::make('display_url')
                             ->label(__('laravel-pwa::broadcast.fields.action_url.label'))
-                            ->state(fn ($record) => $record->payload['data']['url'] ?? '-')
+                            ->placeholder(fn ($record) => $record?->payload['data']['url'] ?? '-')
                             ->disabled(),
                     ])->columns(1),
             ])->columns(1);
@@ -241,13 +248,44 @@ class BroadcastResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('hold')
+                    ->label(__('laravel-pwa::notifications.messages.actions.hold'))
+                    ->icon('heroicon-o-pause-circle')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->visible(fn (Broadcast $record): bool => $record->status->canTransitionTo(\BeegoodIT\LaravelPwa\States\Broadcasts\OnHold::class))
+                    ->action(function (Broadcast $record): void {
+                        $record->hold();
+
+                        \Filament\Notifications\Notification::make()
+                            ->title(__('laravel-pwa::broadcast.notifications.held.title'))
+                            ->success()
+                            ->send();
+                    }),
+
+                Action::make('release')
+                    ->label(__('laravel-pwa::notifications.messages.actions.release'))
+                    ->icon('heroicon-o-play-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn (Broadcast $record): bool => $record->status->canTransitionTo(\BeegoodIT\LaravelPwa\States\Broadcasts\Pending::class) && $record->status->equals(\BeegoodIT\LaravelPwa\States\Broadcasts\OnHold::class))
+                    ->action(function (Broadcast $record): void {
+                        $record->release();
+
+                        \Filament\Notifications\Notification::make()
+                            ->title(__('laravel-pwa::broadcast.notifications.released.title'))
+                            ->success()
+                            ->send();
+                    }),
+
                 Action::make('resend')
                     ->label(__('laravel-pwa::broadcast.buttons.resend'))
                     ->icon('heroicon-o-arrow-path')
                     ->color('warning')
                     ->requiresConfirmation()
+                    ->visible(fn (Broadcast $record): bool => $record->status->canTransitionTo(\BeegoodIT\LaravelPwa\States\Broadcasts\Pending::class) && ! $record->status->equals(\BeegoodIT\LaravelPwa\States\Broadcasts\OnHold::class) && ! $record->status->equals(\BeegoodIT\LaravelPwa\States\Broadcasts\Pending::class))
                     ->action(function (Broadcast $record): void {
-                        $record->update(['status' => 'pending']);
+                        $record->resend();
 
                         dispatch(new \BeegoodIT\LaravelPwa\Notifications\Jobs\ProcessBroadcastJob($record))
                             ->onQueue(config('pwa.notifications.queue', 'default'));
@@ -256,13 +294,13 @@ class BroadcastResource extends Resource
                             ->title(__('laravel-pwa::broadcast.notifications.requeued.title'))
                             ->success()
                             ->send();
-                    })
-                    ->visible(fn (Broadcast $record): bool => in_array($record->status, ['completed', 'failed'])),
-                ViewAction::make(),
+                    }),
+                \Filament\Actions\EditAction::make(),
+                \Filament\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    \Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -271,7 +309,7 @@ class BroadcastResource extends Resource
     public static function getRelations(): array
     {
         return [
-            BroadcastResource\RelationManagers\MessagesRelationManager::class,
+            \BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource\RelationManagers\MessagesRelationManager::class,
         ];
     }
 
@@ -280,7 +318,7 @@ class BroadcastResource extends Resource
         return [
             'index' => Pages\ListBroadcasts::route('/'),
             'create' => Pages\CreateBroadcast::route('/create'),
-            'view' => Pages\ViewBroadcast::route('/{record}'),
+            'edit' => Pages\EditBroadcast::route('/{record}/edit'),
         ];
     }
 }

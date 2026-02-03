@@ -13,6 +13,7 @@ return [
             'label' => 'Status',
             'options' => [
                 'pending' => 'Wartend',
+                'on_hold' => 'Angehalten',
                 'processing' => 'Verarbeitung',
                 'completed' => 'Abgeschlossen',
                 'failed' => 'Fehlgeschlagen',
@@ -103,6 +104,14 @@ return [
         'test_failed' => [
             'title' => 'Test-Benachrichtigung fehlgeschlagen',
             'body' => 'Die Test-Benachrichtigung konnte nicht gesendet werden. Prüfen Sie die Web-Logs für Details.',
+        ],
+        'held' => [
+            'title' => 'Verarbeitung pausiert',
+            'body' => 'Alle ausstehenden Nachrichten für diesen Broadcast wurden angehalten.',
+        ],
+        'released' => [
+            'title' => 'Verarbeitung fortgesetzt',
+            'body' => 'Alle angehaltenen Nachrichten für diesen Broadcast wurden wieder freigegeben.',
         ],
         'new_tournament' => [
             'title' => '🏆 Neues Turnier',

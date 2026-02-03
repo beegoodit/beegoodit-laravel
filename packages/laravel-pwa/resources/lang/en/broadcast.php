@@ -105,6 +105,14 @@ return [
             'title' => 'Test Notification Failed',
             'body' => 'Failed to send the test notification. Check the logs for details.',
         ],
+        'held' => [
+            'title' => 'Processing Paused',
+            'body' => 'All pending messages for this broadcast have been put on hold.',
+        ],
+        'released' => [
+            'title' => 'Processing Resumed',
+            'body' => 'All held messages for this broadcast have been released back to the delivery queue.',
+        ],
         'new_tournament' => [
             'title' => '🏆 New Tournament',
             'body' => ':name on :date!',

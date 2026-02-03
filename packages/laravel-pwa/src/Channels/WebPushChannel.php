@@ -70,7 +70,7 @@ class WebPushChannel
         Str::afterLast($type, '\\');
 
         return Broadcast::firstOrCreate(
-            ['trigger_type' => $type, 'status' => 'automated'],
+            ['trigger_type' => $type, 'status' => 'pending'],
             [
                 'id' => Str::uuid(),
                 'payload' => null, // Personalized contentResolved on-demand

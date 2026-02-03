@@ -6,13 +6,11 @@ use BeegoodIT\LaravelPwa\Filament\Resources\PushSubscriptionResource\Pages;
 use BeegoodIT\LaravelPwa\Messages\WebPushMessage;
 use BeegoodIT\LaravelPwa\Models\Notifications\PushSubscription;
 use BeegoodIT\LaravelPwa\Services\PushNotificationService;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class PushSubscriptionResource extends Resource
 {

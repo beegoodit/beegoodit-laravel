@@ -65,8 +65,10 @@ The system has a global "Delivery Gate" controlled by the `pwa_deliver_notificat
 - **Filament**: Use the **Notification Settings** page in the Admin panel.
 - **Artisan**: `php artisan pwa:toggle-system off|on`
 
-### 2. Manual "On Hold"
-Admins can manually suppress specific notifications by setting their status to `on_hold` in the **Messages** resource. The worker will skip these records until they are released back to `pending`.
+### 2. Manual Management
+Admins have full control over recorded messages and broadcasts:
+- **Messages**: Edit content (title/body), manually toggle `on_hold`/`pending` status, or delete records entirely (even if sent).
+- **Broadcasts**: Hold or release ALL pending messages for a specific broadcast at once, delete broadcasts (cascading to messages), or resend completed broadcasts.
 
 ---
 

@@ -3,26 +3,26 @@
 namespace BeegoodIT\LaravelPwa\Filament\Resources\MessageResource\Pages;
 
 use BeegoodIT\LaravelPwa\Filament\Resources\MessageResource;
-use Filament\Actions\Action;
-use Filament\Resources\Pages\ViewRecord;
+use Filament\Actions;
+use Filament\Resources\Pages\EditRecord;
 
-class ViewMessage extends ViewRecord
+class EditMessage extends EditRecord
 {
     protected static string $resource = MessageResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('resend')
+            Actions\DeleteAction::make(),
+
+            Actions\Action::make('resend')
                 ->label(__('laravel-pwa::broadcast.buttons.resend'))
                 ->icon('heroicon-o-arrow-path')
                 ->color('warning')
                 ->requiresConfirmation()
-                ->action(function (Message $record): void {
-                    $record->update([
-                        'delivery_status' => 'pending',
-                        'error_message' => null,
-                    ]);
+                ->visible(fn ($record): bool => $record->delivery_status->canTransitionTo(\BeegoodIT\LaravelPwa\States\Messages\Pending::class) && ! $record->delivery_status->equals(\BeegoodIT\LaravelPwa\States\Messages\OnHold::class) && ! $record->delivery_status->equals(\BeegoodIT\LaravelPwa\States\Messages\Pending::class))
+                ->action(function ($record): void {
+                    $record->resend();
 
                     dispatch(new \BeegoodIT\LaravelPwa\Notifications\Jobs\SendMessageJob($record))
                         ->onQueue(config('pwa.notifications.queue', 'default'));
@@ -33,5 +33,10 @@ class ViewMessage extends ViewRecord
                         ->send();
                 }),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('view', ['record' => $this->getRecord()]);
     }
 }

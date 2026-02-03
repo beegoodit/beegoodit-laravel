@@ -11,15 +11,21 @@ return [
         'total_recipients' => 'Destinatarios',
         'total_sent' => 'Enviados',
         'total_opened' => 'Abiertos',
-        'payload' => 'Carga útil',
+        'content' => 'Contenido',
         'created_at' => 'Creado en',
         'stats' => 'Estadísticas',
     ],
     'messages' => [
         'title' => 'Mensajes',
+        'resource_label' => 'Mensaje',
+        'resource_label_plural' => 'Mensajes',
         'status' => 'Estado del mensaje',
         'opened_at' => 'Abierto en',
         'error' => 'Mensaje de error',
+        'actions' => [
+            'hold' => 'Retener',
+            'release' => 'Liberar',
+        ],
     ],
     'subscriptions' => [
         'title' => 'Suscripciones',

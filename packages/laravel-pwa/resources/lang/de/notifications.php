@@ -22,6 +22,10 @@ return [
         'status' => 'Nachrichtenstatus',
         'opened_at' => 'Geöffnet am',
         'error' => 'Fehlermeldung',
+        'actions' => [
+            'hold' => 'Anhalten',
+            'release' => 'Freigeben',
+        ],
     ],
     'subscriptions' => [
         'title' => 'Abonnements',

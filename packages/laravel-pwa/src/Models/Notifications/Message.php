@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\ModelStates\HasStates;
+use BeegoodIT\LaravelPwa\States\Messages\MessageState;
 
 class Message extends Model
 {
-    use HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory, MassPrunable;
+    use HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory, MassPrunable, HasStates;
 
     protected static function newFactory()
     {
@@ -31,17 +33,23 @@ class Message extends Model
     ];
     public function hold(): void
     {
-        $this->update(['delivery_status' => 'on_hold']);
+        $this->delivery_status->transitionTo(\BeegoodIT\LaravelPwa\States\Messages\OnHold::class);
     }
 
     public function release(): void
     {
-        $this->update(['delivery_status' => 'pending']);
+        $this->delivery_status->transitionTo(\BeegoodIT\LaravelPwa\States\Messages\Pending::class);
+    }
+
+    public function resend(): void
+    {
+        $this->update(['error_message' => null]);
+        $this->delivery_status->transitionTo(\BeegoodIT\LaravelPwa\States\Messages\Pending::class);
     }
 
     public function isOnHold(): bool
     {
-        return $this->delivery_status === 'on_hold';
+        return $this->delivery_status->equals(\BeegoodIT\LaravelPwa\States\Messages\OnHold::class);
     }
 
     public function broadcast(): BelongsTo
@@ -104,6 +112,7 @@ class Message extends Model
             'data' => 'array',
             'content' => 'array',
             'opened_at' => 'datetime',
+            'delivery_status' => MessageState::class,
         ];
     }
 }

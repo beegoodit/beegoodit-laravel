@@ -13,6 +13,7 @@ return [
             'label' => 'Estado',
             'options' => [
                 'pending' => 'Pendiente',
+                'on_hold' => 'En espera',
                 'processing' => 'Procesando',
                 'completed' => 'Completado',
                 'failed' => 'Fallido',
@@ -103,6 +104,14 @@ return [
         'test_failed' => [
             'title' => 'Fallo en la notificación de prueba',
             'body' => 'No se pudo enviar la notificación de prueba. Consulte los registros web para más detalles.',
+        ],
+        'held' => [
+            'title' => 'Procesamiento en pausa',
+            'body' => 'Todos los mensajes pendientes de esta difusión han sido puestos en espera.',
+        ],
+        'released' => [
+            'title' => 'Procesamiento reanudado',
+            'body' => 'Todos los mensajes en espera de esta difusión han sido liberados de nuevo a la cola de entrega.',
         ],
         'new_tournament' => [
             'title' => '🏆 Nuevo Torneo',
