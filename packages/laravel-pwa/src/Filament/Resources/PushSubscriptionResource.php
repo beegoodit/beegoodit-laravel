@@ -47,7 +47,7 @@ class PushSubscriptionResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 40;
+        return 10;
     }
 
     public static function table(Table $table): Table

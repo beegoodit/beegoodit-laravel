@@ -74,10 +74,18 @@ return [
         'push_subscription_id' => [
             'label' => 'ID de Suscripción',
         ],
+        'endpoint' => [
+            'label' => 'Punto final',
+        ],
+        'encoding' => [
+            'label' => 'Codificación',
+        ],
     ],
     'buttons' => [
         'send' => 'Enviar notificación',
         'resend' => 'Reenviar',
+        'view' => 'Ver',
+        'test_notification' => 'Enviar notificación de prueba',
     ],
     'notifications' => [
         'success' => [
@@ -87,6 +95,14 @@ return [
         'requeued' => [
             'title' => 'Cola actualizada',
             'body' => 'Las notificaciones han sido puestas en cola nuevamente.',
+        ],
+        'test_sent' => [
+            'title' => 'Notificación de prueba enviada',
+            'body' => 'La notificación de prueba ha sido enviada al servicio push.',
+        ],
+        'test_failed' => [
+            'title' => 'Fallo en la notificación de prueba',
+            'body' => 'No se pudo enviar la notificación de prueba. Consulte los registros web para más detalles.',
         ],
         'new_tournament' => [
             'title' => '🏆 Nuevo Torneo',

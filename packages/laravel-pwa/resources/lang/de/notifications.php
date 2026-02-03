@@ -23,10 +23,21 @@ return [
         'opened_at' => 'Geöffnet am',
         'error' => 'Fehlermeldung',
     ],
+    'subscriptions' => [
+        'title' => 'Abonnements',
+        'resource_label' => 'Abonnement',
+        'resource_label_plural' => 'Abonnements',
+    ],
     'settings' => [
-        'title' => 'Einstellungen',
-        'emergency_maintenance' => 'Notfall-Wartung',
-        'emergency_description' => 'Alle ausgehenden Push-Benachrichtigungen sofort pausieren.',
-        'pwa_active' => 'PWA-Systemstatus',
+        'title' => 'Benachrichtigungs-Einstellungen',
+        'fields' => [
+            'pwa_deliver_notifications' => [
+                'label' => 'PWA-Benachrichtigungen zustellen',
+                'description' => 'Wenn deaktiviert, werden Benachrichtigungen in der Hintergrund-Warteschlange gehalten und es werden keine Zustellversuche an Push-Dienste unternommen.',
+            ],
+        ],
+    ],
+    'nav' => [
+        'group' => 'PWA-Management',
     ],
 ];

@@ -21,10 +21,21 @@ return [
         'opened_at' => 'Abierto en',
         'error' => 'Mensaje de error',
     ],
+    'subscriptions' => [
+        'title' => 'Suscripciones',
+        'resource_label' => 'Suscripción',
+        'resource_label_plural' => 'Suscripciones',
+    ],
     'settings' => [
-        'title' => 'Ajustes',
-        'emergency_maintenance' => 'Mantenimiento de emergencia',
-        'emergency_description' => 'Pausar todas las notificaciones push salientes inmediatamente.',
-        'pwa_active' => 'Estado del sistema PWA',
+        'title' => 'Ajustes de Notificación',
+        'fields' => [
+            'pwa_deliver_notifications' => [
+                'label' => 'Entregar Notificaciones PWA',
+                'description' => 'Cuando está desactivado, las notificaciones se mantendrán en la cola de fondo y no se realizarán intentos de entrega a los servicios push.',
+            ],
+        ],
+    ],
+    'nav' => [
+        'group' => 'Gestión de PWA',
     ],
 ];

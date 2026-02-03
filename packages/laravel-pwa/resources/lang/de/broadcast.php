@@ -74,10 +74,18 @@ return [
         'push_subscription_id' => [
             'label' => 'Abonnement-ID',
         ],
+        'endpoint' => [
+            'label' => 'Endpunkt',
+        ],
+        'encoding' => [
+            'label' => 'Kodierung',
+        ],
     ],
     'buttons' => [
         'send' => 'Benachrichtigung senden',
         'resend' => 'Erneut senden',
+        'view' => 'Anzeigen',
+        'test_notification' => 'Test-Benachrichtigung senden',
     ],
     'notifications' => [
         'success' => [
@@ -87,6 +95,14 @@ return [
         'requeued' => [
             'title' => 'Warteschlange aktualisiert',
             'body' => 'Benachrichtigungen wurden erneut in die Warteschlange gestellt.',
+        ],
+        'test_sent' => [
+            'title' => 'Test-Benachrichtigung gesendet',
+            'body' => 'Die Test-Benachrichtigung wurde an den Push-Dienst gesendet.',
+        ],
+        'test_failed' => [
+            'title' => 'Test-Benachrichtigung fehlgeschlagen',
+            'body' => 'Die Test-Benachrichtigung konnte nicht gesendet werden. Prüfen Sie die Web-Logs für Details.',
         ],
         'new_tournament' => [
             'title' => '🏆 Neues Turnier',
