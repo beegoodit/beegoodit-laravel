@@ -1,0 +1,60 @@
+{
+    "name": "beegoodit/laravel-feedback",
+    "description": "Feedback system for Laravel applications with Filament integration",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "feedback",
+        "filament",
+        "user-feedback",
+        "beegoodit"
+    ],
+    "authors": [
+        {
+            "name": "BeegoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/database": "^11.0|^12.0",
+        "filament/filament": "^4.0",
+        "livewire/livewire": "^3.0",
+        "livewire/flux": "^2.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^4.0",
+        "rector/rector": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\LaravelFeedback\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\LaravelFeedback\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeegoodIT\\LaravelFeedback\\FeedbackServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint",
+        "rector": "rector process --dry-run",
+        "rector:fix": "rector process"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
