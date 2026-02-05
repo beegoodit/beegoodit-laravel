@@ -39,16 +39,14 @@ class FeedbackServiceProvider extends ServiceProvider
         ], 'feedback-config');
 
         // Publish migrations
-        if (!$this->migrationExists('create_feedback_items_table')) {
+        if (is_dir(__DIR__.'/../database/migrations')) {
             $this->publishes([
-                __DIR__.'/../database/migrations/2026_02_04_155744_create_feedback_items_table.php' => database_path('migrations/'.now()->format('Y_m_d_His').'_create_feedback_items_table.php'),
+                __DIR__.'/../database/migrations' => database_path('migrations'),
             ], 'feedback-migrations');
         }
 
-        // Load migrations (only if directory exists)
-        if (is_dir(__DIR__.'/../database/migrations')) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        }
+        // Load migrations
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         // Publish views
         if (is_dir(__DIR__.'/../resources/views')) {
@@ -126,16 +124,5 @@ class FeedbackServiceProvider extends ServiceProvider
                 }
             });
         });
-    }
-
-    /**
-     * Check if a migration already exists.
-     */
-    protected function migrationExists(string $migrationName): bool
-    {
-        $migrationsPath = database_path('migrations');
-        $files = glob($migrationsPath.'/*_'.$migrationName.'.php');
-
-        return $files !== [] && $files !== false;
     }
 }
