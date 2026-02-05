@@ -161,10 +161,6 @@ class BroadcastResource extends Resource
                             ->state(fn ($record) => $record->payload['title'] ?? Str::afterLast($record->trigger_type, '\\'))
                             ->weight('bold'),
 
-                        TextEntry::make('trigger_type_display')
-                            ->label(__('laravel-pwa::broadcast.fields.target_type.label'))
-                            ->state(fn ($record) => $record->status === 'automated' ? __('laravel-pwa::broadcast.fields.status.options.automated') : ($record->target_ids ? __('laravel-pwa::broadcast.fields.target_type.options.users') : __('laravel-pwa::broadcast.fields.target_type.options.all'))),
-
                         TextEntry::make('display_body')
                             ->label(__('laravel-pwa::broadcast.fields.body.label'))
                             ->state(fn ($record) => $record->payload['body'] ?? '-'),
