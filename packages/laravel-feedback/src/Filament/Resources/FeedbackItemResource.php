@@ -7,6 +7,7 @@ use BeegoodIT\LaravelFeedback\Filament\Resources\FeedbackItemResource\Pages\Crea
 use BeegoodIT\LaravelFeedback\Filament\Resources\FeedbackItemResource\Pages\EditFeedbackItem;
 use BeegoodIT\LaravelFeedback\Filament\Resources\FeedbackItemResource\Pages\ListFeedbackItems;
 use BeegoodIT\LaravelFeedback\Filament\Resources\FeedbackItemResource\Pages\ViewFeedbackItem;
+use BeegoodIT\LaravelFeedback\Filament\Resources\FeedbackItemResource\Schemas\FeedbackItemInfolist;
 use BeegoodIT\LaravelFeedback\Models\FeedbackItem;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -99,6 +100,12 @@ class FeedbackItemResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('ip_address')
+                    ->label(__('feedback::feedback.table.ip_address'))
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->copyable(),
             ])
             ->filters([
                 Filter::make('created_at')
@@ -119,8 +126,20 @@ class FeedbackItemResource extends Resource
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
+                Filter::make('ip_address')
+                    ->form([
+                        \Filament\Forms\Components\TextInput::make('ip_address')
+                            ->label(__('feedback::feedback.filters.ip_address')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['ip_address'],
+                                fn (Builder $query, $ip): Builder => $query->where('ip_address', 'like', "%{$ip}%")
+                            );
+                    }),
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
@@ -131,6 +150,11 @@ class FeedbackItemResource extends Resource
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return FeedbackItemInfolist::configure($schema);
     }
 
     public static function getRelations(): array

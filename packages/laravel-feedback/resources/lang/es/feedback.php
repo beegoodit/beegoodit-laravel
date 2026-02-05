@@ -35,11 +35,20 @@ return [
         'description' => 'Descripción',
         'creator' => 'Creador',
         'created_at' => 'Creado En',
+        'ip_address' => 'Dirección IP',
+        'user_agent' => 'Agente de Usuario',
     ],
 
     'filters' => [
         'created_from' => 'Creado Desde',
         'created_until' => 'Creado Hasta',
+        'ip_address' => 'Dirección IP',
+    ],
+
+    'infolist' => [
+        'metadata' => 'Metadatos',
+        'user_agent' => 'Agente de Usuario',
+        'ip_address' => 'Dirección IP',
     ],
 
     'submit' => [
