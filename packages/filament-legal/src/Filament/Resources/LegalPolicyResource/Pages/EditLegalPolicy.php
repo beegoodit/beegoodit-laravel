@@ -11,6 +11,11 @@ class EditLegalPolicy extends EditRecord
 {
     protected static string $resource = LegalPolicyResource::class;
 
+    public function getBreadcrumb(): string
+    {
+        return __('filament-legal::messages.Edit');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

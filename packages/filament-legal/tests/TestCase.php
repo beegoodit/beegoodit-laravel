@@ -44,6 +44,12 @@ class TestCase extends Orchestra
         $migration = include __DIR__ . '/../database/migrations/2025_12_30_000001_create_legal_policies_table.php';
         $migration->up();
 
+        $migration = include __DIR__ . '/../database/migrations/2026_02_07_000001_add_polymorphic_to_legal_policies_table.php';
+        $migration->up();
+
+        $migration = include __DIR__ . '/../database/migrations/2026_02_07_000002_create_legal_identities_table.php';
+        $migration->up();
+
         $migration = include __DIR__ . '/../database/migrations/2025_12_30_000002_create_policy_acceptances_table.php';
         $migration->up();
     }

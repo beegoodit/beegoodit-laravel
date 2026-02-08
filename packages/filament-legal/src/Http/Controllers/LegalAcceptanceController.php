@@ -14,7 +14,7 @@ class LegalAcceptanceController extends Controller
     {
         $policy = LegalPolicy::getActive('privacy');
 
-        if (!$policy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (! $policy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return redirect()->intended();
         }
 
@@ -25,7 +25,7 @@ class LegalAcceptanceController extends Controller
     {
         $policy = LegalPolicy::getActive('privacy');
 
-        if (!$policy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (! $policy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return redirect()->intended();
         }
 

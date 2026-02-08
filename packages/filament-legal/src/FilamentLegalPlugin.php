@@ -2,12 +2,26 @@
 
 namespace BeegoodIT\FilamentLegal;
 
+use BeegoodIT\FilamentLegal\Filament\Resources\LegalIdentityResource;
 use BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
 class FilamentLegalPlugin implements Plugin
 {
+    protected array $legalableModels = [];
+
+    public function legalableModels(array $models): static
+    {
+        $this->legalableModels = $models;
+
+        return $this;
+    }
+
+    public function getLegalableModels(): array
+    {
+        return $this->legalableModels;
+    }
     public function getId(): string
     {
         return 'filament-legal';
@@ -18,6 +32,7 @@ class FilamentLegalPlugin implements Plugin
         $panel
             ->resources([
                 LegalPolicyResource::class,
+                LegalIdentityResource::class,
             ]);
     }
 

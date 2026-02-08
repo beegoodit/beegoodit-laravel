@@ -23,7 +23,7 @@ trait HasPolicyAcceptances
     {
         $activePolicy = LegalPolicy::getActive($type);
 
-        if (!$activePolicy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (! $activePolicy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return true;
         }
 

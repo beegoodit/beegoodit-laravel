@@ -4,10 +4,11 @@ Centralized legal compliance for Filament applications. This package provides ve
 
 ## Features
 
-- **Filament Management**: A dedicated `LegalResource` to manage and version policies directly from your Admin panel.
-- **Unified Legal Gate**: Middleware that intercepts users immediately after login/registration if they haven't accepted the latest policy.
-- **Robust Audit Trail**: Detailed tracking of policy acceptances, including User ID, Policy Version, IP Address, and User Agent.
-- **Multi-language Support**: Native integration with Filament's translation features for managing policies in multiple languages.
+- **Polymorphic Ownership**: Legal documents (Policies and Identities) can be owned by the platform (default) or by specific entities like Teams.
+- **Legal Identities**: Manage official contact and registration details (GmbH, e.V., etc.) for the platform or specific owners.
+- **Dynamic Documents**: Fetch owner-specific imprint or privacy policies with automatic fallbacks to platform defaults.
+- **Unified Legal Gate**: Middleware that enforces policy acceptance across different owners.
+- **Filament Integration**: Pre-built resources for managing legal data in any Filament panel.
 - **Plug-and-Play**: Designed to be dropped into any project in the `beegoodit` ecosystem to ensure consistent legal compliance.
 
 ## Installation

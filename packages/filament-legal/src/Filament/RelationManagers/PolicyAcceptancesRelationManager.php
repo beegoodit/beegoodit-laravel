@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentLegal\Filament\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -28,16 +27,22 @@ class PolicyAcceptancesRelationManager extends RelationManager
                     ->label(__('filament-legal::messages.User'))
                     ->searchable()
                     ->sortable()
-                    ->hidden(fn($livewire): bool => $livewire->getOwnerRecord() instanceof \App\Models\User),
+                    ->hidden(fn ($livewire): bool => $livewire->getOwnerRecord() instanceof \App\Models\User),
                 TextColumn::make('policy.type')
                     ->label(__('filament-legal::messages.Policy Type'))
-                    ->formatStateUsing(fn($state): string => ucfirst((string) $state))
+                    ->formatStateUsing(fn ($state): string => match ($state) {
+                        'privacy' => __('filament-legal::messages.Privacy Policy'),
+                        'terms' => __('filament-legal::messages.Terms of Service'),
+                        'imprint' => __('filament-legal::messages.Imprint'),
+                        'cookie' => __('filament-legal::messages.Cookie Policy'),
+                        default => ucfirst((string) $state),
+                    })
                     ->sortable()
-                    ->hidden(fn($livewire): bool => $livewire->getOwnerRecord() instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy),
+                    ->hidden(fn ($livewire): bool => $livewire->getOwnerRecord() instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy),
                 TextColumn::make('policy.version')
                     ->label(__('filament-legal::messages.Version'))
                     ->sortable()
-                    ->hidden(fn($livewire): bool => $livewire->getOwnerRecord() instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy),
+                    ->hidden(fn ($livewire): bool => $livewire->getOwnerRecord() instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy),
                 TextColumn::make('ip_address')
                     ->label(__('filament-legal::messages.IP Address'))
                     ->searchable(),
@@ -55,7 +60,7 @@ class PolicyAcceptancesRelationManager extends RelationManager
             ->actions([
                 \Filament\Actions\ViewAction::make()
                     ->url(
-                        fn($record) => $this->getOwnerRecord() instanceof \App\Models\User
+                        fn ($record): string => $this->getOwnerRecord() instanceof \App\Models\User
                         ? \BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource::getUrl('edit', ['record' => $record->legal_policy_id])
                         : route('filament.admin.resources.users.edit', ['record' => $record->user_id])
                     ),

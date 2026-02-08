@@ -10,6 +10,16 @@ class CreateLegalPolicy extends CreateRecord
 {
     protected static string $resource = LegalPolicyResource::class;
 
+    public function getTitle(): string
+    {
+        return __('filament-legal::messages.Create Legal Policy');
+    }
+
+    public function getBreadcrumb(): string
+    {
+        return __('filament-legal::messages.Create');
+    }
+
     protected function afterCreate(): void
     {
         if ($this->record->is_active) {

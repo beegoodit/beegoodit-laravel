@@ -21,14 +21,14 @@ class EnsureLegalAcceptance
         $user = Auth::user();
 
         // Only enforce for authenticated users
-        if (!$user) {
+        if (! $user) {
             return $next($request);
         }
 
         // Get the current active privacy policy
         $activePrivacyPolicy = LegalPolicy::getActive('privacy');
 
-        if (!$activePrivacyPolicy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
+        if (! $activePrivacyPolicy instanceof \BeegoodIT\FilamentLegal\Models\LegalPolicy) {
             return $next($request);
         }
 
@@ -40,10 +40,11 @@ class EnsureLegalAcceptance
                 ->exists();
 
         // If not accepted, redirect to acceptance page (unless already there or on an allowed route)
-        if (!$hasAccepted && !$this->shouldSkip($request)) {
+        if (! $hasAccepted && ! $this->shouldSkip($request)) {
             if ($request->isMethod('GET')) {
                 session()->put('url.intended', $request->fullUrl());
             }
+
             return to_route('filament-legal.acceptance');
         }
 
