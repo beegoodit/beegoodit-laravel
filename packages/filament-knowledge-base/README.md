@@ -207,7 +207,7 @@ return [
     AuthenticateSession::class,
     ShareErrorsFromSession::class,
     VerifyCsrfToken::class,
-    \App\Http\Middleware\SetLocale::class,  // ← Must be BEFORE SubstituteBindings
+    \BeegoodIT\FilamentI18n\Middleware\SetLocale::class,  // ← Must be BEFORE SubstituteBindings
     SubstituteBindings::class,              // ← Route binding happens here
     DisableBladeIconComponents::class,
     DispatchServingFilamentEvent::class,

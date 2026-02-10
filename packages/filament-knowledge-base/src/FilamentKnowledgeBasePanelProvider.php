@@ -15,6 +15,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use BeegoodIT\FilamentI18n\Middleware\SetLocale;
 
 class FilamentKnowledgeBasePanelProvider extends PanelProvider
 {
@@ -36,7 +37,7 @@ class FilamentKnowledgeBasePanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \BeegoodIT\FilamentI18n\Middleware\SetLocale::class,
+                SetLocale::class,
             ]);
     }
 }
