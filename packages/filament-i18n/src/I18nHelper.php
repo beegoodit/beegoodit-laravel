@@ -2,6 +2,8 @@
 
 namespace BeegoodIT\FilamentI18n;
 
+use Closure;
+
 /**
  * Helper class for internationalization utilities.
  */
@@ -111,5 +113,13 @@ class I18nHelper
         $meta = $this->localeMetadata($locale);
 
         return $meta['flag'] ?? '';
+    }
+
+    public function withLocale(string $locale, Closure $callback): void
+    {
+        $previousLocale = app()->getLocale();
+        app()->setLocale($locale);
+        $callback();
+        app()->setLocale($previousLocale);
     }
 }
