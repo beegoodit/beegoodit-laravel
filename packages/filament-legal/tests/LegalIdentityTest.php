@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegalIdentityTest extends TestCase
 {
-    /** @test */
-    public function it_can_create_and_retrieve_legal_identity_for_an_owner(): void
+    public function test_it_can_create_and_retrieve_legal_identity_for_an_owner(): void
     {
         $owner = UserWithLegal::create([
             'name' => 'Team Owner',

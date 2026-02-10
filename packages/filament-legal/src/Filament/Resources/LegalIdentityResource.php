@@ -119,9 +119,9 @@ class LegalIdentityResource extends Resource
             ->filters([
                 SelectFilter::make('owner_type')
                     ->label(__('filament-legal::messages.Owner Type'))
-                    ->options([
-                        \App\Models\Team::class => 'Team',
-                    ]),
+                    ->options(collect(FilamentLegalPlugin::get()->getLegalableModels())
+                        ->mapWithKeys(fn ($model) => [$model => __('filament-legal::messages.' . class_basename($model))])
+                        ->toArray()),
             ])
             ->recordActions([
                 ViewAction::make()

@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegalPolicyOwnershipTest extends TestCase
 {
-    /** @test */
-    public function it_can_retrieve_active_policy_for_platform(): void
+    public function test_it_can_retrieve_active_policy_for_platform(): void
     {
         LegalPolicy::create([
             'type' => 'privacy',
@@ -24,8 +23,7 @@ class LegalPolicyOwnershipTest extends TestCase
         $this->assertNull($policy->owner_id);
     }
 
-    /** @test */
-    public function it_can_retrieve_active_policy_for_an_owner(): void
+    public function test_it_can_retrieve_active_policy_for_an_owner(): void
     {
         $owner = User::create([
             'name' => 'Team Owner',
@@ -57,8 +55,7 @@ class LegalPolicyOwnershipTest extends TestCase
         $this->assertEquals($owner->id, $policy->owner_id);
     }
 
-    /** @test */
-    public function it_respects_versioning_within_owner_scope(): void
+    public function test_it_respects_versioning_within_owner_scope(): void
     {
         $owner = User::create([
             'name' => 'Team Owner',
