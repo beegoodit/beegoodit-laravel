@@ -2,6 +2,8 @@
 
 namespace BeegoodIT\FilamentTenancyDomains;
 
+use BeegoodIT\FilamentTenancyDomains\Http\Middleware\EnsureDomainContextMiddleware;
+use BeegoodIT\FilamentTenancyDomains\Http\Middleware\ResolveDomainMiddleware;
 use Illuminate\Support\ServiceProvider;
 
 class FilamentTenancyDomainsServiceProvider extends ServiceProvider
@@ -18,6 +20,8 @@ class FilamentTenancyDomainsServiceProvider extends ServiceProvider
                 __DIR__.'/../config/filament-tenancy-domains.php' => config_path('filament-tenancy-domains.php'),
             ], 'filament-tenancy-domains-config');
         }
+
+        $this->app['router']->aliasMiddleware('domain.context', EnsureDomainContextMiddleware::class);
     }
 
     public function register(): void

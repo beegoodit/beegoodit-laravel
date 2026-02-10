@@ -1,12 +1,13 @@
 <?php
 
-namespace BeegoodIT\FilamentTenancyDomains;
+namespace BeegoodIT\FilamentTenancyDomains\Http\Middleware;
 
+use BeegoodIT\FilamentTenancyDomains\Domain;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ResolveDomain
+class ResolveDomainMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -19,8 +20,8 @@ class ResolveDomain
             ->first();
 
         if ($resolvedDomain && $resolvedDomain->model) {
-            app()->instance('resolvedDomain', $resolvedDomain);
-            app()->instance('resolvedEntity', $resolvedDomain->model);
+            app()->instance("resolvedDomain", $resolvedDomain);
+            app()->instance("resolvedEntity", $resolvedDomain->model);
         }
 
         return $next($request);
