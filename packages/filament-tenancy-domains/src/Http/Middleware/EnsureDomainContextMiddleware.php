@@ -15,7 +15,7 @@ class EnsureDomainContextMiddleware
      */
     public function handle(Request $request, Closure $next, string $requirement): Response
     {
-        $domain = app()->bound('resolvedDomain') ? app('resolvedDomain') : null;
+        $domain = app()->bound('resolvedDomain') ? resolve('resolvedDomain') : null;
 
         // Implementation Detail: Local development and Tests often use hosts like 'localhost'
         // that might not be in the 'domains' table. We treat these as 'platform'.
@@ -23,7 +23,7 @@ class EnsureDomainContextMiddleware
             $currentHost = $request->getHost();
             $platformDomain = config('filament-tenancy-domains.platform_domain');
 
-            if ($currentHost === 'localhost' || $currentHost === '127.0.0.1' || $currentHost === $platformDomain) {
+            if (in_array($currentHost, ['localhost', '127.0.0.1', $platformDomain, 'www.'.$platformDomain], true)) {
                 return $next($request);
             }
         }
