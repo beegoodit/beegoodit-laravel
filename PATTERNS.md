@@ -2,6 +2,21 @@
 
 Some features are too simple for packages - use these patterns in your apps.
 
+## Add Laravel Boost (optional)
+
+[Laravel Boost](https://laravel.com/docs/12.x/boost) provides MCP tooling and AI guidelines (e.g. `CLAUDE.md`, `AGENTS.md`) for Laravel apps. Useful when using Cursor, Claude Code, or other MCP-compatible editors.
+
+```bash
+composer require laravel/boost --dev
+php artisan boost:install
+```
+
+`boost:install` is interactive and configures `.mcp.json`, guideline files, and `boost.json`. Add generated files to `.gitignore` if you prefer not to commit them (they can be regenerated).
+
+**When to use**: Any app where you want AI-assisted development with Laravel-aware context.
+
+---
+
 ## Force HTTPS in Production
 
 Add to `app/Providers/AppServiceProvider.php`:
@@ -172,5 +187,33 @@ AWS_ENDPOINT=https://s3.amazonaws.com
 - ✅ App-specific configuration
 - ✅ One-time setup
 - ✅ Rarely changes
+
+---
+
+## Default routes and panels
+
+Use these paths and panel names so apps stay consistent. Portal = tenant business logic, team = team management, admin = superadmin (no tenancy), landing = `/` redirect to `/:locale`.
+
+| Path | Purpose |
+|------|---------|
+| `/` | Redirect to `/:locale` |
+| `/:locale` | Landing page (e.g. `en`, `de`) |
+| `/portal/:team_uuid` | Tenant panel – app business logic per tenant (Filament panel `path('portal')` with `tenant(Team::class)`) |
+| `/team/:team_uuid` | Team management – tenant profile, branding, register team (Filament panel `path('team')` with `tenant(Team::class)`) |
+| `/admin` | Superadmin panel – platform-wide admin (Filament panel `path('admin')`, no tenancy) |
+| `/me` | User profile and unified auth (filament-user-profile panel) |
+| `/kb` | Knowledge base (filament-knowledge-base panel) |
+| `/legal/accept` | Legal acceptance gate (filament-legal route) |
+
+Filament tenant URLs are `/{panel_path}/{tenant_identifier}`; the identifier is the team’s route key (e.g. uuid or slug). To use uuid in the URL, ensure the Team model’s `getRouteKeyName()` returns `id`.
+
+**Optional:** Redirect `/` to the user’s locale (or default) in `routes/web.php`:
+
+```php
+Route::get('/', function () {
+    $locale = request()->getPreferredLanguage(config('app.available_locales', ['en'])) ?: 'en';
+    return redirect("/{$locale}");
+});
+```
 
 
