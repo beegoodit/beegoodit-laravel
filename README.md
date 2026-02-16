@@ -13,6 +13,19 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 - **[beegoodit/filament-tenancy](packages/filament-tenancy)** - Multi-tenancy support with team branding and management
 - **[beegoodit/filament-user-profile](packages/filament-user-profile)** - User profile settings pages
 - **[beegoodit/laravel-pwa](packages/laravel-pwa)** - Progressive Web App support
+- **[beegoodit/filament-tenancy-roles](packages/filament-tenancy-roles)** - Role-based authorization for Filament multi-tenancy
+- **[beegoodit/filament-tenancy-domains](packages/filament-tenancy-domains)** - Polymorphic domain and subdomain management for Filament applications
+- **[beegoodit/filament-connect](packages/filament-connect)** - Multi-tenant API credential management for Filament
+- **[beegoodit/filament-social-links](packages/filament-social-links)** - Polymorphic social media link management for Filament
+- **[beegoodit/filament-legal](packages/filament-legal)** - Centralized legal compliance for Filament applications
+- **[beegoodit/filament-knowledge-base](packages/filament-knowledge-base)** - Standardized Knowledge Base for BeegoodIT Filament Apps
+- **[beegoodit/laravel-feedback](packages/laravel-feedback)** - Feedback system for Laravel applications with Filament integration
+
+## Guides
+
+- **[Building an app with all packages](BUILDING-AN-APP.md)** – Step-by-step guide to get a new Laravel 12 / Filament 4 app up and running with every BeeGoodIT package and [PATTERNS.md](PATTERNS.md). Prerequisites: PHP 8.4+, Laravel 12+, Filament 4+.
+- **Main features and default paths** when using all packages: see [Main features of the full app](BUILDING-AN-APP.md#main-features-of-the-full-app) in BUILDING-AN-APP.md.
+- **Recommended route and panel layout** (portal, team, admin, landing): see [PATTERNS.md – Default routes and panels](PATTERNS.md#default-routes-and-panels) and [BUILDING-AN-APP.md](BUILDING-AN-APP.md).
 
 ## Installation in Apps
 

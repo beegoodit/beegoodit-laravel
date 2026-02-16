@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "filament/filament": "^4.0",
+        "filament/filament": "^4.0 || ^5.0",
         "guava/filament-knowledge-base": "^2.1"
     },
     "autoload": {
