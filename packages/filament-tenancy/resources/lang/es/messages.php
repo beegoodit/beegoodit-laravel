@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'Branding' => 'Marca',
+    'Team Logo' => 'Logo del equipo',
+    'Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)' => 'Sube el logo de tu equipo (JPG, PNG, GIF, WebP o SVG, máx. 2MB)',
+    'Primary Brand Color' => 'Color de marca principal',
+    'Main color for buttons, links, and accents' => 'Color principal para botones, enlaces y acentos',
+    'Secondary Color' => 'Color secundario',
+    'Additional brand color if needed' => 'Color de marca adicional si es necesario',
+    'URL-friendly identifier. Auto-generated from name, but can be customized.' => 'Identificador amigable para URL. Generado automáticamente a partir del nombre, pero se puede personalizar.',
+    'Team Profile' => 'Perfil del equipo',
+    'Register team' => 'Registrar equipo',
+    'Settings' => 'Configuración',
+    'Uploaded' => 'Subido',
+    'Missing' => 'Falta',
+    'Logo looks great!' => '¡El logo se ve genial!',
+    'Adding a logo improves brand recognition.' => 'Añadir un logo mejora el reconocimiento de la marca.',
+    'Brand Colors' => 'Colores de marca',
+    'Defined' => 'Definido',
+    'Default' => 'Predeterminado',
+    'Your brand identity is set.' => 'Tu identidad de marca está establecida.',
+    'Set brand colors to customize the team portal.' => 'Establece colores de marca para personalizar el portal del equipo.',
+    'Custom URL' => 'URL personalizada',
+    'Customized' => 'Personalizado',
+    'Standard' => 'Estándar',
+    'Web Presence' => 'Presencia web',
+    'Active' => 'Activo',
+    'Inactive' => 'Inactivo',
+    'Custom domain is configured.' => 'Se ha configurado un dominio personalizado.',
+    'Connect a custom domain for a professional look.' => 'Conecta un dominio personalizado para una apariencia profesional.',
+    'models' => [
+        'team' => [
+            'attributes' => [
+                'name' => 'Nombre',
+                'slug' => 'Slug',
+            ],
+        ],
+    ],
+];

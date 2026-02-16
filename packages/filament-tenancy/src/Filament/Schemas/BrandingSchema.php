@@ -49,14 +49,14 @@ class BrandingSchema
     {
         return [
             TextInput::make('name')
-                ->label(fn () => __('models.team.attributes.name'))
+                ->label(fn () => __('filament-tenancy::messages.models.team.attributes.name'))
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
 
             TextInput::make('slug')
-                ->label(fn () => __('models.team.attributes.slug'))
+                ->label(fn () => __('filament-tenancy::messages.models.team.attributes.slug'))
                 ->required()
                 ->maxLength(255)
                 ->unique($teamModelClass, 'slug', ignoreRecord: true)
