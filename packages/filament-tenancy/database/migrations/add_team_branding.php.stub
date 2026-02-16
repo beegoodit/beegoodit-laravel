@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->string('slug')->unique()->nullable()->after('name');
             $table->string('logo')->nullable()->after('slug');
             $table->string('primary_color')->nullable()->after('logo');
             $table->string('secondary_color')->nullable()->after('primary_color');
@@ -28,7 +27,6 @@ return new class extends Migration
     {
         Schema::table('teams', function (Blueprint $table) {
             $table->dropColumn([
-                'slug',
                 'logo',
                 'primary_color',
                 'secondary_color',

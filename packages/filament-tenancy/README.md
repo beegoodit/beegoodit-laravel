@@ -12,20 +12,22 @@ composer require beegoodit/filament-tenancy
 
 ## Setup
 
-### 1. Publish Migration
+### 1. Publish Migrations
 
 ```bash
 php artisan vendor:publish --tag=tenancy-migrations
 php artisan migrate
 ```
 
-This adds to the `teams` table:
-- `slug` (unique identifier)
-- `logo` (file path)
-- `primary_color` (hex color)
-- `secondary_color` (hex color)
-- `oauth_provider` (for team auto-assignment)
-- `oauth_tenant_id` (for team auto-assignment)
+On a **fresh Laravel app** this publishes three migrations (in order):
+
+1. **create_teams_table** – `teams` with `id`, `name`, `slug` (unique, nullable), `timestamps`
+2. **create_team_user_table** – pivot `team_user` with `team_id`, `user_id` (foreign keys with cascade on delete), `timestamps`
+3. **add_team_branding** – adds to existing `teams` table: `logo`, `primary_color`, `secondary_color`, `oauth_provider`, `oauth_tenant_id`
+
+**If you already have `teams` and `team_user`:** After publishing, delete the `*_create_teams_table.php` and `*_create_team_user_table.php` files from `database/migrations` so only `add_team_branding` runs when you migrate.
+
+**If your app uses UUIDs for users or teams:** Replace the published create migrations with versions that use `uuid('id')->primary()` and `foreignUuid()->constrained()->cascadeOnDelete()` as needed (see your framework’s UUID conventions).
 
 ### 2. Add Trait to Team Model
 
