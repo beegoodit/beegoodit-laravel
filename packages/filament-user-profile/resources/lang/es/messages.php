@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'Teams' => 'Equipos',
+    'Your team memberships' => 'Tus membresías de equipo',
     // Appearance Page
     'Appearance Settings' => 'Configuración de Apariencia',
     'Customize your interface appearance and localization preferences' => 'Personaliza la apariencia de tu interfaz y las preferencias de localización',

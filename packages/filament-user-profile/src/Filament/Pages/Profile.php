@@ -10,6 +10,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -115,13 +116,13 @@ class Profile extends Page implements HasForms
 
         if ($panelInstance) {
             // Construct URL using panel path and page slug
-            $url = $panelInstance->getPath() . '/' . static::getSlug($panelInstance);
+            $url = $panelInstance->getPath().'/'.static::getSlug($panelInstance);
 
             if ($isAbsolute) {
                 return url($url);
             }
 
-            return '/' . ltrim($url, '/');
+            return '/'.ltrim($url, '/');
         }
 
         // Fallback to parent method
@@ -185,16 +186,25 @@ class Profile extends Page implements HasForms
                                 table: config('auth.providers.users.model'),
                                 column: 'email',
                                 ignoreRecord: true,
-                                modifyRuleUsing: fn($rule) => $rule->ignore(Auth::id()),
+                                modifyRuleUsing: fn ($rule) => $rule->ignore(Auth::id()),
                             )
                             ->helperText(function () {
                                 $user = Auth::user();
-                                if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+                                if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
                                     return __('filament-user-profile::messages.Your email address is unverified.');
                                 }
 
                                 return null;
                             }),
+                    ]),
+
+                Section::make(__('filament-user-profile::messages.Teams'))
+                    ->description(__('filament-user-profile::messages.Your team memberships'))
+                    ->schema([
+                        View::make('filament-user-profile::components.teams-list')
+                            ->viewData([
+                                'teams' => Auth::user()->teams,
+                            ]),
                     ]),
             ]);
     }
@@ -253,7 +263,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$this->supportsAvatar() || !$this->avatarUpload) {
+        if (! $this->supportsAvatar() || ! $this->avatarUpload) {
             return;
         }
 
@@ -278,7 +288,7 @@ class Profile extends Page implements HasForms
             } else {
                 // Fallback: handle avatar upload directly
                 $disk = config('filesystems.default') === 's3' ? 's3' : 'public';
-                $path = $this->avatarUpload->store('users/' . $user->id . '/avatar', $disk);
+                $path = $this->avatarUpload->store('users/'.$user->id.'/avatar', $disk);
 
                 // Delete old avatar if exists
                 if ($user->avatar) {
@@ -294,7 +304,7 @@ class Profile extends Page implements HasForms
             Session::flash('status', 'avatar-updated');
         } catch (\Exception $e) {
             Session::flash('status', 'avatar-update-failed');
-            \Illuminate\Support\Facades\Log::error('Avatar update failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Avatar update failed: '.$e->getMessage());
         }
     }
 
@@ -305,7 +315,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$this->supportsAvatar()) {
+        if (! $this->supportsAvatar()) {
             return;
         }
 
@@ -328,7 +338,7 @@ class Profile extends Page implements HasForms
             Session::flash('status', 'avatar-removed');
         } catch (\Exception $e) {
             Session::flash('status', 'avatar-remove-failed');
-            \Illuminate\Support\Facades\Log::error('Avatar removal failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Avatar removal failed: '.$e->getMessage());
         }
     }
 
@@ -357,7 +367,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -377,7 +387,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return null;
         }
 
@@ -472,7 +482,7 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             abort(403, 'Not authenticated');
         }
 
@@ -483,7 +493,7 @@ class Profile extends Page implements HasForms
 
         // Double-check: if user has a password, redirect to password deletion
         // This handles cases where the view incorrectly showed OAuth UI
-        if (!is_null($user->password) && $user->password !== '') {
+        if (! is_null($user->password) && $user->password !== '') {
             throw ValidationException::withMessages([
                 'confirmDelete' => __('filament-user-profile::messages.You have a password set. Please close this modal and use the password field to delete your account.'),
             ]);
@@ -493,12 +503,12 @@ class Profile extends Page implements HasForms
         // This way we fail fast if provider can't be determined
         $provider = $this->getOAuthProvider();
 
-        if (!$provider) {
+        if (! $provider) {
             // Log detailed debugging information
             \Illuminate\Support\Facades\Log::error('Unable to determine OAuth provider for user deletion', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
-                'has_password' => !is_null($user->password),
+                'has_password' => ! is_null($user->password),
                 'password_is_null' => is_null($user->password),
                 'password_is_empty' => $user->password === '',
                 'has_oauth_accounts_method' => method_exists($user, 'oauthAccounts'),
@@ -533,14 +543,14 @@ class Profile extends Page implements HasForms
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             abort(403, 'Not authenticated');
         }
 
         // Verify deletion intent exists and is valid
         $intent = Session::get('delete_account_intent');
 
-        if (!$intent) {
+        if (! $intent) {
             Session::flash('error', __('filament-user-profile::messages.Deletion request expired or invalid.'));
             $this->redirect(static::getUrl());
 
@@ -592,7 +602,7 @@ class Profile extends Page implements HasForms
 
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             abort(403, 'Not authenticated');
         }
 
