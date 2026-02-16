@@ -28,14 +28,14 @@
                         @drop.prevent="handleDrop"
                         :class="isDragging ? 'ring-2 ring-primary-500' : ''"
                     >
-                        <span class="relative flex h-24 w-24 shrink-0 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 transition-colors hover:border-gray-400 dark:hover:border-gray-500">
+                        <span class="relative flex h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600 transition-colors hover:border-gray-400 dark:hover:border-gray-500">
                             @php
                                 $avatarUrl = $user->getAvatarUrl();
                             @endphp
                             @if ($avatarUrl)
                                 <img src="{{ $avatarUrl }}" alt="{{ __('filament-user-profile::messages.Avatar') }}" class="h-full w-full object-cover" wire:loading.remove wire:target="avatarUpload" />
                             @else
-                                <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-lg font-semibold text-black dark:bg-neutral-700 dark:text-white" wire:loading.remove wire:target="avatarUpload">
+                                <span class="flex h-full w-full items-center justify-center rounded-full bg-neutral-200 text-lg font-semibold text-black dark:bg-neutral-700 dark:text-white" wire:loading.remove wire:target="avatarUpload">
                                     {{ method_exists($user, 'initials') ? $user->initials() : substr($user->name, 0, 2) }}
                                 </span>
                             @endif
