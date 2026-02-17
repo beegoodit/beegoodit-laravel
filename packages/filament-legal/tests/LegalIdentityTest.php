@@ -2,9 +2,7 @@
 
 namespace BeegoodIT\FilamentLegal\Tests;
 
-use BeegoodIT\FilamentLegal\Models\LegalIdentity;
 use BeegoodIT\FilamentLegal\Models\Concerns\HasLegalDocuments;
-use Illuminate\Database\Eloquent\Model;
 
 class LegalIdentityTest extends TestCase
 {
@@ -25,6 +23,7 @@ class LegalIdentityTest extends TestCase
             'vat_id' => 'DE123456789',
             'register_court' => 'Amtsgericht Berlin',
             'register_number' => 'HRB 123456',
+            'founded_at' => '2020-01-01',
         ]);
 
         $identity = $owner->refresh()->legalIdentity;
@@ -33,12 +32,15 @@ class LegalIdentityTest extends TestCase
         $this->assertEquals('BeegoodIT GmbH', $identity->name);
         $this->assertEquals($owner->id, $identity->owner_id);
         $this->assertEquals($owner->getMorphClass(), $identity->owner_type);
+        $this->assertEquals('2020-01-01', $identity->founded_at->toDateString());
     }
 }
 
 class UserWithLegal extends \Illuminate\Foundation\Auth\User
 {
     use HasLegalDocuments;
+
     protected $table = 'users';
+
     protected $guarded = [];
 }

@@ -3,9 +3,9 @@
 namespace BeegoodIT\FilamentLegal\Tests;
 
 use BeegoodIT\FilamentLegal\FilamentLegalServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
@@ -41,16 +41,19 @@ class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        $migration = include __DIR__ . '/../database/migrations/2025_12_30_000001_create_legal_policies_table.php';
+        $migration = include __DIR__.'/../database/migrations/2025_12_30_000001_create_legal_policies_table.php';
         $migration->up();
 
-        $migration = include __DIR__ . '/../database/migrations/2026_02_07_000001_add_polymorphic_to_legal_policies_table.php';
+        $migration = include __DIR__.'/../database/migrations/2026_02_07_000001_add_polymorphic_to_legal_policies_table.php';
         $migration->up();
 
-        $migration = include __DIR__ . '/../database/migrations/2026_02_07_000002_create_legal_identities_table.php';
+        $migration = include __DIR__.'/../database/migrations/2026_02_07_000002_create_legal_identities_table.php';
         $migration->up();
 
-        $migration = include __DIR__ . '/../database/migrations/2025_12_30_000002_create_policy_acceptances_table.php';
+        $migration = include __DIR__.'/../database/migrations/2025_12_30_000002_create_policy_acceptances_table.php';
+        $migration->up();
+
+        $migration = include __DIR__.'/../database/migrations/2026_02_17_000001_add_founded_at_to_legal_identities_table.php';
         $migration->up();
     }
 }
@@ -58,5 +61,6 @@ class TestCase extends Orchestra
 class User extends \Illuminate\Foundation\Auth\User
 {
     protected $table = 'users';
+
     protected $guarded = [];
 }

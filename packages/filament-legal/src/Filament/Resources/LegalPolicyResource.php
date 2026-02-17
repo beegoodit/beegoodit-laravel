@@ -2,8 +2,8 @@
 
 namespace BeegoodIT\FilamentLegal\Filament\Resources;
 
-use BeegoodIT\FilamentLegal\FilamentLegalPlugin;
 use BeegoodIT\FilamentLegal\Filament\Resources\LegalPolicyResource\Pages;
+use BeegoodIT\FilamentLegal\FilamentLegalPlugin;
 use BeegoodIT\FilamentLegal\Models\LegalPolicy;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -43,7 +43,7 @@ class LegalPolicyResource extends Resource
     {
         return __('filament-legal::messages.Legal Policies');
     }
-    
+
     public static function getBreadcrumb(): string
     {
         return __('filament-legal::messages.Legal Policies');
@@ -170,8 +170,8 @@ class LegalPolicyResource extends Resource
                 SelectFilter::make('owner_type')
                     ->label(__('filament-legal::messages.Owner Type'))
                     ->options(collect(FilamentLegalPlugin::get()->getLegalableModels())
-                        ->mapWithKeys(fn ($model) => [$model => __('filament-legal::messages.' . class_basename($model))])
-                        ->toArray()),
+                        ->mapWithKeys(fn ($model): array => [$model => __('filament-legal::messages.'.class_basename($model))])
+                        ->all()),
             ])
             ->recordActions([
                 EditAction::make(),

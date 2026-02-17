@@ -43,6 +43,8 @@ return [
     'VAT ID' => 'Número de IVA',
     'Register Court' => 'Registro mercantil',
     'Register Number' => 'Número de registro',
+    'Founding Date' => 'Fecha de fundación',
+
     'Legal Identity' => 'Identidad legal',
     'Legal Identities' => 'Identidades legales',
     'Legal Policy' => 'Política legal',

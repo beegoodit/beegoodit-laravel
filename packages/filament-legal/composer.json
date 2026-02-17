@@ -27,7 +27,8 @@
     },
     "autoload": {
         "psr-4": {
-            "BeegoodIT\\FilamentLegal\\": "src/"
+            "BeegoodIT\\FilamentLegal\\": "src/",
+            "BeegoodIT\\FilamentLegal\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {

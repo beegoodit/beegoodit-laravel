@@ -2,19 +2,18 @@
 
 namespace BeegoodIT\FilamentLegal\Filament\Resources;
 
-use BeegoodIT\FilamentLegal\FilamentLegalPlugin;
 use BeegoodIT\FilamentLegal\Filament\Resources\LegalIdentityResource\Pages;
+use BeegoodIT\FilamentLegal\FilamentLegalPlugin;
 use BeegoodIT\FilamentLegal\Models\LegalIdentity;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -71,7 +70,7 @@ class LegalIdentityResource extends Resource
                         ->toArray())
                     ->columnSpanFull()
                     ->hidden(fn () => filament()->hasTenancy())
-                    ->required(fn () => ! filament()->hasTenancy()),
+                    ->required(fn (): bool => ! filament()->hasTenancy()),
                 TextInput::make('name')
                     ->label(__('filament-legal::messages.Name'))
                     ->required(),
@@ -91,6 +90,8 @@ class LegalIdentityResource extends Resource
                     ->label(__('filament-legal::messages.Register Court')),
                 TextInput::make('register_number')
                     ->label(__('filament-legal::messages.Register Number')),
+                \Filament\Forms\Components\DatePicker::make('founded_at')
+                    ->label(__('filament-legal::messages.Founding Date')),
             ]);
     }
 
@@ -112,6 +113,11 @@ class LegalIdentityResource extends Resource
                 TextColumn::make('email')
                     ->label(__('filament-legal::messages.Email'))
                     ->searchable(),
+                TextColumn::make('founded_at')
+                    ->label(__('filament-legal::messages.Founding Date'))
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -120,8 +126,8 @@ class LegalIdentityResource extends Resource
                 SelectFilter::make('owner_type')
                     ->label(__('filament-legal::messages.Owner Type'))
                     ->options(collect(FilamentLegalPlugin::get()->getLegalableModels())
-                        ->mapWithKeys(fn ($model) => [$model => __('filament-legal::messages.' . class_basename($model))])
-                        ->toArray()),
+                        ->mapWithKeys(fn ($model): array => [$model => __('filament-legal::messages.'.class_basename($model))])
+                        ->all()),
             ])
             ->recordActions([
                 ViewAction::make()

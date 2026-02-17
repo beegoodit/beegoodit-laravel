@@ -43,6 +43,7 @@ return [
     'VAT ID' => 'VAT ID',
     'Register Court' => 'Register Court',
     'Register Number' => 'Register Number',
+    'Founding Date' => 'Founding Date',
     'Legal Identity' => 'Legal Identity',
     'Legal Identities' => 'Legal Identities',
     'Legal Policy' => 'Legal Policy',

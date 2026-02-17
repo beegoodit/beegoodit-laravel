@@ -43,6 +43,8 @@ return [
     'VAT ID' => 'USt-IdNr.',
     'Register Court' => 'Registergericht',
     'Register Number' => 'Registernummer',
+    'Founding Date' => 'Gründungsdatum',
+
     'Legal Identity' => 'Rechtliche Identität',
     'Legal Identities' => 'Rechtliche Identitäten',
     'Legal Policy' => 'Rechtliche Richtlinie',

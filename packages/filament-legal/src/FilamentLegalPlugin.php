@@ -22,6 +22,7 @@ class FilamentLegalPlugin implements Plugin
     {
         return $this->legalableModels;
     }
+
     public function getId(): string
     {
         return 'filament-legal';

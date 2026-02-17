@@ -5,7 +5,7 @@ Centralized legal compliance for Filament applications. This package provides ve
 ## Features
 
 - **Polymorphic Ownership**: Legal documents (Policies and Identities) can be owned by the platform (default) or by specific entities like Teams.
-- **Legal Identities**: Manage official contact and registration details (GmbH, e.V., etc.) for the platform or specific owners.
+- **Legal Identities**: Manage official contact and registration details (GmbH, e.V., founding date, etc.) for the platform or specific owners.
 - **Dynamic Documents**: Fetch owner-specific imprint or privacy policies with automatic fallbacks to platform defaults.
 - **Unified Legal Gate**: Middleware that enforces policy acceptance across different owners.
 - **Filament Integration**: Pre-built resources for managing legal data in any Filament panel.
