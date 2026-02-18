@@ -2,7 +2,7 @@
 
 namespace BeegoodIT\FilamentTenancyDomains\Tests;
 
-use BeegoodIT\FilamentTenancyDomains\ResolveDomain;
+use BeegoodIT\FilamentTenancyDomains\Http\Middleware\ResolveDomainMiddleware;
 use Illuminate\Http\Request;
 
 class ResolveDomainTest extends TestCase
@@ -21,7 +21,7 @@ class ResolveDomainTest extends TestCase
         ]);
 
         $request = Request::create('http://tour.foosbeaver.app');
-        $middleware = new ResolveDomain;
+        $middleware = new ResolveDomainMiddleware;
 
         $middleware->handle($request, function ($req) use ($tour) {
             $this->assertTrue(app()->bound('resolvedDomain'));
@@ -46,7 +46,7 @@ class ResolveDomainTest extends TestCase
         ]);
 
         $request = Request::create('http://tour.foosbeaver.app');
-        $middleware = new ResolveDomain;
+        $middleware = new ResolveDomainMiddleware;
 
         $middleware->handle($request, function ($req) {
             $this->assertFalse(app()->bound('resolvedDomain'));

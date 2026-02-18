@@ -81,6 +81,9 @@ class FeedbackServiceProvider extends ServiceProvider
      */
     protected function registerLivewireComponents(): void
     {
+        if (! $this->app->bound('livewire.finder')) {
+            return;
+        }
         if (class_exists(FeedbackModal::class)) {
             Livewire::component('laravel-feedback::feedback-modal', FeedbackModal::class);
         }
@@ -111,9 +114,15 @@ class FeedbackServiceProvider extends ServiceProvider
      */
     protected function registerFilamentResources(): void
     {
+        if (! $this->app->bound('filament')) {
+            return;
+        }
         // Add feedback button to all panels (including /me panel)
         // Use booted callback to ensure all panels are registered
         $this->app->booted(function (): void {
+            if (! $this->app->bound('filament')) {
+                return;
+            }
             // Register hook for all panels when Filament is serving
             Filament::serving(function (): void {
                 foreach (Filament::getPanels() as $panel) {

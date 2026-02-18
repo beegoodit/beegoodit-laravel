@@ -4,18 +4,13 @@ namespace BeegoodIT\LaravelFeedback\Tests\Unit;
 
 use BeegoodIT\LaravelFeedback\Models\FeedbackItem;
 use BeegoodIT\LaravelFeedback\Tests\TestCase;
-use Illuminate\Foundation\Auth\User;
+use BeegoodIT\LaravelFeedback\Tests\TestUser;
 
 class FeedbackItemTest extends TestCase
 {
-
     public function test_feedback_item_has_creator_relationship(): void
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        $user = $this->createUser();
 
         $feedbackItem = FeedbackItem::create([
             'subject' => 'Test Subject',
@@ -25,17 +20,13 @@ class FeedbackItemTest extends TestCase
             'ip_address' => '127.0.0.1',
         ]);
 
-        $this->assertInstanceOf(User::class, $feedbackItem->creator);
+        $this->assertInstanceOf(TestUser::class, $feedbackItem->creator);
         $this->assertEquals($user->id, $feedbackItem->creator->id);
     }
 
     public function test_feedback_item_requires_subject(): void
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        $user = $this->createUser();
 
         $this->expectException(\Illuminate\Database\QueryException::class);
 
@@ -47,11 +38,7 @@ class FeedbackItemTest extends TestCase
 
     public function test_feedback_item_requires_description(): void
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        $user = $this->createUser();
 
         $this->expectException(\Illuminate\Database\QueryException::class);
 
@@ -63,11 +50,7 @@ class FeedbackItemTest extends TestCase
 
     public function test_feedback_item_stores_metadata(): void
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        $user = $this->createUser();
 
         $feedbackItem = FeedbackItem::create([
             'subject' => 'Test subject',

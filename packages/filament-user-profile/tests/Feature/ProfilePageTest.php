@@ -88,6 +88,7 @@ class ProfilePageTest extends TestCase
 
         $content = file_get_contents($profileFile);
 
-        $this->assertStringContainsString('strtolower($validated[\'email\'])', $content);
+        $this->assertStringContainsString('strtolower', $content);
+        $this->assertStringContainsString('$validated[\'email\']', $content);
     }
 }

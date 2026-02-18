@@ -33,6 +33,7 @@
             "BeegoodIT\\FilamentSocialLinks\\Database\\Seeders\\": "packages/filament-social-links/database/seeders/",
             "BeegoodIT\\FilamentSocialLinks\\Database\\Factories\\": "packages/filament-social-links/database/factories/",
             "BeegoodIT\\FilamentTenancyDomains\\": "packages/filament-tenancy-domains/src/",
+            "BeegoodIT\\FilamentTenancyRoles\\": "packages/filament-tenancy-roles/src/",
             "BeegoodIT\\FilamentLegal\\": "packages/filament-legal/src/",
             "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/"
         }
@@ -51,6 +52,7 @@
             "BeegoodIT\\FilamentUserProfile\\Tests\\": "packages/filament-user-profile/tests/",
             "BeegoodIT\\LaravelPwa\\Tests\\": "packages/laravel-pwa/tests/",
             "BeegoodIT\\FilamentTenancyDomains\\Tests\\": "packages/filament-tenancy-domains/tests/",
+            "BeegoodIT\\FilamentTenancyRoles\\Tests\\": "packages/filament-tenancy-roles/tests/",
             "BeegoodIT\\FilamentSocialLinks\\Tests\\": "packages/filament-social-links/tests/",
             "BeegoodIT\\FilamentLegal\\Tests\\": "packages/filament-legal/tests/",
             "BeegoodIT\\FilamentTimeline\\Tests\\": "packages/filament-timeline/tests/"

@@ -27,6 +27,7 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
         config()->set('auth.providers.users.model', User::class);
+        config()->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
 
     protected function setUpDatabase($app)

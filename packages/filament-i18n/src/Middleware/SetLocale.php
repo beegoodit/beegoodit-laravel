@@ -2,10 +2,10 @@
 
 namespace BeegoodIT\FilamentI18n\Middleware;
 
+use BeegoodIT\FilamentI18n\Facades\FilamentI18n;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use BeegoodIT\FilamentI18n\Facades\FilamentI18n;
 use Illuminate\Support\Facades\Auth;
 
 class SetLocale
@@ -17,10 +17,11 @@ class SetLocale
     {
         $locale = $request->segment(1);
 
-        if (!in_array($locale, FilamentI18n::availableLocales())) {
-            if (Auth::check() && Auth::user()->locale) {
+        if (! in_array($locale, FilamentI18n::availableLocales())) {
+            $user = $request->user() ?? Auth::user();
+            if ($user && ! empty($user->locale)) {
                 // Prioritize user preference if logged in
-                $locale = Auth::user()->locale;
+                $locale = $user->locale;
             } elseif (session()->has('locale')) {
                 // Fallback to session
                 $locale = session('locale');
