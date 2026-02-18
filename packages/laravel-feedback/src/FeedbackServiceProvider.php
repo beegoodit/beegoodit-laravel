@@ -81,9 +81,6 @@ class FeedbackServiceProvider extends ServiceProvider
      */
     protected function registerLivewireComponents(): void
     {
-        if (! $this->app->bound('livewire.finder')) {
-            return;
-        }
         if (class_exists(FeedbackModal::class)) {
             Livewire::component('laravel-feedback::feedback-modal', FeedbackModal::class);
         }
