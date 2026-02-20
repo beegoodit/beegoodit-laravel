@@ -41,6 +41,27 @@ php artisan vendor:publish --tag=cookie-consent-config
 php artisan vendor:publish --tag=cookie-consent-views
 ```
 
+### 4. Styling (Tailwind CSS)
+
+The banner is styled with Tailwind CSS utility classes only; no separate CSS file is shipped. Your app must include the package view path in Tailwind’s content/source so those classes are not purged.
+
+- **Tailwind v4:** In your main CSS file (e.g. `resources/css/app.css`), add:
+
+  ```css
+  @source '../../vendor/beegoodit/laravel-cookie-consent/resources/views/**/*.blade.php';
+  ```
+
+- **Tailwind v3:** In `tailwind.config.js`, add the path to the `content` array:
+
+  ```js
+  content: [
+      // ... your paths
+      './vendor/beegoodit/laravel-cookie-consent/resources/views/**/*.blade.php',
+  ],
+  ```
+
+If your app does not use Tailwind, publish the views (`php artisan vendor:publish --tag=cookie-consent-views`) and replace the utility classes with your own CSS.
+
 ## Configuration
 
 ```php
