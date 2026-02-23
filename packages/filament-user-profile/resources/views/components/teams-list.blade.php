@@ -6,8 +6,17 @@
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         @foreach($teams as $team)
             @php
-                $roleEnum = $team->pivot?->role;
-                $color = $roleEnum?->getColor();
+                $role = $team->pivot?->role;
+                $hasRoleWithColor = $role && method_exists($role, 'getColor') && method_exists($role, 'getLabel');
+                $color = $hasRoleWithColor ? $role->getColor() : 'gray';
+                $roleLabel = $hasRoleWithColor
+                    ? $role->getLabel()
+                    : ($role ? match (true) {
+                        $role instanceof \BackedEnum => $role->value,
+                        $role instanceof \UnitEnum => $role->name,
+                        is_scalar($role) => (string) $role,
+                        default => null,
+                    } : null);
             @endphp
             <div class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
                 <div class="flex flex-col gap-1">
@@ -18,10 +27,10 @@
                         {{ $team->slug }}
                     </span>
                 </div>
-                
-                @if($roleEnum)
+
+                @if($roleLabel !== null)
                     <x-filament::badge :color="$color">
-                        {{ $roleEnum->getLabel() }}
+                        {{ $roleLabel }}
                     </x-filament::badge>
                 @endif
             </div>
