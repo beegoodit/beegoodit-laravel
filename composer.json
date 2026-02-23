@@ -35,6 +35,8 @@
             "BeegoodIT\\FilamentTenancyDomains\\": "packages/filament-tenancy-domains/src/",
             "BeegoodIT\\FilamentTenancyRoles\\": "packages/filament-tenancy-roles/src/",
             "BeegoodIT\\FilamentLegal\\": "packages/filament-legal/src/",
+            "BeegoodIT\\FilamentPartners\\": "packages/filament-partners/src/",
+            "BeegoodIT\\FilamentPartners\\Database\\Factories\\": "packages/filament-partners/database/factories/",
             "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/"
         }
     },
@@ -55,6 +57,7 @@
             "BeegoodIT\\FilamentTenancyRoles\\Tests\\": "packages/filament-tenancy-roles/tests/",
             "BeegoodIT\\FilamentSocialLinks\\Tests\\": "packages/filament-social-links/tests/",
             "BeegoodIT\\FilamentLegal\\Tests\\": "packages/filament-legal/tests/",
+            "BeegoodIT\\FilamentPartners\\Tests\\": "packages/filament-partners/tests/",
             "BeegoodIT\\FilamentTimeline\\Tests\\": "packages/filament-timeline/tests/"
         }
     },
