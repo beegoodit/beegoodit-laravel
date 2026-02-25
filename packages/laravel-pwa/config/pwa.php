@@ -68,4 +68,40 @@ return [
         'url' => '/me/notifications',
         'dismiss_duration' => 7, // days
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | PWA Navigation (optional bottom bar + menu sheet)
+    |--------------------------------------------------------------------------
+    |
+    | Set 'bar' to an array of items or a closure that returns items. Each
+    | item: label, icon (Heroicon name when Filament is present), url,
+    | optional active (bool), optional action (e.g. 'toggleMenu' for menu button).
+    | Use the <x-pwa::nav> component and pass the menu slot for sheet content.
+    |
+    | Theming: Optional Tailwind class strings. Omit any key to use the default.
+    | - bar_class: Bar container (bg, border, shadow)
+    | - bar_item_inactive_class: Inactive tab icon + label
+    | - bar_item_hover_class: Hover state for inactive items
+    | - active_color_class: Active tab and open menu button
+    | - sheet_backdrop_class: Backdrop overlay
+    | - sheet_panel_class: Sheet panel (bg, radius, shadow)
+    | - sheet_header_border_class: Header bottom border
+    | - sheet_title_class: Menu title text
+    | - sheet_close_class: Close button
+    |
+    */
+    'navigation' => [
+        'padding_bottom' => '4rem',
+        'bar' => [],
+        'active_color_class' => 'text-amber-500',
+        'bar_class' => 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-800/50 shadow-[0_-1px_10px_rgba(0,0,0,0.05)]',
+        'bar_item_inactive_class' => 'text-gray-500 dark:text-gray-400',
+        'bar_item_hover_class' => 'group-hover:text-amber-400',
+        'sheet_backdrop_class' => 'bg-gray-500/75 dark:bg-gray-900/75',
+        'sheet_panel_class' => 'bg-white dark:bg-gray-900 rounded-t-2xl shadow-xl',
+        'sheet_header_border_class' => 'border-gray-200 dark:border-gray-800',
+        'sheet_title_class' => 'text-gray-900 dark:text-white',
+        'sheet_close_class' => 'text-gray-400 hover:text-gray-500 dark:hover:text-gray-300',
+    ],
 ];

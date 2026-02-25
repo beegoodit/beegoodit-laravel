@@ -110,6 +110,43 @@ This will automatically register:
 - **Messages**: Detailed delivery log and manual hold/release controls.
 - **Subscriptions**: Transparency into active browser clients and diagnostic tests.
 
+### 5. Optional: PWA navigation (bottom bar + menu sheet)
+
+For standalone PWA mode, the browser hides the URL bar. You can add an in-app bottom navigation bar and slide-up menu using the `<x-pwa::nav>` component.
+
+1. **Configure bar items** in `config/pwa.php` under `navigation.bar`: set an array of items or a closure that returns items. Each item: `label`, `icon` (Heroicon name when Filament is present), `url`, optional `active` (bool), optional `action` (e.g. `'toggleMenu'` for the menu button).
+2. **Include the component** in your layout and pass the **menu** slot with your content (auth links, legal, etc.):
+
+```blade
+<x-pwa::nav :items="value(config('pwa.navigation.bar'))" :menu-title="__('Menu')">
+    <x-slot:menu>
+        @auth
+            <a href="{{ url('/me/profile') }}">...</a>
+        @else
+            <a href="{{ route('login') }}">{{ __('Log In') }}</a>
+        @endauth
+    </x-slot:menu>
+</x-pwa::nav>
+```
+
+Icons use Filament’s Heroicons when available; otherwise a simple fallback is shown. Set `navigation.active_color_class` (e.g. `text-primary-600 dark:text-primary-400`) to match your theme; default is amber. The nav adds padding to `main`, `.fi-main`, and `.fi-sidebar` for use on Filament dashboards. Default `navigation.bar` is `[]` (opt-in).
+
+**Theming with Tailwind:** You can override the nav look with optional Tailwind class strings under `config/pwa.php` → `navigation`. Each key defaults to the current look; omit any key to keep the default.
+
+| Key | Purpose |
+|-----|---------|
+| `bar_class` | Bar container (bg, border, shadow) |
+| `bar_item_inactive_class` | Inactive tab icon + label |
+| `bar_item_hover_class` | Hover state for inactive items |
+| `active_color_class` | Active tab and open menu button |
+| `sheet_backdrop_class` | Backdrop overlay |
+| `sheet_panel_class` | Sheet panel (bg, radius, shadow) |
+| `sheet_header_border_class` | Header bottom border |
+| `sheet_title_class` | Menu title text |
+| `sheet_close_class` | Close button |
+
+Example: set `'active_color_class' => 'text-primary-600 dark:text-primary-400'` to match your app's primary color.
+
 ## Features
 - ✅ **PWA manifest.json** installation support
 - ✅ **Push Notifications** via Web Push (VAPID)

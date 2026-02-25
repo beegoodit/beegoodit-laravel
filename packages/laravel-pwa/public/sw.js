@@ -1,11 +1,31 @@
 const CACHE_NAME = 'app-v1';
 const urlsToCache = [
-  '/',
   '/build/assets/app.css',
   '/build/assets/app.js',
 ];
 
-// Install event - cache essential resources
+const STATIC_ASSET_EXT = /\.(js|css|png|jpg|jpeg|svg|gif|ico|woff|woff2|ttf|eot)(\?.*)?$/i;
+
+function isStaticAsset(request) {
+  if (request.method !== 'GET') {
+    return false;
+  }
+  try {
+    const url = new URL(request.url);
+    if (url.origin !== self.location.origin) {
+      return false;
+    }
+    const path = url.pathname;
+    if (path === '/' || path === '/favicon.ico') {
+      return false;
+    }
+    return path.startsWith('/build/') || STATIC_ASSET_EXT.test(path);
+  } catch {
+    return false;
+  }
+}
+
+// Install event - cache essential resources (e.g. in dev or with hashed assets, precache may 404; SW still activates)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -15,6 +35,7 @@ self.addEventListener('install', (event) => {
       })
       .catch((error) => {
         console.log('[ServiceWorker] Cache failed:', error);
+        return Promise.resolve();
       })
   );
   self.skipWaiting();
@@ -37,11 +58,9 @@ self.addEventListener('activate', (event) => {
   return self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - only handle GET same-origin static assets; everything else uses default (network)
 self.addEventListener('fetch', (event) => {
-  // Skip service worker for navigation requests to allow redirects
-  if (event.request.mode === 'navigate') {
-    event.respondWith(fetch(event.request));
+  if (!isStaticAsset(event.request)) {
     return;
   }
 
@@ -61,7 +80,7 @@ self.addEventListener('fetch', (event) => {
             const responseToCache = response.clone();
 
             // Cache static assets only
-            if (event.request.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|woff|woff2|ttf|eot)$/)) {
+            if (event.request.url.match(/\.(js|css|png|jpg|jpeg|svg|gif|ico|woff|woff2|ttf|eot)$/i)) {
               caches.open(CACHE_NAME)
                 .then((cache) => {
                   cache.put(event.request, responseToCache);
@@ -74,6 +93,9 @@ self.addEventListener('fetch', (event) => {
       })
       .catch(() => {
         console.log('[ServiceWorker] Fetch failed');
+        return fetch(event.request).catch(
+          () => new Response('', { status: 503, statusText: 'Service Unavailable' })
+        );
       })
   );
 });
