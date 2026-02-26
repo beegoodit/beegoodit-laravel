@@ -104,4 +104,19 @@ return [
         'sheet_title_class' => 'text-gray-900 dark:text-white',
         'sheet_close_class' => 'text-gray-400 hover:text-gray-500 dark:hover:text-gray-300',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | PWA Top Nav (optional fixed header)
+    |--------------------------------------------------------------------------
+    |
+    | Optional fixed top bar for logo + actions. Use <x-pwa::header> and pass
+    | your content via the default slot. header_class controls the bar look;
+    | padding_top is applied to main, .fi-main, .fi-sidebar so content clears.
+    |
+    */
+    'header' => [
+        'header_class' => 'fixed top-0 inset-x-0 z-[105] bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm',
+        'padding_top' => '5rem',
+    ],
 ];

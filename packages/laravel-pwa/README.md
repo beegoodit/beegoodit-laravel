@@ -147,6 +147,21 @@ Icons use Filament’s Heroicons when available; otherwise a simple fallback is 
 
 Example: set `'active_color_class' => 'text-primary-600 dark:text-primary-400'` to match your app's primary color.
 
+### 5a. Optional: PWA top nav (header)
+
+For a fixed top bar (e.g. logo + actions), use `<x-pwa::header>`. Pass your content via the default slot. The component adds `padding-top` to `main`, `.fi-main`, and `.fi-sidebar` so content clears the header; control it via `config/pwa.php` → `header.padding_top`. Customize the bar look with `header.header_class`.
+
+```blade
+<x-pwa::header>
+    <nav class="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <a href="{{ url('/') }}" class="font-bold text-gray-900 dark:text-white">{{ config('app.name') }}</a>
+        <a href="{{ url('/admin') }}" class="text-sm font-medium text-amber-600 dark:text-amber-400">{{ __('Dashboard') }}</a>
+    </nav>
+</x-pwa::header>
+```
+
+Config: `pwa.header.header_class` (Tailwind classes for the bar), `pwa.header.padding_top` (e.g. `5rem` or `6rem`).
+
 ## Features
 - ✅ **PWA manifest.json** installation support
 - ✅ **Push Notifications** via Web Push (VAPID)
