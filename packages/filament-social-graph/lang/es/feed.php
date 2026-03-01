@@ -1,0 +1,10 @@
+<?php
+
+return [
+    'title' => 'Feed',
+    'home' => 'Feed principal',
+    'composer_placeholder' => '¿Qué quieres compartir?',
+    'post' => 'Publicar',
+    'no_items' => 'Aún no hay elementos en el feed.',
+    'load_more' => 'Cargar más',
+];

@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Elemento del feed',
+    'plural' => 'Elementos del feed',
+    'subject' => 'Asunto',
+    'body' => 'Contenido',
+    'visibility' => 'Visibilidad',
+    'visibility_public' => 'Público',
+    'visibility_unlisted' => 'No listado',
+    'visibility_private' => 'Privado',
+    'visibility_followers' => 'Solo seguidores',
+    'actor' => 'Autor',
+    'actor_required_hint' => 'Selecciona un actor o configura actor_models en config/filament-social-graph.php. Ejecuta php artisan config:clear si ya lo has hecho.',
+    'attachments' => 'Adjuntos',
+    'attachments_count' => 'Adjuntos',
+    'attachments_files' => 'Archivos',
+    'created' => 'Elemento del feed creado.',
+    'created_at' => 'Creado el',
+    'body_required' => 'El campo contenido es obligatorio.',
+    'deleted_at' => 'Eliminado el',
+    'navigation_group' => 'Red social',
+    'section_metadata' => 'Metadatos',
+    'section_content' => 'Contenido',
+];

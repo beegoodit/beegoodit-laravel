@@ -56,4 +56,15 @@ class RegisterTeam extends RegisterTenant
     {
         return false;
     }
+
+    /**
+     * Required by Filament NavigationManager (which calls this on every panel page).
+     * RegisterTenant extends SimplePage, not Page, so this method is not inherited.
+     */
+    public static function registerNavigationItems(): void
+    {
+        if (! static::shouldRegisterNavigation()) {
+            return;
+        }
+    }
 }

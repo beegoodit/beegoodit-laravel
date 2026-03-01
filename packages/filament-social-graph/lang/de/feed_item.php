@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Feed-Beitrag',
+    'plural' => 'Feed-Beiträge',
+    'subject' => 'Betreff',
+    'body' => 'Inhalt',
+    'visibility' => 'Sichtbarkeit',
+    'visibility_public' => 'Öffentlich',
+    'visibility_unlisted' => 'Unaufgelistet',
+    'visibility_private' => 'Privat',
+    'visibility_followers' => 'Nur Abonnenten',
+    'actor' => 'Autor',
+    'actor_required_hint' => 'Autor auswählen oder actor_models in config/filament-social-graph.php konfigurieren. Bei Bedarf php artisan config:clear ausführen.',
+    'attachments' => 'Anhänge',
+    'attachments_count' => 'Anhänge',
+    'attachments_files' => 'Dateien',
+    'created' => 'Feed-Beitrag erstellt.',
+    'created_at' => 'Erstellt am',
+    'body_required' => 'Das Feld Inhalt ist erforderlich.',
+    'deleted_at' => 'Gelöscht am',
+    'navigation_group' => 'Soziales Netzwerk',
+    'section_metadata' => 'Metadaten',
+    'section_content' => 'Inhalt',
+];

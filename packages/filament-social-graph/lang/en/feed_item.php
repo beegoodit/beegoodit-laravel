@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Feed Item',
+    'plural' => 'Feed Items',
+    'subject' => 'Subject',
+    'body' => 'Body',
+    'visibility' => 'Visibility',
+    'visibility_public' => 'Public',
+    'visibility_unlisted' => 'Unlisted',
+    'visibility_private' => 'Private',
+    'visibility_followers' => 'Followers Only',
+    'actor' => 'Actor',
+    'actor_required_hint' => 'Select an actor or configure actor_models in config/filament-social-graph.php. Run php artisan config:clear if you have already.',
+    'attachments' => 'Attachments',
+    'attachments_count' => 'Attachments',
+    'attachments_files' => 'Files',
+    'created' => 'Feed item created.',
+    'created_at' => 'Created At',
+    'body_required' => 'The body field is required.',
+    'deleted_at' => 'Deleted At',
+    'navigation_group' => 'Social Graph',
+    'section_metadata' => 'Metadata',
+    'section_content' => 'Content',
+];

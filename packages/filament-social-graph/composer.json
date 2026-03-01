@@ -1,0 +1,45 @@
+{
+    "name": "beegoodit/filament-social-graph",
+    "description": "Actor-centric feeds, subscriptions, and social graph primitives for Filament",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "filament", "social", "feed", "subscriptions", "beegoodit"],
+    "authors": [{"name": "BeegoodIT", "email": "dev@beegoodit.de"}],
+    "require": {
+        "beegoodit/eloquent-userstamps": "@dev",
+        "filament/filament": "^4.0 || ^5.0",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0",
+        "livewire/flux": "^2.0",
+        "livewire/livewire": "^3.0|^4.0",
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "beegoodit/laravel-file-storage": "@dev",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0"
+    },
+    "suggest": {
+        "beegoodit/laravel-file-storage": "Required for attachment uploads (Phase 1.7)"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\FilamentSocialGraph\\": "src/",
+            "BeegoodIT\\FilamentSocialGraph\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\FilamentSocialGraph\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["BeegoodIT\\FilamentSocialGraph\\FilamentSocialGraphServiceProvider"]
+        }
+    },
+    "config": {"sort-packages": true},
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
