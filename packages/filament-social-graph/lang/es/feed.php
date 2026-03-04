@@ -7,4 +7,8 @@ return [
     'post' => 'Publicar',
     'no_items' => 'Aún no hay elementos en el feed.',
     'load_more' => 'Cargar más',
+    'edit_title' => 'Editar elemento del feed',
+    'edit' => 'Editar',
+    'update' => 'Actualizar',
+    'cancel' => 'Cancelar',
 ];

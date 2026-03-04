@@ -6,7 +6,7 @@ use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreFeedItemRequest extends FormRequest
+class UpdateFeedItemRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -28,6 +28,8 @@ class StoreFeedItemRequest extends FormRequest
             'visibility' => ['required', 'string', Rule::enum(Visibility::class)],
             'attachments' => ['nullable', 'array', 'max:'.$maxFiles],
             'attachments.*' => ['required', 'file', 'max:'.$maxKb, 'mimes:'.implode(',', $mimes)],
+            'attachments_remove' => ['nullable', 'array'],
+            'attachments_remove.*' => ['string'],
         ];
     }
 

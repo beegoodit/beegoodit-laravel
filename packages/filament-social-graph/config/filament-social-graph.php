@@ -30,6 +30,15 @@ return [
     'entity_models' => [],
 
     /*
+     * Attachment limits for feed item create/edit (public forms).
+     */
+    'attachments' => [
+        'max_files' => 5,
+        'max_file_size_kb' => 5120,
+        'allowed_mimes' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'],
+    ],
+
+    /*
      * Feed page configuration for the public/home feed.
      */
     'feed_page' => [
@@ -38,7 +47,11 @@ return [
         'show_composer' => true,
         'show_composer_on_entity_feed' => true,
         'authorize_create_ability' => 'create', // Ability name for Gate (composer visibility + submit auth)
+        'authorize_update_ability' => 'update',
+        'authorize_delete_ability' => 'delete',
         'actor_feed_url_resolver' => null, // Closure(actor) => url, or null for default
+        'feed_item_edit_url_resolver' => null, // Closure(FeedItem $feedItem): ?string, or null to hide edit link
+        'feed_item_destroy_url_resolver' => null, // Closure(FeedItem $feedItem): ?string, or null to hide delete
     ],
 
 ];

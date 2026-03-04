@@ -68,4 +68,128 @@ class FeedItemPolicyTest extends TestCase
 
         $this->assertFalse(Gate::allows('create', [FeedItem::class, $entity]));
     }
+
+    public function test_guest_cannot_update_feed_item(): void
+    {
+        $this->assertGuest();
+
+        $actor = TestUser::create([
+            'name' => 'Actor',
+            'email' => 'actor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $feedItem = FeedItem::create([
+            'actor_type' => TestUser::class,
+            'actor_id' => $actor->getKey(),
+            'body' => 'Test',
+            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
+        ]);
+
+        $this->assertFalse(Gate::allows('update', $feedItem));
+    }
+
+    public function test_authenticated_user_can_update_feed_item_when_actor_in_actor_models(): void
+    {
+        $user = TestUser::create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $this->actingAs($user);
+
+        $actor = TestUser::create([
+            'name' => 'Actor',
+            'email' => 'actor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+
+        $feedItem = FeedItem::create([
+            'actor_type' => TestUser::class,
+            'actor_id' => $actor->getKey(),
+            'body' => 'Test',
+            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
+        ]);
+
+        $this->assertTrue(Gate::allows('update', $feedItem));
+    }
+
+    public function test_authenticated_user_cannot_update_feed_item_when_actor_not_in_actor_models(): void
+    {
+        $user = TestUser::create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $this->actingAs($user);
+
+        $actor = TestUser::create([
+            'name' => 'Actor',
+            'email' => 'actor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        config()->set('filament-social-graph.actor_models', []);
+
+        $feedItem = FeedItem::create([
+            'actor_type' => TestUser::class,
+            'actor_id' => $actor->getKey(),
+            'body' => 'Test',
+            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
+        ]);
+
+        $this->assertFalse(Gate::allows('update', $feedItem));
+    }
+
+    public function test_guest_cannot_delete_feed_item(): void
+    {
+        $this->assertGuest();
+
+        $actor = TestUser::create([
+            'name' => 'Actor',
+            'email' => 'actor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $feedItem = FeedItem::create([
+            'actor_type' => TestUser::class,
+            'actor_id' => $actor->getKey(),
+            'body' => 'Test',
+            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
+        ]);
+
+        $this->assertFalse(Gate::allows('delete', $feedItem));
+    }
+
+    public function test_authenticated_user_can_delete_feed_item_when_actor_in_actor_models(): void
+    {
+        $user = TestUser::create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $this->actingAs($user);
+
+        $actor = TestUser::create([
+            'name' => 'Actor',
+            'email' => 'actor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+
+        $feedItem = FeedItem::create([
+            'actor_type' => TestUser::class,
+            'actor_id' => $actor->getKey(),
+            'body' => 'Test',
+            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
+        ]);
+
+        $this->assertTrue(Gate::allows('delete', $feedItem));
+    }
 }

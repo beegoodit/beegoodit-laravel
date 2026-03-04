@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignUuid('created_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignUuid('updated_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->index(['actor_type', 'actor_id']);
         });

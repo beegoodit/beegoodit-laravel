@@ -51,10 +51,11 @@ In `config/filament-social-graph.php`:
 - **tenancy**: Enable/disable team scoping; configure `team_model` and `team_resolver`.
 - **actor_models**: **Required for CRUD.** Models that can post and subscribe (e.g. `[\App\Models\User::class, \App\Models\Team::class]`). The actor selector in `FeedItemResource` and `SubscriptionResource` is hidden when empty.
 - **entity_models**: Models that can have entity feeds (e.g. `[\App\Models\Team::class]`).
-- **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer visibility, **authorize_create_ability** (default `'create'`) — ability name used when checking whether to show the composer and when authorizing feed item creation (see Authorization).
-
-Attachments use Filament's `FileUpload::multiple()` and are stored as JSON in `feed_items.attachments`. Files go to `feed-item-attachments/` on the default disk (public or S3). Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient; Livewire temporary upload rules apply.
+- **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer visibility, **authorize_create_ability** (default `'create'`), **authorize_update_ability** (default `'update'`), **authorize_delete_ability** (default `'delete'`), **feed_item_edit_url_resolver** and **feed_item_destroy_url_resolver** (closures for Edit/Delete links on feed item cards). See Authorization.
+- **attachments**: Limits for public feed create/edit forms: **max_files** (default `5`), **max_file_size_kb** (default `5120`), **allowed_mimes** (default `['jpg','jpeg','png','gif','webp','pdf']`). Used by `StoreFeedItemRequest` and `UpdateFeedItemRequest`.
 - **resources.enabled**: Set to `false` to disable `FeedItemResource` and `SubscriptionResource` when registering the plugin.
+
+**Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
 
 ## Register the plugin
 
@@ -82,7 +83,7 @@ The plugin does **not** auto-register. Add it explicitly to the Filament panel w
 |------------|--------|
 | FeedItemResource, SubscriptionResource (List, Create, View, Edit) | Register plugin on desired panel (Admin or Portal) |
 | Form schema, table columns, filters | Configure `actor_models` for your domain (User, Team, Person, etc.) |
-| Soft deletes, userstamps on models | Publish and run migrations (including team_id if tenancy needed) |
+| Userstamps on models | Publish and run migrations (including team_id if tenancy needed) |
 | Translations, config defaults | Add `HasSocialFeed` / `HasSocialSubscriptions` traits to models |
 
 ## FeedItem CRUD setup checklist
@@ -128,10 +129,15 @@ Include `<livewire:filament-social-graph.feed-page />` or `<livewire:filament-so
 
 For entity feeds (e.g. team feed), the preferred approach is **GET index + POST store** on the same URL using the package’s `FeedController` and `CreateFeedItemForEntity` action. The app registers the routes and binds the entity (e.g. `{team:slug}`); the package provides the controller, form request, action, and views. The form POSTs to the current URL; no `entityType`/`entityId` in the form. Feed items are created with `team_id` from server-only context (tenancy config / Filament tenant), never from request input.
 
-**App:** Register two routes in your route group (e.g. under teams):
+**App:** Register routes in your route group (e.g. under teams):
 
 - `GET /{team:slug}/feed` → `[FeedController::class, 'index']`
 - `POST /{team:slug}/feed` → `[FeedController::class, 'store']`
+- `GET /{team:slug}/feed/items/{feedItem}/edit` → `[FeedController::class, 'edit']`
+- `PUT /{team:slug}/feed/items/{feedItem}` → `[FeedController::class, 'update']`
+- `DELETE /{team:slug}/feed/items/{feedItem}` → `[FeedController::class, 'destroy']`
+
+`{feedItem}` is the feed item’s id (UUID). The controller resolves the item and ensures it belongs to the entity (actor scope). Edit/delete use **authorize_update_ability** and **authorize_delete_ability** (default `'update'` and `'delete'`). To show Edit/Delete links on feed item cards, set **feed_item_edit_url_resolver** and **feed_item_destroy_url_resolver** in `feed_page` to closures that accept a `FeedItem` and return the edit/destroy URL (or `null` to hide).
 
 Optionally set `feed_page.index_view` in config to an app view that wraps the package feed content (e.g. breadcrumb + `@include('filament-social-graph::feed.content', ['entity' => $entity, 'showComposer' => $showComposer])`).
 

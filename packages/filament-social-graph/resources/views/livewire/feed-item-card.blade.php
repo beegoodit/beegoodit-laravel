@@ -1,5 +1,5 @@
 <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-    <div class="mb-2 flex items-center gap-2">
+    <div class="mb-2 flex flex-wrap items-center gap-2">
         <span class="font-medium text-gray-900 dark:text-white">
             {{ $feedItem->actor?->name ?? class_basename($feedItem->actor_type) }}
         </span>
@@ -10,6 +10,26 @@
             <span class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300">
                 {{ $feedItem->visibility->label() }}
             </span>
+        @endif
+        @php
+            $editUrlResolver = config('filament-social-graph.feed_page.feed_item_edit_url_resolver');
+            $destroyUrlResolver = config('filament-social-graph.feed_page.feed_item_destroy_url_resolver');
+        @endphp
+        @if($editUrlResolver && \Illuminate\Support\Facades\Gate::allows('update', $feedItem))
+            @php $editUrl = $editUrlResolver($feedItem); @endphp
+            @if($editUrl)
+                <a href="{{ $editUrl }}" class="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">{{ __('filament-social-graph::feed.edit') }}</a>
+            @endif
+        @endif
+        @if($destroyUrlResolver && \Illuminate\Support\Facades\Gate::allows('delete', $feedItem))
+            @php $destroyUrl = $destroyUrlResolver($feedItem); @endphp
+            @if($destroyUrl)
+                <form method="POST" action="{{ $destroyUrl }}" class="inline" x-data x-on:submit="if (!confirm($el.getAttribute('data-confirm'))) $event.preventDefault()" data-confirm="{{ e(__('filament-social-graph::feed_item.delete_confirm')) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">{{ __('filament-social-graph::feed_item.delete') }}</button>
+                </form>
+            @endif
         @endif
     </div>
 

@@ -5,6 +5,8 @@ namespace BeegoodIT\FilamentSocialGraph\Tests;
 use BeegoodIT\FilamentSocialGraph\Actions\CreateFeedItemForEntity;
 use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 uses(TestCase::class);
 
@@ -41,6 +43,34 @@ test('it creates a feed item for an entity that uses HasSocialFeed', function ()
         'actor_id' => $user->id,
         'body' => 'Hello world',
     ]);
+});
+
+test('it creates feed item with attachments and stores files', function (): void {
+    Storage::fake('public');
+
+    $user = TestUser::create([
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $file = UploadedFile::fake()->image('photo.jpg');
+
+    $action = new CreateFeedItemForEntity;
+    $data = [
+        'body' => 'With photo',
+        'visibility' => Visibility::Public,
+        'attachments' => [$file],
+    ];
+
+    $feedItem = $action($user, $data);
+
+    expect($feedItem->attachments)->toBeArray()
+        ->and($feedItem->attachments)->toHaveCount(1);
+
+    $path = $feedItem->attachments[0];
+    expect($path)->toContain('feed-item-attachments')
+        ->and(Storage::disk('public')->exists($path))->toBeTrue();
 });
 
 test('it throws when entity does not use HasSocialFeed', function (): void {

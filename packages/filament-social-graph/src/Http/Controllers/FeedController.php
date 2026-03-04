@@ -3,7 +3,10 @@
 namespace BeegoodIT\FilamentSocialGraph\Http\Controllers;
 
 use BeegoodIT\FilamentSocialGraph\Actions\CreateFeedItemForEntity;
+use BeegoodIT\FilamentSocialGraph\Actions\DeleteFeedItem;
+use BeegoodIT\FilamentSocialGraph\Actions\UpdateFeedItem;
 use BeegoodIT\FilamentSocialGraph\Http\Requests\StoreFeedItemRequest;
+use BeegoodIT\FilamentSocialGraph\Http\Requests\UpdateFeedItemRequest;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -38,10 +41,78 @@ class FeedController
         $ability = config('filament-social-graph.feed_page.authorize_create_ability', 'create');
         Gate::authorize($ability, [FeedItem::class, $entity]);
 
-        $action = new CreateFeedItemForEntity;
-        $action($entity, $request->validated());
+        CreateFeedItemForEntity::run($entity, $request->validated());
 
         return redirect()->back()->with('success', __('filament-social-graph::feed_item.created'));
+    }
+
+    public function edit(Request $request): View
+    {
+        $feedItemId = $request->route('feedItem');
+        $entity = $this->entityFromRoute($request);
+        $feedItemModel = $this->resolveFeedItemForEntity($request, $feedItemId);
+
+        $ability = config('filament-social-graph.feed_page.authorize_update_ability', 'update');
+        Gate::authorize($ability, $feedItemModel);
+
+        $layout = config('filament-social-graph.feed_page.layout', 'filament-social-graph::layouts.app');
+        $title = __('filament-social-graph::feed.edit_title');
+        $updateUrl = preg_replace('#/edit$#', '', $request->url());
+        $feedUrl = preg_replace('#/feed/items/[^/]+/edit$#', '/feed', $request->url());
+
+        return view('filament-social-graph::feed.edit', [
+            'entity' => $entity,
+            'feedItem' => $feedItemModel,
+            'layout' => $layout,
+            'title' => $title,
+            'updateUrl' => $updateUrl,
+            'feedUrl' => $feedUrl,
+        ]);
+    }
+
+    public function update(UpdateFeedItemRequest $request): RedirectResponse
+    {
+        $feedItemId = $request->route('feedItem');
+        $entity = $this->entityFromRoute($request);
+        $feedItem = $this->resolveFeedItemForEntity($request, $feedItemId);
+
+        Gate::authorize('update', $feedItem);
+
+        UpdateFeedItem::run($feedItem, $request->validated());
+
+        return redirect()->back()->with('success', __('filament-social-graph::feed_item.updated'));
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $feedItemId = $request->route('feedItem');
+        $entity = $this->entityFromRoute($request);
+        $feedItem = $this->resolveFeedItemForEntity($request, $feedItemId);
+
+        $ability = config('filament-social-graph.feed_page.authorize_delete_ability', 'delete');
+        Gate::authorize($ability, $feedItem);
+
+        DeleteFeedItem::run($feedItem);
+
+        return redirect()->back()->with('success', __('filament-social-graph::feed_item.deleted'));
+    }
+
+    /**
+     * Resolve feed item by id and ensure it belongs to the entity from the route.
+     */
+    protected function resolveFeedItemForEntity(Request $request, string $feedItemId): FeedItem
+    {
+        $entity = $this->entityFromRoute($request);
+        $feedItem = FeedItem::findOrFail($feedItemId);
+
+        $actorMatches = $feedItem->actor_type === $entity->getMorphClass()
+            && (string) $feedItem->actor_id === (string) $entity->getKey();
+
+        if (! $actorMatches) {
+            abort(404);
+        }
+
+        return $feedItem;
     }
 
     /**

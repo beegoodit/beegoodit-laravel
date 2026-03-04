@@ -10,14 +10,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FeedItem extends Model
 {
     use HasFactory;
     use HasUserStamps;
     use HasUuids;
-    use SoftDeletes;
 
     /**
      * @var array<int, string>
@@ -69,6 +67,19 @@ class FeedItem extends Model
     public static function getStorageDisk(): string
     {
         return config('filesystems.default') === 's3' ? 's3' : 'public';
+    }
+
+    /**
+     * Storage directory for attachments: feed-item-attachments or feed-item-attachments/{team_id} when tenancy enabled.
+     */
+    public static function getAttachmentDirectory(?string $teamId = null): string
+    {
+        $base = 'feed-item-attachments';
+        if (! config('filament-social-graph.tenancy.enabled') || $teamId === null) {
+            return $base;
+        }
+
+        return $base.'/'.$teamId;
     }
 
     protected function getTeamModel(): string
