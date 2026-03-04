@@ -5,7 +5,7 @@ Actor-centric feeds, subscriptions, and social graph primitives for Filament app
 ## Features
 
 - **Polymorphic actors**: Any model (User, Team, etc.) can post feed items and subscribe to others via `HasSocialFeed` and `HasSocialSubscriptions`.
-- **Feed items**: Subject, body, visibility (Public, Unlisted, Private, Followers), attachments (multi-file upload stored as JSON paths).
+- **Feed items**: Subject, body (WYSIWYG rich text; stored as HTML, sanitized on display), visibility (Public, Unlisted, Private, Followers), attachments (multi-file upload stored as JSON paths; client-side preview on create/edit).
 - **Subscriptions**: Subscribe/unsubscribe to actors; home feed aggregates items from subscribed feeds.
 - **Entity feeds**: Feeds scoped to entities (e.g. team feed, project feed) alongside the global home feed.
 - **Tenancy**: Optional team scoping for multi-tenant setups.
@@ -56,6 +56,8 @@ In `config/filament-social-graph.php`:
 - **resources.enabled**: Set to `false` to disable `FeedItemResource` and `SubscriptionResource` when registering the plugin.
 
 **Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
+
+**Public feed body and attachments:** The public create/edit forms (Blade views) use a **WYSIWYG editor** (Quill via CDN) for the body; the form submits HTML, which is stored as-is and **sanitized on output** in the feed item card (safe tags only; script and unsafe tags are stripped). Existing items with markdown body are still rendered as markdown. The Quill editor supports **dark mode**: when a parent element has the `.dark` class (e.g. Tailwind/Flux), the package injects CSS so the toolbar and container match zinc-based form styling. **File preview** is client-side only (Alpine.js): after selecting files, image thumbnails and file names are shown before submit; no server round-trip.
 
 ## Register the plugin
 

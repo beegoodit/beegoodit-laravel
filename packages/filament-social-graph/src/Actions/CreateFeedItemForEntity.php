@@ -92,7 +92,7 @@ class CreateFeedItemForEntity
         if ($resolver !== null && is_callable($resolver)) {
             $team = $resolver();
         }
-        if ($team === null && class_exists(Filament::class)) {
+        if ($team === null && class_exists(Filament::class) && app()->bound('filament')) {
             $team = Filament::getTenant();
         }
 

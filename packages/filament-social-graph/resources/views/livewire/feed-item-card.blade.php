@@ -40,8 +40,19 @@
     @endif
 
     @if($feedItem->body)
+        @php
+            $body = $feedItem->body;
+            $isHtml = str_contains($body, '<') && str_contains($body, '>');
+            if ($isHtml) {
+                $body = preg_replace('/<script\b[^>]*>.*?<\/script>/si', '', $body);
+                $allowedTags = '<p><br><strong><em><b><i><u><ul><ol><li><a><h1><h2><h3><h4><blockquote>';
+                $rendered = strip_tags($body, $allowedTags);
+            } else {
+                $rendered = \Illuminate\Support\Str::markdown($body);
+            }
+        @endphp
         <div class="prose prose-sm dark:prose-invert max-w-none">
-            {!! \Illuminate\Support\Str::markdown($feedItem->body) !!}
+            {!! $rendered !!}
         </div>
     @endif
 
