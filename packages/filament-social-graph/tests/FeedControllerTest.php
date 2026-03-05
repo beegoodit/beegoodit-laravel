@@ -290,6 +290,6 @@ class FeedControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertSee(__('filament-social-graph::feed_item.attachments_drop_placeholder'), false);
-        $response->assertSee('name="attachments[]"', false);
+        $response->assertSee('feed-composer-attachments', false);
     }
 }

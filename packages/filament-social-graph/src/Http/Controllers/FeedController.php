@@ -22,7 +22,8 @@ class FeedController
         $layout = config('filament-social-graph.feed_page.layout', 'filament-social-graph::layouts.app');
         $ability = config('filament-social-graph.feed_page.authorize_create_ability', 'create');
         $showComposer = Gate::allows($ability, [FeedItem::class, $entity]);
-
+        $stepTitle = "feed";
+        $quillId = 'feed-body-editor';
         $title = ($entity->name ?? class_basename($entity)).' - '.__('filament-social-graph::feed.title');
         $viewName = config('filament-social-graph.feed_page.index_view') ?: 'filament-social-graph::feed.index';
         $data = [
@@ -30,6 +31,9 @@ class FeedController
             'showComposer' => $showComposer,
             'layout' => $layout,
             'title' => $title,
+            'stepTitle' => $stepTitle,
+            'showComposer' => $showComposer,
+            'quillId' => $quillId,
         ];
 
         return view($viewName, $data);

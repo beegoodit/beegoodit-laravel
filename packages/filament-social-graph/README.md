@@ -57,7 +57,16 @@ In `config/filament-social-graph.php`:
 
 **Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
 
-**Public feed body and attachments:** The public create/edit forms (Blade views) use a **WYSIWYG editor** (Quill via CDN) for the body; the form submits HTML, which is stored as-is and **sanitized on output** in the feed item card (safe tags only; script and unsafe tags are stripped). Existing items with markdown body are still rendered as markdown. The Quill editor supports **dark mode**: when a parent element has the `.dark` class (e.g. Tailwind/Flux), the package injects CSS so the toolbar and container match zinc-based form styling. The **attachment field** supports drag-and-drop: users can drop files onto the zone or click to select; **file preview** is client-side only (Alpine.js): after selecting files, image thumbnails and file names are shown before submit; no server round-trip.
+**Public feed body and attachments:** The public create and edit forms are **Livewire components** (FeedComposer and FeedEditForm). Attachments are uploaded **one per request** to Livewire temporary storage, so the combined submit only sends subject, body, and file references—avoiding PHP `post_max_size` limits when many or large files are added. The forms use a **WYSIWYG editor** (Quill via CDN) for the body; HTML is stored as-is and **sanitized on output** in the feed item card (safe tags only; script and unsafe tags are stripped). Existing items with markdown body are still rendered as markdown. The Quill editor supports **dark mode**: when a parent element has the `.dark` class (e.g. Tailwind/Flux), the package injects CSS so the toolbar and container match zinc-based form styling. The **attachment field** supports drag-and-drop: users can drop files onto the zone or click to select; file preview and remove-before-submit are shown in the component.
+
+### Flux, Livewire and Quill
+
+When using **Flux UI** components inside a Livewire component that also uses the **Quill** editor:
+
+- **Avoid:** Loading Quill via `@push('styles')` / `@push('scripts')` and initialising it in `document.addEventListener('DOMContentLoaded', ...)`. That order (scripts in layout, init after DOM ready) leads to Livewire morphing the component DOM after Flux has already upgraded it; the new `<flux:*>` nodes are never upgraded, so labels and fields can disappear.
+- **Use instead:** Vanilla Quill load in the **same Blade view** as the component: a `<link>` for the theme CSS, the editor container, then `<script src="...quill.js">` and an inline script that runs `new Quill(...)` immediately (no `DOMContentLoaded`). Keep everything in document order and do not push Quill assets into the layout.
+
+The feed composer (and any similar “Livewire + Flux + Quill” form) should follow this pattern so Flux remains visible after Livewire hydration.
 
 ## Register the plugin
 
