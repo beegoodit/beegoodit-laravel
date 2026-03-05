@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Actions;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\Concerns\HasSocialFeed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Filament\Facades\Filament;
@@ -23,15 +22,9 @@ class CreateFeedItemForEntity
             );
         }
 
-        $visibility = $data['visibility'] ?? Visibility::Public;
-        if (! $visibility instanceof Visibility) {
-            $visibility = Visibility::from($visibility);
-        }
-
         $feedItem = $entity->createFeedItem([
             'subject' => $data['subject'] ?? null,
             'body' => $data['body'] ?? null,
-            'visibility' => $visibility,
         ]);
 
         if (config('filament-social-graph.tenancy.enabled')) {

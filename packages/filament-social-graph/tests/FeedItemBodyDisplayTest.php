@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Http\Controllers\FeedController;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +35,6 @@ class FeedItemBodyDisplayTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => '<p>Safe text</p><script>alert("evil")</script><strong>bold</strong>',
-            'visibility' => Visibility::Public,
         ]);
 
         $html = View::make('filament-social-graph::livewire.feed-item-card', ['feedItem' => $feedItem])->render();
@@ -59,7 +57,6 @@ class FeedItemBodyDisplayTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => '**Bold** and _italic_',
-            'visibility' => Visibility::Public,
         ]);
 
         $html = View::make('filament-social-graph::livewire.feed-item-card', ['feedItem' => $feedItem])->render();
@@ -86,7 +83,6 @@ class FeedItemBodyDisplayTest extends TestCase
         $htmlBody = '<p>Posted via form</p><script>document.steal()</script>';
         $response = $this->post(route('feed.store', ['entity' => $user->getKey()]), [
             'body' => $htmlBody,
-            'visibility' => Visibility::Public->value,
         ]);
 
         $response->assertRedirect();

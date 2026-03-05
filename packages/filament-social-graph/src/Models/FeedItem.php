@@ -4,7 +4,6 @@ namespace BeegoodIT\FilamentSocialGraph\Models;
 
 use BeegoodIT\EloquentUserstamps\HasUserStamps;
 use BeegoodIT\FilamentSocialGraph\Database\Factories\FeedItemFactory;
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +40,6 @@ class FeedItem extends Model
         'subject',
         'body',
         'attachments',
-        'visibility',
         'created_by_id',
         'updated_by_id',
     ];
@@ -50,7 +48,6 @@ class FeedItem extends Model
     {
         return [
             'attachments' => 'array',
-            'visibility' => Visibility::class,
         ];
     }
 

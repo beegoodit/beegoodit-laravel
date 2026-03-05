@@ -6,31 +6,32 @@
         <span class="text-sm text-gray-500 dark:text-gray-400">
             {{ $feedItem->created_at->diffForHumans() }}
         </span>
-        @if($feedItem->visibility)
-            <span class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                {{ $feedItem->visibility->label() }}
-            </span>
-        @endif
         @php
             $editUrlResolver = config('filament-social-graph.feed_page.feed_item_edit_url_resolver');
             $destroyUrlResolver = config('filament-social-graph.feed_page.feed_item_destroy_url_resolver');
         @endphp
-        @if($editUrlResolver && \Illuminate\Support\Facades\Gate::allows('update', $feedItem))
-            @php $editUrl = $editUrlResolver($feedItem); @endphp
-            @if($editUrl)
-                <a href="{{ $editUrl }}" class="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">{{ __('filament-social-graph::feed.edit') }}</a>
+        <div class="ml-auto flex items-center gap-2">
+            @if($editUrlResolver && \Illuminate\Support\Facades\Gate::allows('update', $feedItem))
+                @php $editUrl = $editUrlResolver($feedItem); @endphp
+                @if($editUrl)
+                    <flux:button href="{{ $editUrl }}" variant="outline" size="sm">
+                        {{ __('filament-social-graph::feed.edit') }}
+                    </flux:button>
+                @endif
             @endif
-        @endif
-        @if($destroyUrlResolver && \Illuminate\Support\Facades\Gate::allows('delete', $feedItem))
-            @php $destroyUrl = $destroyUrlResolver($feedItem); @endphp
-            @if($destroyUrl)
-                <form method="POST" action="{{ $destroyUrl }}" class="inline" x-data x-on:submit="if (!confirm($el.getAttribute('data-confirm'))) $event.preventDefault()" data-confirm="{{ e(__('filament-social-graph::feed_item.delete_confirm')) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">{{ __('filament-social-graph::feed_item.delete') }}</button>
-                </form>
+            @if($destroyUrlResolver && \Illuminate\Support\Facades\Gate::allows('delete', $feedItem))
+                @php $destroyUrl = $destroyUrlResolver($feedItem); @endphp
+                @if($destroyUrl)
+                    <form method="POST" action="{{ $destroyUrl }}" class="inline" x-data x-on:submit="if (!confirm($el.getAttribute('data-confirm'))) $event.preventDefault()" data-confirm="{{ e(__('filament-social-graph::feed_item.delete_confirm')) }}">
+                        @csrf
+                        @method('DELETE')
+                        <flux:button type="submit" variant="danger" size="sm">
+                            {{ __('filament-social-graph::feed_item.delete') }}
+                        </flux:button>
+                    </form>
+                @endif
             @endif
-        @endif
+        </div>
     </div>
 
     @if($feedItem->subject)

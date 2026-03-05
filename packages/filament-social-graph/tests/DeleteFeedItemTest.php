@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Actions\DeleteFeedItem;
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,7 +24,6 @@ test('it deletes feed item', function (): void {
         'actor_type' => TestUser::class,
         'actor_id' => $actor->getKey(),
         'body' => 'Test',
-        'visibility' => Visibility::Public,
     ]);
 
     $id = $feedItem->id;
@@ -51,7 +49,6 @@ test('it deletes stored attachment files when deleting feed item', function (): 
         'actor_type' => TestUser::class,
         'actor_id' => $actor->getKey(),
         'body' => 'With attachment',
-        'visibility' => Visibility::Public,
         'attachments' => [$path],
     ]);
 

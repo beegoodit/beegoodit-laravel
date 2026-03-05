@@ -24,7 +24,6 @@ class FeedPageTest extends TestCase
         $user->createFeedItem([
             'subject' => 'First Post',
             'body' => 'Content here',
-            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
         ]);
 
         Livewire::test(FeedList::class)

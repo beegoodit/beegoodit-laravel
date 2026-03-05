@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Http\Controllers\FeedController;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Gate;
@@ -57,7 +56,6 @@ class FeedControllerTest extends TestCase
         $response = $this->post(route('feed.store', ['entity' => $user->getKey()]), [
             'body' => 'Hello from controller',
             'subject' => 'Test subject',
-            'visibility' => Visibility::Public->value,
         ]);
 
         $response->assertRedirect();
@@ -100,7 +98,6 @@ class FeedControllerTest extends TestCase
 
         $response = $this->post(route('feed.store', ['entity' => $user->getKey()]), [
             'body' => 'Hello',
-            'visibility' => Visibility::Public->value,
         ]);
 
         $response->assertForbidden();
@@ -119,7 +116,6 @@ class FeedControllerTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => 'Original',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
@@ -144,7 +140,6 @@ class FeedControllerTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => 'Original',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
@@ -172,7 +167,6 @@ class FeedControllerTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $otherUser->getKey(),
             'body' => 'Other post',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
@@ -195,7 +189,6 @@ class FeedControllerTest extends TestCase
             'actor_id' => $user->getKey(),
             'subject' => 'Old',
             'body' => 'Old body',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
@@ -203,14 +196,12 @@ class FeedControllerTest extends TestCase
         $response = $this->put(route('feed.items.update', ['entity' => $user->getKey(), 'feedItem' => $feedItem->id]), [
             'subject' => 'New subject',
             'body' => 'New body',
-            'visibility' => Visibility::Private->value,
         ]);
 
         $response->assertRedirect();
         $feedItem->refresh();
         $this->assertSame('New subject', $feedItem->subject);
         $this->assertSame('New body', $feedItem->body);
-        $this->assertSame(Visibility::Private, $feedItem->visibility);
     }
 
     public function test_update_returns_403_when_policy_denies(): void
@@ -227,14 +218,12 @@ class FeedControllerTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => 'Original',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
 
         $response = $this->put(route('feed.items.update', ['entity' => $user->getKey(), 'feedItem' => $feedItem->id]), [
             'body' => 'Updated',
-            'visibility' => Visibility::Public->value,
         ]);
 
         $response->assertForbidden();
@@ -253,7 +242,6 @@ class FeedControllerTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => 'To delete',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
@@ -278,7 +266,6 @@ class FeedControllerTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->getKey(),
             'body' => 'Keep',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->actingAs($user);
@@ -287,5 +274,22 @@ class FeedControllerTest extends TestCase
 
         $response->assertForbidden();
         $this->assertNotNull(FeedItem::find($feedItem->id));
+    }
+
+    public function test_feed_index_includes_attachments_drop_zone_and_file_input(): void
+    {
+        $user = TestUser::create([
+            'name' => 'Feed Owner',
+            'email' => 'owner@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('feed.index', ['entity' => $user->getKey()]));
+
+        $response->assertOk();
+        $response->assertSee(__('filament-social-graph::feed_item.attachments_drop_placeholder'), false);
+        $response->assertSee('name="attachments[]"', false);
     }
 }

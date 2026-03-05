@@ -5,12 +5,12 @@ Actor-centric feeds, subscriptions, and social graph primitives for Filament app
 ## Features
 
 - **Polymorphic actors**: Any model (User, Team, etc.) can post feed items and subscribe to others via `HasSocialFeed` and `HasSocialSubscriptions`.
-- **Feed items**: Subject, body (WYSIWYG rich text; stored as HTML, sanitized on display), visibility (Public, Unlisted, Private, Followers), attachments (multi-file upload stored as JSON paths; client-side preview on create/edit).
+- **Feed items**: Subject, body (WYSIWYG rich text; stored as HTML, sanitized on display), attachments (multi-file upload stored as JSON paths; client-side preview on create/edit).
 - **Subscriptions**: Subscribe/unsubscribe to actors; home feed aggregates items from subscribed feeds.
 - **Entity feeds**: Feeds scoped to entities (e.g. team feed, project feed) alongside the global home feed.
 - **Tenancy**: Optional team scoping for multi-tenant setups.
 - **Filament Admin resources**: `FeedItemResource` and `SubscriptionResource` for CRUD. Attachments via FileUpload field on Create/Edit.
-- **Livewire components**: Feed page, feed composer, feed list, subscribe button, entity feed page.
+- **Livewire components**: Feed list, subscribe button (entity feeds use FeedController routes).
 
 ## Installation
 
@@ -51,13 +51,13 @@ In `config/filament-social-graph.php`:
 - **tenancy**: Enable/disable team scoping; configure `team_model` and `team_resolver`.
 - **actor_models**: **Required for CRUD.** Models that can post and subscribe (e.g. `[\App\Models\User::class, \App\Models\Team::class]`). The actor selector in `FeedItemResource` and `SubscriptionResource` is hidden when empty.
 - **entity_models**: Models that can have entity feeds (e.g. `[\App\Models\Team::class]`).
-- **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer visibility, **authorize_create_ability** (default `'create'`), **authorize_update_ability** (default `'update'`), **authorize_delete_ability** (default `'delete'`), **feed_item_edit_url_resolver** and **feed_item_destroy_url_resolver** (closures for Edit/Delete links on feed item cards). See Authorization.
+- **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer (form) visibility, **authorize_create_ability** (default `'create'`), **authorize_update_ability** (default `'update'`), **authorize_delete_ability** (default `'delete'`), **feed_item_edit_url_resolver** and **feed_item_destroy_url_resolver** (closures for Edit/Delete links on feed item cards). See Authorization.
 - **attachments**: Limits for public feed create/edit forms: **max_files** (default `5`), **max_file_size_kb** (default `5120`), **allowed_mimes** (default `['jpg','jpeg','png','gif','webp','pdf']`). Used by `StoreFeedItemRequest` and `UpdateFeedItemRequest`.
 - **resources.enabled**: Set to `false` to disable `FeedItemResource` and `SubscriptionResource` when registering the plugin.
 
 **Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
 
-**Public feed body and attachments:** The public create/edit forms (Blade views) use a **WYSIWYG editor** (Quill via CDN) for the body; the form submits HTML, which is stored as-is and **sanitized on output** in the feed item card (safe tags only; script and unsafe tags are stripped). Existing items with markdown body are still rendered as markdown. The Quill editor supports **dark mode**: when a parent element has the `.dark` class (e.g. Tailwind/Flux), the package injects CSS so the toolbar and container match zinc-based form styling. **File preview** is client-side only (Alpine.js): after selecting files, image thumbnails and file names are shown before submit; no server round-trip.
+**Public feed body and attachments:** The public create/edit forms (Blade views) use a **WYSIWYG editor** (Quill via CDN) for the body; the form submits HTML, which is stored as-is and **sanitized on output** in the feed item card (safe tags only; script and unsafe tags are stripped). Existing items with markdown body are still rendered as markdown. The Quill editor supports **dark mode**: when a parent element has the `.dark` class (e.g. Tailwind/Flux), the package injects CSS so the toolbar and container match zinc-based form styling. The **attachment field** supports drag-and-drop: users can drop files onto the zone or click to select; **file preview** is client-side only (Alpine.js): after selecting files, image thumbnails and file names are shown before submit; no server round-trip.
 
 ## Register the plugin
 
@@ -125,7 +125,7 @@ On FeedItem Create, Edit, or View, use the **Attachments** FileUpload field (Cre
 
 ### 4. Use Livewire components
 
-Include `<livewire:filament-social-graph.feed-page />` or `<livewire:filament-social-graph.entity-feed-page :entity="$team" />` in your layouts. Use `<livewire:filament-social-graph.subscribe-button :feed-owner="$user" />` for subscribe/unsubscribe buttons.
+Use `<livewire:filament-social-graph.subscribe-button :feed-owner="$user" />` for subscribe/unsubscribe buttons. For entity feeds, use the FeedController routes (see §5).
 
 ### 5. Entity feed routes (REST)
 
@@ -155,7 +155,7 @@ use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 Gate::policy(FeedItem::class, \App\Policies\FeedItemPolicy::class);
 ```
 
-Implement `create($user, $entity)`: return `true` when the user may create a feed item for that entity (or for the global feed when `$entity` is null). The same check is used to show/hide the composer and to authorize `FeedController::store` (and `FeedComposer::submit()` when using the Livewire entity feed page).
+Implement `create($user, $entity)`: return `true` when the user may create a feed item for that entity (or for the global feed when `$entity` is null). The same check is used to show/hide the composer and to authorize `FeedController::store`.
 
 **Example: restrict team feed posting to team owner/admin.** For entity feeds where the entity is a Team, allow creation only when the user has team owner/admin access (e.g. via `$user->isTeamAdmin($entity)`). In your app policy:
 

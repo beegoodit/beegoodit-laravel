@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('subject')->nullable();
             $table->text('body')->nullable();
             $table->json('attachments')->nullable();
-            $table->string('visibility', 50)->default('public');
             $table->foreignUuid('created_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignUuid('updated_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

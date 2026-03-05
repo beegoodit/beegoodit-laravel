@@ -2,13 +2,11 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Filament\Resources;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedItemResource\Pages;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -16,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
@@ -72,17 +69,6 @@ class FeedItemResource extends Resource
                         TextEntry::make('actor')
                             ->label(__('filament-social-graph::feed_item.actor'))
                             ->formatStateUsing(fn ($record) => $record->actor?->name ?? $record->actor_type),
-                        TextEntry::make('visibility')
-                            ->label(__('filament-social-graph::feed_item.visibility'))
-                            ->formatStateUsing(fn ($state) => $state?->label())
-                            ->badge()
-                            ->color(fn (?Visibility $state): string => match ($state?->value ?? '') {
-                                'public' => 'success',
-                                'unlisted' => 'info',
-                                'private' => 'warning',
-                                'followers' => 'gray',
-                                default => 'gray',
-                            }),
                         TextEntry::make('created_at')
                             ->label(__('filament-social-graph::feed_item.created_at'))
                             ->dateTime(),
@@ -175,13 +161,6 @@ class FeedItemResource extends Resource
                     ])
                     ->columnSpanFull(),
 
-                Select::make('visibility')
-                    ->label(__('filament-social-graph::feed_item.visibility'))
-                    ->options(collect(Visibility::cases())->mapWithKeys(fn (Visibility $v): array => [$v->value => $v->label()]))
-                    ->default(Visibility::Public)
-                    ->required()
-                    ->columnSpan(1),
-
                 FileUpload::make('attachments')
                     ->label(__('filament-social-graph::feed_item.attachments'))
                     ->multiple()
@@ -206,11 +185,6 @@ class FeedItemResource extends Resource
                     ->limit(50)
                     ->searchable(),
 
-                TextColumn::make('visibility')
-                    ->label(__('filament-social-graph::feed_item.visibility'))
-                    ->formatStateUsing(fn (Visibility $state): string => $state->label())
-                    ->badge(),
-
                 TextColumn::make('attachments_count')
                     ->label(__('filament-social-graph::feed_item.attachments_count'))
                     ->getStateUsing(fn (FeedItem $record): int => count($record->attachments ?? []))
@@ -231,11 +205,7 @@ class FeedItemResource extends Resource
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->filters([
-                SelectFilter::make('visibility')
-                    ->label(__('filament-social-graph::feed_item.visibility'))
-                    ->options(collect(Visibility::cases())->mapWithKeys(fn (Visibility $v): array => [$v->value => $v->label()])),
-            ])
+            ->filters([])
             ->recordActions([
                 \Filament\Actions\ViewAction::make(),
                 \Filament\Actions\EditAction::make(),

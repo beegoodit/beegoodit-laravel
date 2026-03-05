@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 
 class FeedItemViewAttachmentsTest extends TestCase
@@ -42,7 +41,6 @@ class FeedItemViewAttachmentsTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->id,
             'body' => 'With mixed attachments',
-            'visibility' => Visibility::Public,
             'attachments' => $paths,
         ]);
 

@@ -34,56 +34,61 @@
                     @enderror
                 </flux:field>
             </div>
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <flux:field>
-                    <flux:label class="sr-only">{{ __('filament-social-graph::feed_item.visibility') }}</flux:label>
-                    <flux:select name="visibility" class="min-w-[10rem]" value="{{ old('visibility', $feedItem->visibility?->value ?? \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public->value) }}">
-                        @foreach (\BeegoodIT\FilamentSocialGraph\Enums\Visibility::cases() as $v)
-                            <flux:select.option :value="$v->value">{{ $v->label() }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
-                    @error('visibility')
-                        <flux:error>{{ $message }}</flux:error>
-                    @enderror
-                </flux:field>
+            <div>
                 @php
                     $existingAttachments = $feedItem->attachments ?? [];
                     $editDisk = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getStorageDisk();
                 @endphp
                 @if(!empty($existingAttachments))
-                    <div>
-                        <flux:field>
-                            <flux:label>{{ __('filament-social-graph::feed_item.attachments') }}</flux:label>
-                            <div class="flex flex-wrap gap-3">
-                                @foreach($existingAttachments as $path)
-                                    @php
-                                        $url = \Illuminate\Support\Facades\Storage::disk($editDisk)->url($path);
-                                        $filename = basename($path);
-                                        $isImage = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path);
-                                    @endphp
-                                    <label class="flex items-start gap-2 rounded border border-zinc-200 p-2 dark:border-zinc-600">
-                                        <input type="checkbox" name="attachments_remove[]" value="{{ e($path) }}" class="rounded" />
-                                        @if($isImage)
-                                            <a href="{{ $url }}" target="_blank" rel="noopener" class="block shrink-0">
-                                                <img src="{{ $url }}" alt="{{ $filename }}" class="max-h-24 rounded object-cover">
-                                            </a>
-                                        @else
-                                            <a href="{{ $url }}" target="_blank" rel="noopener" class="text-sm text-zinc-600 dark:text-zinc-400">{{ $filename }}</a>
-                                        @endif
-                                        <span class="text-xs text-zinc-500 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_remove') }}</span>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </flux:field>
-                    </div>
+                    <flux:field>
+                        <flux:label>{{ __('filament-social-graph::feed_item.attachments') }}</flux:label>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach($existingAttachments as $path)
+                                @php
+                                    $url = \Illuminate\Support\Facades\Storage::disk($editDisk)->url($path);
+                                    $filename = basename($path);
+                                    $isImage = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path);
+                                @endphp
+                                <div class="flex items-start gap-2 rounded border border-zinc-200 p-2 dark:border-zinc-600">
+                                    @if($isImage)
+                                        <a href="{{ $url }}" target="_blank" rel="noopener" class="block shrink-0">
+                                            <img src="{{ $url }}" alt="{{ $filename }}" class="max-h-24 rounded object-cover">
+                                        </a>
+                                    @else
+                                        <a href="{{ $url }}" target="_blank" rel="noopener" class="text-sm text-zinc-600 dark:text-zinc-400">{{ $filename }}</a>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </flux:field>
                 @endif
-                <div x-data="feedAttachmentPreview()">
+                <div
+                    x-data="feedAttachmentPreview({{ config('filament-social-graph.attachments.max_files', 5) }})"
+                    class="contents"
+                >
                     <flux:field>
                         <flux:label for="feed-edit-attachments">{{ __('filament-social-graph::feed_item.attachments_new') }}</flux:label>
-                        <flux:input
+                        <div
+                            role="button"
+                            tabindex="0"
+                            aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
+                            class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
+                            :class="{ 'border-primary-500 bg-primary-50 dark:bg-primary-900/20': isDragging }"
+                            @click="$refs.input.click()"
+                            @keydown.enter.prevent="$refs.input.click()"
+                            @keydown.space.prevent="$refs.input.click()"
+                            @dragover.prevent="onDragover($event)"
+                            @dragleave.prevent="onDragleave($event)"
+                            @drop.prevent="onDrop($event)"
+                        >
+                            <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                        </div>
+                        <input
                             type="file"
                             name="attachments[]"
                             id="feed-edit-attachments"
+                            x-ref="input"
+                            class="sr-only"
                             multiple
                             accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
                             @change="onChange($event)"
@@ -108,14 +113,14 @@
                         </div>
                     </flux:field>
                 </div>
-                <div class="flex gap-2">
-                    <a href="{{ $feedUrl }}" class="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700">
-                        {{ __('filament-social-graph::feed.cancel') }}
-                    </a>
-                    <flux:button type="submit" variant="primary" size="base">
-                        {{ __('filament-social-graph::feed.update') }}
-                    </flux:button>
-                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="{{ $feedUrl }}" class="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700">
+                    {{ __('filament-social-graph::feed.cancel') }}
+                </a>
+                <flux:button type="submit" variant="primary" size="base">
+                    {{ __('filament-social-graph::feed.update') }}
+                </flux:button>
             </div>
         </form>
     </div>
@@ -142,10 +147,12 @@
     </script>
     <script>
         document.addEventListener('alpine:init', function() {
-            Alpine.data('feedAttachmentPreview', function() {
+            Alpine.data('feedAttachmentPreview', function(maxFiles) {
                 return {
                     files: [],
-                    onChange(event) {
+                    isDragging: false,
+                    maxFiles: typeof maxFiles === 'number' ? maxFiles : 5,
+                    onChange: function(event) {
                         var input = event.target;
                         this.files = [];
                         for (var i = 0; i < input.files.length; i++) {
@@ -160,6 +167,30 @@
                                 reader.readAsDataURL(file);
                             }
                         }
+                    },
+                    onDragover: function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.isDragging = true;
+                    },
+                    onDragleave: function(e) {
+                        e.preventDefault();
+                        this.isDragging = false;
+                    },
+                    onDrop: function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.isDragging = false;
+                        var dt = e.dataTransfer;
+                        if (!dt || !dt.files || dt.files.length === 0) return;
+                        var input = this.$refs.input;
+                        var existing = input.files ? Array.from(input.files) : [];
+                        var dropped = Array.from(dt.files);
+                        var combined = existing.concat(dropped).slice(0, this.maxFiles);
+                        var dataTransfer = new DataTransfer();
+                        combined.forEach(function(file) { dataTransfer.items.add(file); });
+                        input.files = dataTransfer.files;
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
                     },
                 };
             });

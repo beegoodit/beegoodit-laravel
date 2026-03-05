@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Actions;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,11 +15,6 @@ class UpdateFeedItem
 
     public function handle(FeedItem $feedItem, array $data): FeedItem
     {
-        $visibility = $data['visibility'] ?? $feedItem->visibility;
-        if (! $visibility instanceof Visibility) {
-            $visibility = Visibility::from($visibility);
-        }
-
         $currentPaths = $feedItem->attachments ?? [];
         $toRemove = $this->validRemovalPaths($feedItem, $data['attachments_remove'] ?? []);
         $keptPaths = array_values(array_diff($currentPaths, $toRemove));
@@ -38,7 +32,6 @@ class UpdateFeedItem
         $feedItem->update([
             'subject' => $data['subject'] ?? $feedItem->subject,
             'body' => $data['body'] ?? $feedItem->body,
-            'visibility' => $visibility,
             'attachments' => array_merge($keptPaths, $newPaths),
         ]);
 

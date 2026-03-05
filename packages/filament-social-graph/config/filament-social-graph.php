@@ -46,7 +46,7 @@ return [
         'index_view' => null, // App view name to use for GET feed (e.g. livewire.public-team-feed) for breadcrumb/wrapper; null = package feed.index
         'show_composer' => true,
         'show_composer_on_entity_feed' => true,
-        'authorize_create_ability' => 'create', // Ability name for Gate (composer visibility + submit auth)
+        'authorize_create_ability' => 'create', // Ability name for Gate (composer form visibility + submit auth)
         'authorize_update_ability' => 'update',
         'authorize_delete_ability' => 'delete',
         'actor_feed_url_resolver' => null, // Closure(actor) => url, or null for default

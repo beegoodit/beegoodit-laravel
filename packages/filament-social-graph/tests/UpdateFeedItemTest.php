@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Actions\UpdateFeedItem;
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +15,7 @@ beforeEach(function (): void {
     config()->set('filament-social-graph.entity_models', [TestUser::class]);
 });
 
-test('it updates feed item subject body and visibility', function (): void {
+test('it updates feed item subject and body', function (): void {
     $actor = TestUser::create([
         'name' => 'Actor',
         'email' => 'actor@example.com',
@@ -28,20 +27,17 @@ test('it updates feed item subject body and visibility', function (): void {
         'actor_id' => $actor->getKey(),
         'subject' => 'Old subject',
         'body' => 'Old body',
-        'visibility' => Visibility::Public,
     ]);
 
     UpdateFeedItem::run($feedItem, [
         'subject' => 'New subject',
         'body' => 'New body',
-        'visibility' => Visibility::Private,
     ]);
 
     $feedItem->refresh();
 
     expect($feedItem->subject)->toBe('New subject')
-        ->and($feedItem->body)->toBe('New body')
-        ->and($feedItem->visibility)->toBe(Visibility::Private);
+        ->and($feedItem->body)->toBe('New body');
 });
 
 test('it updates only provided fields', function (): void {
@@ -56,7 +52,6 @@ test('it updates only provided fields', function (): void {
         'actor_id' => $actor->getKey(),
         'subject' => 'Keep subject',
         'body' => 'Old body',
-        'visibility' => Visibility::Public,
     ]);
 
     UpdateFeedItem::run($feedItem, [
@@ -66,8 +61,7 @@ test('it updates only provided fields', function (): void {
     $feedItem->refresh();
 
     expect($feedItem->subject)->toBe('Keep subject')
-        ->and($feedItem->body)->toBe('New body')
-        ->and($feedItem->visibility)->toBe(Visibility::Public);
+        ->and($feedItem->body)->toBe('New body');
 });
 
 test('it removes attachments and deletes files from storage when attachments_remove provided', function (): void {
@@ -88,14 +82,12 @@ test('it removes attachments and deletes files from storage when attachments_rem
         'actor_type' => TestUser::class,
         'actor_id' => $actor->getKey(),
         'body' => 'With attachments',
-        'visibility' => Visibility::Public,
         'attachments' => [$pathToRemove, $pathToKeep],
     ]);
 
     UpdateFeedItem::run($feedItem, [
         'subject' => $feedItem->subject,
         'body' => $feedItem->body,
-        'visibility' => $feedItem->visibility->value,
         'attachments_remove' => [$pathToRemove],
     ]);
 
@@ -122,7 +114,6 @@ test('it adds new attachment files when attachments provided', function (): void
         'actor_type' => TestUser::class,
         'actor_id' => $actor->getKey(),
         'body' => 'With one attachment',
-        'visibility' => Visibility::Public,
         'attachments' => [$existingPath],
     ]);
 
@@ -131,7 +122,6 @@ test('it adds new attachment files when attachments provided', function (): void
     UpdateFeedItem::run($feedItem, [
         'subject' => $feedItem->subject,
         'body' => $feedItem->body,
-        'visibility' => $feedItem->visibility->value,
         'attachments' => [$newFile],
     ]);
 
@@ -157,7 +147,6 @@ test('it throws validation exception when combined attachments exceed max_files'
         'actor_type' => TestUser::class,
         'actor_id' => $actor->getKey(),
         'body' => 'Body',
-        'visibility' => Visibility::Public,
         'attachments' => ['feed-item-attachments/a.pdf', 'feed-item-attachments/b.pdf'],
     ]);
 
@@ -166,7 +155,6 @@ test('it throws validation exception when combined attachments exceed max_files'
     UpdateFeedItem::run($feedItem, [
         'subject' => $feedItem->subject,
         'body' => $feedItem->body,
-        'visibility' => $feedItem->visibility->value,
         'attachments' => [$newFile],
     ]);
 })->throws(ValidationException::class);

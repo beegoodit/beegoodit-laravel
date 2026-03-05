@@ -83,7 +83,6 @@ class FeedItemPolicyTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $actor->getKey(),
             'body' => 'Test',
-            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
         ]);
 
         $this->assertFalse(Gate::allows('update', $feedItem));
@@ -111,7 +110,6 @@ class FeedItemPolicyTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $actor->getKey(),
             'body' => 'Test',
-            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
         ]);
 
         $this->assertTrue(Gate::allows('update', $feedItem));
@@ -139,7 +137,6 @@ class FeedItemPolicyTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $actor->getKey(),
             'body' => 'Test',
-            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
         ]);
 
         $this->assertFalse(Gate::allows('update', $feedItem));
@@ -159,7 +156,6 @@ class FeedItemPolicyTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $actor->getKey(),
             'body' => 'Test',
-            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
         ]);
 
         $this->assertFalse(Gate::allows('delete', $feedItem));
@@ -187,7 +183,6 @@ class FeedItemPolicyTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $actor->getKey(),
             'body' => 'Test',
-            'visibility' => \BeegoodIT\FilamentSocialGraph\Enums\Visibility::Public,
         ]);
 
         $this->assertTrue(Gate::allows('delete', $feedItem));

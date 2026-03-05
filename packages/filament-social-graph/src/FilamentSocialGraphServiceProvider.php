@@ -2,11 +2,8 @@
 
 namespace BeegoodIT\FilamentSocialGraph;
 
-use BeegoodIT\FilamentSocialGraph\Livewire\EntityFeedPage;
-use BeegoodIT\FilamentSocialGraph\Livewire\FeedComposer;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedItemCard;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedList;
-use BeegoodIT\FilamentSocialGraph\Livewire\FeedPage;
 use BeegoodIT\FilamentSocialGraph\Livewire\SubscribeButton;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use BeegoodIT\FilamentSocialGraph\Policies\FeedItemPolicy;
@@ -65,11 +62,8 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
     protected function registerLivewireComponents(): void
     {
         $components = [
-            EntityFeedPage::class,
-            FeedComposer::class,
             FeedItemCard::class,
             FeedList::class,
-            FeedPage::class,
             SubscribeButton::class,
         ];
 

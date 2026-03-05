@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
-use BeegoodIT\FilamentSocialGraph\Enums\Visibility;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +20,6 @@ class FeedItemTest extends TestCase
         $feedItem = $user->createFeedItem([
             'subject' => 'Hello World',
             'body' => 'This is a test post.',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->assertDatabaseHas('feed_items', [
@@ -30,7 +28,6 @@ class FeedItemTest extends TestCase
             'actor_id' => $user->id,
             'subject' => 'Hello World',
             'body' => 'This is a test post.',
-            'visibility' => 'public',
         ]);
     }
 
@@ -46,7 +43,6 @@ class FeedItemTest extends TestCase
             'actor_type' => TestUser::class,
             'actor_id' => $user->id,
             'body' => 'Test',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->assertEquals($user->id, $feedItem->actor->id);
@@ -65,7 +61,6 @@ class FeedItemTest extends TestCase
 
         $feedItem = $user->createFeedItem([
             'body' => 'Test',
-            'visibility' => Visibility::Public,
         ]);
 
         $this->assertEquals($user->id, $feedItem->created_by_id);
