@@ -66,12 +66,12 @@ class MessageResource extends Resource
 
                         Placeholder::make('broadcast_id')
                             ->label(__('laravel-pwa::broadcast.fields.broadcast.label'))
-                            ->visible(fn ($record) => $record?->broadcast_id !== null)
+                            ->visible(fn ($record): bool => $record?->broadcast_id !== null)
                             ->content(fn ($record) => $record?->broadcast?->display_title ?? $record?->broadcast_id),
 
                         Placeholder::make('delivery_status')
                             ->label(__('laravel-pwa::broadcast.fields.status.label'))
-                            ->content(fn ($record) => new HtmlString(view('filament::components.badge', [
+                            ->content(fn ($record): \Illuminate\Support\HtmlString => new HtmlString(view('filament::components.badge', [
                                 'color' => match ($record?->delivery_status->getValue()) {
                                     'pending' => 'gray',
                                     'on_hold' => 'warning',
@@ -129,7 +129,7 @@ class MessageResource extends Resource
                         TextEntry::make('broadcast.id')
                             ->label(__('laravel-pwa::broadcast.fields.broadcast.label'))
                             ->state(fn ($record) => $record->broadcast?->display_title ?? __('laravel-pwa::notifications.broadcasts.resource_label'))
-                            ->url(fn ($record) => $record->broadcast_id ? \BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource::getUrl('edit', ['record' => $record->broadcast_id]) : null)
+                            ->url(fn ($record): ?string => $record->broadcast_id ? \BeegoodIT\LaravelPwa\Filament\Resources\BroadcastResource::getUrl('edit', ['record' => $record->broadcast_id]) : null)
                             ->color('primary'),
 
                         TextEntry::make('opened_at')

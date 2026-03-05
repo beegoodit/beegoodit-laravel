@@ -56,7 +56,7 @@ class FeedbackModal extends Component
 
             // Close modal after 1.5 seconds
             $this->js("setTimeout(() => \$flux.modal('feedback').close(), 1500);");
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->showError = true;
             $this->errorMessage = __('feedback::feedback.submit.error_body');
         }

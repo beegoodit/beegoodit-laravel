@@ -10,7 +10,7 @@ class FilamentConnectServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/filament-connect.php', 'filament-connect');
 
-        $this->app->singleton(Connect::class, fn() => new Connect());
+        $this->app->singleton(Connect::class, fn (): \Beegoodit\FilamentConnect\Connect => new Connect);
     }
 
     public function boot(): void

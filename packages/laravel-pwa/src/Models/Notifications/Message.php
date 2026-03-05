@@ -2,17 +2,17 @@
 
 namespace BeegoodIT\LaravelPwa\Models\Notifications;
 
+use BeegoodIT\LaravelPwa\States\Messages\MessageState;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\ModelStates\HasStates;
-use BeegoodIT\LaravelPwa\States\Messages\MessageState;
 
 class Message extends Model
 {
-    use HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory, MassPrunable, HasStates;
+    use HasStates, HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory, MassPrunable;
 
     protected static function newFactory()
     {
@@ -31,6 +31,7 @@ class Message extends Model
         'opened_at',
         'error_message',
     ];
+
     public function hold(): void
     {
         $this->delivery_status->transitionTo(\BeegoodIT\LaravelPwa\States\Messages\OnHold::class);

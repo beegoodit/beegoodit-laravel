@@ -52,7 +52,7 @@ class TimelineWidget extends Widget
         /** @var Collection<int, \BeegoodIT\FilamentTimeline\Data\TimelineEntry> $entries */
         $entries = $this->getEntries();
 
-        return $entries->groupBy(fn ($entry) => $entry->occurredAt
+        return $entries->groupBy(fn ($entry) => $entry->occurredAt instanceof \Illuminate\Support\Carbon
             ? (string) $entry->occurredAt->year
             : __('filament-timeline::messages.origin'));
     }

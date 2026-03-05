@@ -65,8 +65,8 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
-        "test:coverage": "phpunit --coverage-text",
+        "test": "./vendor/bin/pest",
+        "test:coverage": "./vendor/bin/pest --coverage",
         "format": "pint",
         "rector": "vendor/bin/rector process --dry-run",
         "rector:fix": "vendor/bin/rector process"

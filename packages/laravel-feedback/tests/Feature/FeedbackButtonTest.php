@@ -35,7 +35,7 @@ class FeedbackButtonTest extends TestCase
     {
         $user = $this->createUser();
 
-        $initialCount = FeedbackItem::count();
+        FeedbackItem::count();
 
         // Note: Testing the action directly requires Filament context
         // This test verifies the component can be instantiated

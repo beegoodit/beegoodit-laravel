@@ -27,8 +27,7 @@ class FeedList extends Component
     public function getFeedItems(): LengthAwarePaginator
     {
         $query = FeedItem::query()
-            ->with(['actor'])
-            ->orderByDesc('created_at');
+            ->with(['actor'])->latest();
 
         if ($this->entityType && $this->entityId) {
             $query->where(function (Builder $q): void {

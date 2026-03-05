@@ -39,7 +39,7 @@ class FeedControllerTest extends TestCase
         $response = $this->get(route('feed.index', ['entity' => $user->getKey()]));
 
         $response->assertOk();
-        $response->assertSee(__('filament-social-graph::feed.title'), false);
+        $response->assertSeeHtml(__('filament-social-graph::feed.title'));
     }
 
     public function test_store_creates_feed_item_and_redirects_back(): void
@@ -81,7 +81,7 @@ class FeedControllerTest extends TestCase
         $response = $this->get(route('feed.index', ['entity' => $user->getKey()]));
 
         $response->assertOk();
-        $response->assertDontSee(__('filament-social-graph::feed.composer_placeholder'), false);
+        $response->assertDontSeeHtml(__('filament-social-graph::feed.composer_placeholder'));
     }
 
     public function test_store_returns_403_when_policy_denies(): void
@@ -123,7 +123,7 @@ class FeedControllerTest extends TestCase
         $response = $this->get(route('feed.items.edit', ['entity' => $user->getKey(), 'feedItem' => $feedItem->id]));
 
         $response->assertOk();
-        $response->assertSee(__('filament-social-graph::feed.edit_title'), false);
+        $response->assertSeeHtml(__('filament-social-graph::feed.edit_title'));
     }
 
     public function test_edit_returns_403_when_policy_denies(): void
@@ -289,7 +289,7 @@ class FeedControllerTest extends TestCase
         $response = $this->get(route('feed.index', ['entity' => $user->getKey()]));
 
         $response->assertOk();
-        $response->assertSee(__('filament-social-graph::feed_item.attachments_drop_placeholder'), false);
-        $response->assertSee('feed-composer-attachments', false);
+        $response->assertSeeHtml(__('filament-social-graph::feed_item.attachments_drop_placeholder'));
+        $response->assertSeeHtml('feed-composer-attachments');
     }
 }

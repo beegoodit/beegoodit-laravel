@@ -22,13 +22,12 @@ class FeedController
         $layout = config('filament-social-graph.feed_page.layout', 'filament-social-graph::layouts.app');
         $ability = config('filament-social-graph.feed_page.authorize_create_ability', 'create');
         $showComposer = Gate::allows($ability, [FeedItem::class, $entity]);
-        $stepTitle = "feed";
+        $stepTitle = 'feed';
         $quillId = 'feed-body-editor';
         $title = ($entity->name ?? class_basename($entity)).' - '.__('filament-social-graph::feed.title');
         $viewName = config('filament-social-graph.feed_page.index_view') ?: 'filament-social-graph::feed.index';
         $data = [
             'entity' => $entity,
-            'showComposer' => $showComposer,
             'layout' => $layout,
             'title' => $title,
             'stepTitle' => $stepTitle,
@@ -47,7 +46,7 @@ class FeedController
 
         CreateFeedItemForEntity::run($entity, $request->validated());
 
-        return redirect()->back()->with('success', __('filament-social-graph::feed_item.created'));
+        return back()->with('success', __('filament-social-graph::feed_item.created'));
     }
 
     public function edit(Request $request): View
@@ -77,20 +76,20 @@ class FeedController
     public function update(UpdateFeedItemRequest $request): RedirectResponse
     {
         $feedItemId = $request->route('feedItem');
-        $entity = $this->entityFromRoute($request);
+        $this->entityFromRoute($request);
         $feedItem = $this->resolveFeedItemForEntity($request, $feedItemId);
 
         Gate::authorize('update', $feedItem);
 
         UpdateFeedItem::run($feedItem, $request->validated());
 
-        return redirect()->back()->with('success', __('filament-social-graph::feed_item.updated'));
+        return back()->with('success', __('filament-social-graph::feed_item.updated'));
     }
 
     public function destroy(Request $request): RedirectResponse
     {
         $feedItemId = $request->route('feedItem');
-        $entity = $this->entityFromRoute($request);
+        $this->entityFromRoute($request);
         $feedItem = $this->resolveFeedItemForEntity($request, $feedItemId);
 
         $ability = config('filament-social-graph.feed_page.authorize_delete_ability', 'delete');
@@ -98,7 +97,7 @@ class FeedController
 
         DeleteFeedItem::run($feedItem);
 
-        return redirect()->back()->with('success', __('filament-social-graph::feed_item.deleted'));
+        return back()->with('success', __('filament-social-graph::feed_item.deleted'));
     }
 
     /**
@@ -145,9 +144,8 @@ class FeedController
                 } else {
                     $query->where($routeKey, $value);
                 }
-                $model = $query->firstOrFail();
 
-                return $model;
+                return $query->firstOrFail();
             }
         }
 

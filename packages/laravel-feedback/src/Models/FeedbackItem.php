@@ -68,20 +68,20 @@ class FeedbackItem extends Model
      */
     public function getBrowserName(): ?string
     {
-        if (!$this->user_agent) {
+        if (! $this->user_agent) {
             return null;
         }
 
         $userAgent = $this->user_agent;
 
         // Simple browser detection
-        if (preg_match('/Chrome\/([0-9.]+)/', $userAgent, $matches) && !preg_match('/Edg/', $userAgent)) {
+        if (preg_match('/Chrome\/([0-9.]+)/', $userAgent, $matches) && ! preg_match('/Edg/', $userAgent)) {
             return 'Chrome';
         }
         if (preg_match('/Firefox\/([0-9.]+)/', $userAgent, $matches)) {
             return 'Firefox';
         }
-        if (preg_match('/Safari\/([0-9.]+)/', $userAgent, $matches) && !preg_match('/Chrome/', $userAgent)) {
+        if (preg_match('/Safari\/([0-9.]+)/', $userAgent, $matches) && ! preg_match('/Chrome/', $userAgent)) {
             return 'Safari';
         }
         if (preg_match('/Edg\/([0-9.]+)/', $userAgent, $matches)) {
@@ -99,7 +99,7 @@ class FeedbackItem extends Model
      */
     public function getOperatingSystem(): ?string
     {
-        if (!$this->user_agent) {
+        if (! $this->user_agent) {
             return null;
         }
 

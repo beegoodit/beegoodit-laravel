@@ -12,7 +12,7 @@ class LegalGateTest extends TestCase
     {
         parent::setUp();
 
-        Route::middleware(['web', EnsureLegalAcceptance::class])->get('/dashboard', fn() => 'dashboard')->name('dashboard');
+        Route::middleware(['web', EnsureLegalAcceptance::class])->get('/dashboard', fn (): string => 'dashboard')->name('dashboard');
     }
 
     /** @test */

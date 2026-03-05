@@ -7,7 +7,9 @@ use Illuminate\View\Component;
 class LanguageSwitcher extends Component
 {
     public array $locales;
+
     public string $currentLocale;
+
     public ?string $routeBase;
 
     public function __construct(?string $routeBase = null)
@@ -21,15 +23,16 @@ class LanguageSwitcher extends Component
     {
         try {
             $currentRouteName = \Route::currentRouteName();
-            if (!$currentRouteName) {
+            if (! $currentRouteName) {
                 return 'home';
             }
 
             foreach ($this->locales as $locale) {
-                if (str_starts_with($currentRouteName, $locale . '.')) {
+                if (str_starts_with($currentRouteName, $locale.'.')) {
                     return substr($currentRouteName, strlen((string) $locale) + 1);
                 }
             }
+
             return 'home';
         } catch (\Throwable) {
             return 'home';

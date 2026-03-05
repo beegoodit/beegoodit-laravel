@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Domain extends Model
 {
     use HasUuids;
-    
+
     protected static function booted(): void
     {
-        static::saving(function (Domain $domain) {
+        static::saving(function (Domain $domain): void {
             if ($domain->is_primary) {
                 // Ensure only one domain is primary for the same model
                 static::where('model_type', $domain->model_type)

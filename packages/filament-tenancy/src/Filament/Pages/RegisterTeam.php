@@ -64,7 +64,6 @@ class RegisterTeam extends RegisterTenant
     public static function registerNavigationItems(): void
     {
         if (! static::shouldRegisterNavigation()) {
-            return;
         }
     }
 }

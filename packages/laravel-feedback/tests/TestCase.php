@@ -40,7 +40,7 @@ class TestCase extends Orchestra
         $app['config']->set('feedback.user_model', TestUser::class);
 
         // Create users table for testing (with UUIDs)
-        Schema::create('users', function ($table) {
+        Schema::create('users', function ($table): void {
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();

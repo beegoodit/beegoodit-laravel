@@ -58,7 +58,7 @@ class I18nHelper
         foreach ($available as $locale) {
             if (isset($allLocales[$locale])) {
                 $meta = $allLocales[$locale];
-                $options[$locale] = $meta['flag'] . ' ' . $meta['native'];
+                $options[$locale] = $meta['flag'].' '.$meta['native'];
             } else {
                 $options[$locale] = strtoupper($locale);
             }

@@ -91,8 +91,8 @@ class FeedItemBodyDisplayTest extends TestCase
 
         $indexResponse = $this->get(route('feed.index', ['entity' => $user->getKey()]));
         $indexResponse->assertOk();
-        $indexResponse->assertSee('Posted via form', false);
-        $indexResponse->assertDontSee('<script>', false);
-        $indexResponse->assertDontSee('document.steal()', false);
+        $indexResponse->assertSeeHtml('Posted via form');
+        $indexResponse->assertDontSeeHtml('<script>');
+        $indexResponse->assertDontSeeHtml('document.steal()');
     }
 }

@@ -66,10 +66,10 @@ class LegalIdentityResource extends Resource
                 MorphToSelect::make('owner')
                     ->label(__('filament-legal::messages.Owner'))
                     ->types(collect(FilamentLegalPlugin::get()->getLegalableModels())
-                        ->map(fn ($model) => MorphToSelect\Type::make($model)->titleAttribute('name'))
+                        ->map(fn (string $model): \Filament\Forms\Components\MorphToSelect\Type => MorphToSelect\Type::make($model)->titleAttribute('name'))
                         ->toArray())
                     ->columnSpanFull()
-                    ->hidden(fn () => filament()->hasTenancy())
+                    ->hidden(fn (): bool => filament()->hasTenancy())
                     ->required(fn (): bool => ! filament()->hasTenancy()),
                 TextInput::make('name')
                     ->label(__('filament-legal::messages.Name'))

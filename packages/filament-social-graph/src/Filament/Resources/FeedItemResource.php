@@ -90,7 +90,7 @@ class FeedItemResource extends Resource
                             ->label(__('filament-social-graph::feed_item.attachments'))
                             ->getStateUsing(fn ($record): array => array_values(array_filter(
                                 $record->attachments ?? [],
-                                fn (string $path): bool => FeedItem::isImagePath($path)
+                                FeedItem::isImagePath(...)
                             )))
                             ->disk(FeedItem::getStorageDisk())
                             ->visibility('public')
@@ -98,7 +98,7 @@ class FeedItemResource extends Resource
                             ->url(fn (string $state): string => Storage::disk(FeedItem::getStorageDisk())->url($state))
                             ->openUrlInNewTab()
                             ->columnSpanFull()
-                            ->hidden(fn ($record): bool => empty(array_filter($record->attachments ?? [], fn (string $p): bool => FeedItem::isImagePath($p)))),
+                            ->hidden(fn ($record): bool => array_filter($record->attachments ?? [], FeedItem::isImagePath(...)) === []),
                         TextEntry::make('attachments_files')
                             ->label(__('filament-social-graph::feed_item.attachments_files'))
                             ->getStateUsing(fn ($record): array => array_values(array_filter(
@@ -106,7 +106,7 @@ class FeedItemResource extends Resource
                                 fn (string $path): bool => ! FeedItem::isImagePath($path)
                             )))
                             ->formatStateUsing(function (array $paths): string {
-                                if (empty($paths)) {
+                                if ($paths === []) {
                                     return '';
                                 }
                                 $disk = FeedItem::getStorageDisk();
@@ -123,7 +123,7 @@ class FeedItemResource extends Resource
                             })
                             ->html()
                             ->columnSpanFull()
-                            ->hidden(fn ($record): bool => empty(array_filter($record->attachments ?? [], fn (string $p): bool => ! FeedItem::isImagePath($p)))),
+                            ->hidden(fn ($record): bool => array_filter($record->attachments ?? [], fn (string $p): bool => ! FeedItem::isImagePath($p)) === []),
                     ]),
             ]);
     }

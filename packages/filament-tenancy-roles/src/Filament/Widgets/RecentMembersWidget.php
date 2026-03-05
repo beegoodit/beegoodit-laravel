@@ -58,7 +58,7 @@ class RecentMembersWidget extends BaseWidget
                     ->label(__('filament-tenancy-roles::messages.Joined'))
                     ->dateTime()
                     ->since()
-                    ->description(fn ($record): ?string => $record->joined_at ? \Illuminate\Support\Carbon::parse($record->joined_at)->toFormattedDateString() : null),
+                    ->description(fn ($record): ?string => $record->joined_at ? \Illuminate\Support\Facades\Date::parse($record->joined_at)->toFormattedDateString() : null),
             ])
             ->paginated(false)
             ->headerActions([])

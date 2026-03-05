@@ -126,7 +126,7 @@ class Profile extends Page implements HasForms
         }
 
         // Fallback to parent method
-        return parent::getUrl($parameters, $isAbsolute, $panel, null);
+        return parent::getUrl($parameters, $isAbsolute, $panel);
     }
 
     public function mount(): void

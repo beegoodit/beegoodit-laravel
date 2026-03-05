@@ -58,7 +58,7 @@ class FeedbackButton extends Component implements HasActions, HasForms
 
                     // Close the modal after successful submission
                     $action->close();
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     Notification::make()
                         ->title(__('feedback::feedback.submit.error'))
                         ->body(__('feedback::feedback.submit.error_body'))

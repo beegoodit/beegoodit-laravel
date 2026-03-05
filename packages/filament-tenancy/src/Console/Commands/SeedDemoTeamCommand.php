@@ -201,8 +201,8 @@ class SeedDemoTeamCommand extends Command
         try {
             $this->info("Calling app seeder: {$seederClass}");
 
-            $seeder = new $seederClass();
-            
+            $seeder = new $seederClass;
+
             // Check if seeder has a run method that accepts team and withUser
             if (method_exists($seeder, 'run')) {
                 // Try to call with team and withUser parameters
@@ -217,13 +217,13 @@ class SeedDemoTeamCommand extends Command
                     $seeder->run();
                 }
 
-                $this->info("✓ App seeder executed successfully");
+                $this->info('✓ App seeder executed successfully');
             } else {
                 $this->warn("Seeder class {$seederClass} exists but doesn't have a run() method.");
             }
         } catch (\Exception $e) {
             $this->error("Failed to execute app seeder: {$e->getMessage()}");
-            $this->warn("Team was created but domain data seeding failed.");
+            $this->warn('Team was created but domain data seeding failed.');
         }
     }
 
@@ -291,4 +291,3 @@ class SeedDemoTeamCommand extends Command
         return $slug;
     }
 }
-

@@ -29,7 +29,7 @@ class EditTeamProfile extends EditTenantProfile
      */
     protected static function isInTenantRouteGroup(): bool
     {
-        $router = app(Router::class);
+        $router = resolve(Router::class);
         $stack = $router->getGroupStack();
         $namePrefix = '';
         foreach ($stack as $group) {

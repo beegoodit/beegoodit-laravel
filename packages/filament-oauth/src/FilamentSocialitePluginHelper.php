@@ -39,7 +39,7 @@ class FilamentSocialitePluginHelper
                         $tenantId = self::extractMicrosoftTenantId($oauthUser);
                     }
                     // Add other providers here if they support tenant-based assignment
-                    
+
                     $accessToken = $oauthUser->token ?? null;
 
                     if ($tenantId) {
@@ -60,7 +60,7 @@ class FilamentSocialitePluginHelper
                 $user = $socialiteUser->getUser();
 
                 // Ensure teams relationship is loaded (it might not be if getUser() returned a fresh instance)
-                if (!$user->relationLoaded('teams')) {
+                if (! $user->relationLoaded('teams')) {
                     $user->load('teams');
                 }
 
@@ -70,7 +70,7 @@ class FilamentSocialitePluginHelper
                     $tenant = \Filament\Facades\Filament::getUserDefaultTenant($user);
 
                     // Redirect to 2FA challenge if enabled
-                    if ($user->two_factor_secret && !session()->get('auth.two_factor_confirmed_at')) {
+                    if ($user->two_factor_secret && ! session()->get('auth.two_factor_confirmed_at')) {
                         return to_route('filament.user-profile.pages.two-factor-challenge');
                     }
 
@@ -96,13 +96,13 @@ class FilamentSocialitePluginHelper
         $tenantId = $oauthUser->user['tid'] ?? null;
 
         // If not in user data, try access token response
-        if (!$tenantId && isset($oauthUser->accessTokenResponseBody)) {
+        if (! $tenantId && isset($oauthUser->accessTokenResponseBody)) {
             $tokenData = $oauthUser->accessTokenResponseBody;
             $tenantId = $tokenData['tenant_id'] ?? $tokenData['tid'] ?? null;
         }
 
         // If still no tenant ID, try to decode the JWT token
-        if (!$tenantId && isset($oauthUser->token)) {
+        if (! $tenantId && isset($oauthUser->token)) {
             try {
                 $tokenParts = explode('.', $oauthUser->token);
                 if (count($tokenParts) === 3) {

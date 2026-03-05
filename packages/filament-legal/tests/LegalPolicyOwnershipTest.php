@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentLegal\Tests;
 
 use BeegoodIT\FilamentLegal\Models\LegalPolicy;
-use Illuminate\Database\Eloquent\Model;
 
 class LegalPolicyOwnershipTest extends TestCase
 {

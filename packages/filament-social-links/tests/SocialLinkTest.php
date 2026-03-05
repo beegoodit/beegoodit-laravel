@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SocialLinkTest extends TestCase
 {
-    public function test_it_can_create_a_social_link()
+    public function test_it_can_create_a_social_link(): void
     {
         $platform = SocialPlatform::create([
             'name' => 'Instagram',
@@ -32,7 +32,7 @@ class SocialLinkTest extends TestCase
         ]);
     }
 
-    public function test_it_generates_correct_url_from_handle()
+    public function test_it_generates_correct_url_from_handle(): void
     {
         $platform = SocialPlatform::create([
             'name' => 'Instagram',
@@ -50,7 +50,7 @@ class SocialLinkTest extends TestCase
         $this->assertEquals('https://instagram.com/foosbeaver', $link->url);
     }
 
-    public function test_it_handles_handles_starting_with_at_symbol()
+    public function test_it_handles_handles_starting_with_at_symbol(): void
     {
         $platform = SocialPlatform::create([
             'name' => 'TikTok',
@@ -69,7 +69,7 @@ class SocialLinkTest extends TestCase
         $this->assertEquals('https://tiktok.com/@foosbeaver', $link->url);
     }
 
-    public function test_it_tracks_userstamps()
+    public function test_it_tracks_userstamps(): void
     {
         $user = User::create([
             'name' => 'Admin',

@@ -61,13 +61,13 @@ class FeedbackItemResource extends Resource
             ->columns(1)
             ->components([
                 TextInput::make('subject')
-                        ->label(__('feedback::feedback.form.subject'))
+                    ->label(__('feedback::feedback.form.subject'))
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
 
                 Textarea::make('description')
-                        ->label(__('feedback::feedback.form.description'))
+                    ->label(__('feedback::feedback.form.description'))
                     ->required()
                     ->rows(5)
                     ->columnSpanFull(),
@@ -115,29 +115,25 @@ class FeedbackItemResource extends Resource
                         \Filament\Forms\Components\DatePicker::make('created_until')
                             ->label(__('feedback::feedback.filters.created_until')),
                     ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    }),
+                    ->query(fn(Builder $query, array $data): Builder => $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        )),
                 Filter::make('ip_address')
                     ->form([
                         \Filament\Forms\Components\TextInput::make('ip_address')
                             ->label(__('feedback::feedback.filters.ip_address')),
                     ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['ip_address'],
-                                fn (Builder $query, $ip): Builder => $query->where('ip_address', 'like', "%{$ip}%")
-                            );
-                    }),
+                    ->query(fn(Builder $query, array $data): Builder => $query
+                        ->when(
+                            $data['ip_address'],
+                            fn (Builder $query, $ip): Builder => $query->where('ip_address', 'like', "%{$ip}%")
+                        )),
             ])
             ->recordActions([
                 ViewAction::make(),

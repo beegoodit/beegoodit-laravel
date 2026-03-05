@@ -108,7 +108,7 @@ class DomainResource extends Resource
                             ])
                             ->required()
                             ->default('platform')
-                            ->disabled(fn (?Domain $record): bool => $record !== null)
+                            ->disabled(fn (?Domain $record): bool => $record instanceof \BeegoodIT\FilamentTenancyDomains\Domain)
                             ->live()
                             ->reactive(),
                     ]),
@@ -124,7 +124,7 @@ class DomainResource extends Resource
                 Forms\Components\MorphToSelect::make('model')
                     ->label(__('filament-tenancy-domains::domains.model'))
                     ->types(collect(\Filament\Facades\Filament::getPlugin('filament-tenancy-domains')->getDomainableModels())
-                        ->map(fn ($model) => Forms\Components\MorphToSelect\Type::make($model)->titleAttribute('name'))
+                        ->map(fn (string $model): \Filament\Forms\Components\MorphToSelect\Type => Forms\Components\MorphToSelect\Type::make($model)->titleAttribute('name'))
                         ->toArray())
                     ->required(),
 
@@ -223,7 +223,7 @@ class DomainResource extends Resource
                             ->label(__('filament-tenancy-domains::domains.last_verification_error'))
                             ->disabled()
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('last_verification_error')),
+                            ->visible(fn (Get $get): mixed => $get('last_verification_error')),
                     ])
                     ->columns(1)
                     ->hidden(fn (Get $get): bool => $get('type') === 'platform'),

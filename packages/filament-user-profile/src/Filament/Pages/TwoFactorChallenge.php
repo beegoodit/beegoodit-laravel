@@ -15,7 +15,9 @@ class TwoFactorChallenge extends Page implements HasForms
     use InteractsWithForms;
 
     public ?string $code = null;
+
     public ?string $recovery_code = null;
+
     public bool $usingRecoveryCode = false;
 
     protected static string $view = 'filament-user-profile::pages.two-factor-challenge';
@@ -25,7 +27,7 @@ class TwoFactorChallenge extends Page implements HasForms
     public function mount(): void
     {
         // If user doesn't have 2FA enabled, redirect them home
-        if (!Auth::user()?->hasEnabledTwoFactorAuthentication()) {
+        if (! Auth::user()?->hasEnabledTwoFactorAuthentication()) {
             redirect()->intended(config('fortify.home'));
         }
 
@@ -37,7 +39,7 @@ class TwoFactorChallenge extends Page implements HasForms
 
     public function toggleRecoveryCode(): void
     {
-        $this->usingRecoveryCode = !$this->usingRecoveryCode;
+        $this->usingRecoveryCode = ! $this->usingRecoveryCode;
         $this->code = null;
         $this->recovery_code = null;
     }
@@ -65,11 +67,13 @@ class TwoFactorChallenge extends Page implements HasForms
         if ($recovery_code) {
             if ($user->replaceRecoveryCode($recovery_code)) {
                 $this->finishConfirmation();
+
                 return;
             }
         } elseif ($code) {
             if ($user->confirmTwoFactorAuthentication($code)) {
                 $this->finishConfirmation();
+
                 return;
             }
         }

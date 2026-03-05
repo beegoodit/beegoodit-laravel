@@ -76,5 +76,3 @@ class FeedComposer extends Component
         return view('filament-social-graph::livewire.feed-composer');
     }
 }
-
-

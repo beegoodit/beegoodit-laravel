@@ -80,7 +80,7 @@ class BroadcastResource extends Resource
 
                         Placeholder::make('status')
                             ->label(__('laravel-pwa::broadcast.fields.status.label'))
-                            ->content(fn ($record) => new HtmlString(view('filament::components.badge', [
+                            ->content(fn ($record): \Illuminate\Support\HtmlString => new HtmlString(view('filament::components.badge', [
                                 'color' => match ($record?->status->getValue()) {
                                     'pending' => 'gray',
                                     'processing' => 'warning',

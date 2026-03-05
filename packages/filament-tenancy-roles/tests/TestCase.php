@@ -21,6 +21,6 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
         // Bind translator so __() works in enums (e.g. TeamRole::label())
-        $app->singleton('translator', fn () => new Translator(new ArrayLoader, 'en'));
+        $app->singleton('translator', fn (): \Illuminate\Translation\Translator => new Translator(new ArrayLoader, 'en'));
     }
 }

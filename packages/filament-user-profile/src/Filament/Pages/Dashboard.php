@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentUserProfile\Filament\Pages;
 
 use Filament\Pages\Page;
-use Filament\Facades\Filament;
 
 class Dashboard extends Page
 {

@@ -89,11 +89,11 @@ class TeamAssignmentService
 
         // Fallback to generic name generation
         $name = ucfirst($provider);
-        
+
         if ($provider === 'microsoft') {
             $name = 'Microsoft';
         }
 
-        return $name . ' Organization ' . substr($tenantId, 0, 8);
+        return $name.' Organization '.substr($tenantId, 0, 8);
     }
 }

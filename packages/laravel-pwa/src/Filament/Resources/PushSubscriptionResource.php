@@ -80,7 +80,7 @@ class PushSubscriptionResource extends Resource
                     ->label(__('laravel-pwa::broadcast.buttons.test_notification'))
                     ->icon('heroicon-o-bell')
                     ->color('info')
-                    ->action(function (PushSubscription $record, PushNotificationService $service) {
+                    ->action(function (PushSubscription $record, PushNotificationService $service): void {
                         $payload = (new WebPushMessage)
                             ->title('🧪 Test Notification')
                             ->body('Your PWA push subscription is working correctly!')

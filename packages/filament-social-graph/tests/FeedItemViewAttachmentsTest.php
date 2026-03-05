@@ -46,7 +46,7 @@ class FeedItemViewAttachmentsTest extends TestCase
 
         $imagePaths = array_values(array_filter(
             $feedItem->attachments ?? [],
-            fn (string $path): bool => FeedItem::isImagePath($path)
+            FeedItem::isImagePath(...)
         ));
         $filePaths = array_values(array_filter(
             $feedItem->attachments ?? [],

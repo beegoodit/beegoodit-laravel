@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait HasActivePeriod
 {
-    public function scopeActive(Builder $query, \DateTimeInterface|string|null $at = null): Builder
+    protected function scopeActive(Builder $query, \DateTimeInterface|string|null $at = null): Builder
     {
         $at = $at instanceof \DateTimeInterface
-            ? Carbon::instance($at)
-            : ($at ? Carbon::parse($at) : now());
+            ? \Illuminate\Support\Facades\Date::instance($at)
+            : ($at ? \Illuminate\Support\Facades\Date::parse($at) : now());
 
         return $query->where('active_from', '<=', $at)->where('active_to', '>=', $at);
     }
@@ -19,8 +19,8 @@ trait HasActivePeriod
     public function activeAt(\DateTimeInterface|string|null $timestamp = null): bool
     {
         $at = $timestamp instanceof \DateTimeInterface
-            ? Carbon::instance($timestamp)
-            : ($timestamp ? Carbon::parse($timestamp) : now());
+            ? \Illuminate\Support\Facades\Date::instance($timestamp)
+            : ($timestamp ? \Illuminate\Support\Facades\Date::parse($timestamp) : now());
 
         return $this->active_from <= $at && $this->active_to >= $at;
     }

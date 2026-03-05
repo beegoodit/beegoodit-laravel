@@ -64,7 +64,7 @@ class Appearance extends Page implements HasForms
         // Use the user-profile panel (no tenant)
         $panel ??= 'me';
 
-        return parent::getUrl($parameters, $isAbsolute, $panel, null);
+        return parent::getUrl($parameters, $isAbsolute, $panel);
     }
 
     public function getHeading(): string
@@ -161,7 +161,7 @@ class Appearance extends Page implements HasForms
         $data = $this->form->getState();
         $user = Auth::user();
 
-        if (!$user instanceof Authenticatable) {
+        if (! $user instanceof Authenticatable) {
             return;
         }
 

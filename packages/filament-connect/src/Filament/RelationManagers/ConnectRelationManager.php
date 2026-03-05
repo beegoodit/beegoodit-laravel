@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 
 class ConnectRelationManager extends RelationManager
 {
@@ -30,7 +29,7 @@ class ConnectRelationManager extends RelationManager
             ->components([
                 Select::make('service')
                     ->label(__('Service'))
-                    ->options(collect(Connect::getServices())->mapWithKeys(fn($class, $name) => [$name => (new $class)->getName()]))
+                    ->options(collect(Connect::getServices())->mapWithKeys(fn ($class, $name): array => [$name => (new $class)->getName()]))
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn ($state, callable $set) => $set('credentials', [])),
@@ -48,12 +47,12 @@ class ConnectRelationManager extends RelationManager
                 \Filament\Schemas\Components\Group::make()
                     ->schema(function (callable $get) {
                         $serviceName = $get('service');
-                        if (!$serviceName) {
+                        if (! $serviceName) {
                             return [];
                         }
 
                         $serviceClass = Connect::getService($serviceName);
-                        if (!$serviceClass) {
+                        if (! $serviceClass) {
                             return [];
                         }
 
@@ -76,6 +75,7 @@ class ConnectRelationManager extends RelationManager
                     ->label(__('Service'))
                     ->formatStateUsing(function ($state) {
                         $serviceClass = Connect::getService($state);
+
                         return $serviceClass ? (new $serviceClass)->getName() : $state;
                     }),
 
@@ -101,11 +101,12 @@ class ConnectRelationManager extends RelationManager
                     ->color('info')
                     ->action(function (ApiAccount $record): void {
                         $serviceClass = Connect::getService($record->service);
-                        if (!$serviceClass) {
+                        if (! $serviceClass) {
                             \Filament\Notifications\Notification::make()
                                 ->title(__('Service not found'))
                                 ->danger()
                                 ->send();
+
                             return;
                         }
 

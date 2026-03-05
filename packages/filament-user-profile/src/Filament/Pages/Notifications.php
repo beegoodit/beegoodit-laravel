@@ -53,17 +53,17 @@ class Notifications extends Page
 
         if ($panelInstance) {
             // Construct URL using panel path and page slug
-            $url = $panelInstance->getPath() . '/' . static::getSlug($panelInstance);
+            $url = $panelInstance->getPath().'/'.static::getSlug($panelInstance);
 
             if ($isAbsolute) {
                 return url($url);
             }
 
-            return '/' . ltrim($url, '/');
+            return '/'.ltrim($url, '/');
         }
 
         // Fallback to parent method
-        return parent::getUrl($parameters, $isAbsolute, $panel, null);
+        return parent::getUrl($parameters, $isAbsolute, $panel);
     }
 
     public function getHeading(): string
@@ -94,7 +94,7 @@ class Notifications extends Page
     {
         $user = Auth::user();
 
-        if (!$user || !method_exists($user, 'hasPushSubscriptions')) {
+        if (! $user || ! method_exists($user, 'hasPushSubscriptions')) {
             return false;
         }
 
@@ -108,7 +108,7 @@ class Notifications extends Page
     {
         $user = Auth::user();
 
-        if (!$user || !method_exists($user, 'pushSubscriptions')) {
+        if (! $user || ! method_exists($user, 'pushSubscriptions')) {
             return 0;
         }
 

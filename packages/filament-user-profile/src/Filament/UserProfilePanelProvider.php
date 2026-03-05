@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentUserProfile\Filament;
 
+use BeegoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Appearance;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Dashboard;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Notifications;
@@ -9,6 +10,7 @@ use BeegoodIT\FilamentUserProfile\Filament\Pages\Password;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Profile;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\TwoFactor;
 use BeegoodIT\FilamentUserProfile\UserProfileHelper;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -17,8 +19,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
-use BeegoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
-use DutchCodingCompany\FilamentSocialite\Provider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -71,33 +71,33 @@ class UserProfilePanelProvider extends PanelProvider
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber,
             ])
-            ->brandName(fn() => __('filament-user-profile::messages.User Settings'))
+            ->brandName(fn () => __('filament-user-profile::messages.User Settings'))
             ->pages($this->getPages())
             ->navigationItems([
-                    NavigationItem::make()
-                        ->label(fn() => __('filament-user-profile::messages.Back to Portal'))
-                        ->icon('heroicon-o-arrow-left')
-                        ->url(fn(): string => $this->getPortalUrl())
-                        ->sort(-1), // Show at the top
-                ])
+                NavigationItem::make()
+                    ->label(fn () => __('filament-user-profile::messages.Back to Portal'))
+                    ->icon('heroicon-o-arrow-left')
+                    ->url(fn (): string => $this->getPortalUrl())
+                    ->sort(-1), // Show at the top
+            ])
             ->middleware([
-                    EncryptCookies::class,
-                    AddQueuedCookiesToResponse::class,
-                    StartSession::class,
-                    AuthenticateSession::class,
-                    ShareErrorsFromSession::class,
-                    VerifyCsrfToken::class,
-                    SubstituteBindings::class,
-                    DisableBladeIconComponents::class,
-                    DispatchServingFilamentEvent::class,
-                    $this->getSetLocaleMiddleware(),
-                ])
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                AuthenticateSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                SubstituteBindings::class,
+                DisableBladeIconComponents::class,
+                DispatchServingFilamentEvent::class,
+                $this->getSetLocaleMiddleware(),
+            ])
             ->authMiddleware(array_merge(
-                    [Authenticate::class],
-                    class_exists(\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
-                    ? [\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
-                    : []
-                ))
+                [Authenticate::class],
+                class_exists(\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class)
+                ? [\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
+                : []
+            ))
             ->viteTheme('resources/css/filament/portal/theme.css');
     }
 
@@ -112,13 +112,13 @@ class UserProfilePanelProvider extends PanelProvider
     {
         $portalPanel = Filament::getPanel('portal');
 
-        if (!$portalPanel) {
+        if (! $portalPanel) {
             // Fallback if portal panel doesn't exist
             return '/portal';
         }
 
         // If portal doesn't have tenancy, just return the base URL
-        if (!$portalPanel->hasTenancy()) {
+        if (! $portalPanel->hasTenancy()) {
             return $portalPanel->getUrl();
         }
 
@@ -177,7 +177,7 @@ class UserProfilePanelProvider extends PanelProvider
     protected function shouldRegisterTwoFactorPage(): bool
     {
         // Check if Fortify 2FA feature is enabled
-        if (!Features::enabled(Features::twoFactorAuthentication())) {
+        if (! Features::enabled(Features::twoFactorAuthentication())) {
             return false;
         }
 

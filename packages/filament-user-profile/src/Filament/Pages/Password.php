@@ -55,7 +55,7 @@ class Password extends Page implements HasForms
         // Use the user-profile panel (no tenant)
         $panel ??= 'me';
 
-        return parent::getUrl($parameters, $isAbsolute, $panel, null);
+        return parent::getUrl($parameters, $isAbsolute, $panel);
     }
 
     public function getHeading(): string

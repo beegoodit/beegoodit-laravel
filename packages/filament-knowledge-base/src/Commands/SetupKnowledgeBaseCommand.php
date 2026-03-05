@@ -20,9 +20,10 @@ class SetupKnowledgeBaseCommand extends Command
         $fallbackLocale = config('app.fallback_locale', 'en');
 
         // Validate locale format
-        if (!preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $locale)) {
+        if (! preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $locale)) {
             $this->error("Invalid locale code: {$locale}");
             $this->line('Use format: en, de, es, pt_BR, zh_CN, etc.');
+
             return self::FAILURE;
         }
 
@@ -38,12 +39,12 @@ class SetupKnowledgeBaseCommand extends Command
 
         $this->newLine();
         $this->info('✓ Knowledge base setup complete!');
-        $this->line("Access your documentation at: /kb");
+        $this->line('Access your documentation at: /kb');
 
         if ($locale !== $fallbackLocale) {
             $this->newLine();
             $this->comment("Note: Both '{$locale}' and '{$fallbackLocale}' folders were created.");
-            $this->comment("The fallback locale folder is required by guava/filament-knowledge-base.");
+            $this->comment('The fallback locale folder is required by guava/filament-knowledge-base.');
         }
 
         return self::SUCCESS;
@@ -59,7 +60,7 @@ class SetupKnowledgeBaseCommand extends Command
         $welcomePath = "{$localePath}/welcome.md";
 
         // Create directories
-        if (!File::isDirectory($localePath)) {
+        if (! File::isDirectory($localePath)) {
             File::makeDirectory($localePath, 0755, true);
             $this->info("Created: docs/knowledge-base/{$locale}/");
         } else {
@@ -67,7 +68,7 @@ class SetupKnowledgeBaseCommand extends Command
         }
 
         // Create welcome.md template
-        if (!File::exists($welcomePath) || $force) {
+        if (! File::exists($welcomePath) || $force) {
             $content = $this->getWelcomeTemplate($locale);
             File::put($welcomePath, $content);
             $this->info("Created: docs/knowledge-base/{$locale}/welcome.md");
@@ -122,4 +123,3 @@ You can use all standard markdown features including:
 MD;
     }
 }
-

@@ -86,7 +86,7 @@ class FeedbackModalTest extends TestCase
 
     public function test_error_message_shows_on_failure(): void
     {
-        $user = $this->createUser();
+        $this->createUser();
 
         // Mock a failure scenario by causing an exception
         // This is a simplified test - in reality, database errors would trigger this

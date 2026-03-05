@@ -94,8 +94,7 @@ trait HasSocialSubscriptions
                             ->where('actor_id', $sub->feed_owner_id);
                     });
                 }
-            })
-            ->orderByDesc('created_at')
+            })->latest()
             ->limit($limit);
 
         if (config('filament-social-graph.tenancy.enabled') && $this->relationLoaded('team')) {

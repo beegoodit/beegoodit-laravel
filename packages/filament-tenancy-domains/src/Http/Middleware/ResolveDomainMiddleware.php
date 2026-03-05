@@ -20,8 +20,8 @@ class ResolveDomainMiddleware
             ->first();
 
         if ($resolvedDomain && $resolvedDomain->model) {
-            app()->instance("resolvedDomain", $resolvedDomain);
-            app()->instance("resolvedEntity", $resolvedDomain->model);
+            app()->instance('resolvedDomain', $resolvedDomain);
+            app()->instance('resolvedEntity', $resolvedDomain->model);
         }
 
         return $next($request);

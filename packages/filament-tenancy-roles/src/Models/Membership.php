@@ -12,7 +12,7 @@ class Membership extends Pivot
 
     protected static function booted(): void
     {
-        static::creating(function (Membership $membership) {
+        static::creating(function (Membership $membership): void {
             if ($membership->role === null) {
                 $membership->role = TeamRole::Member;
             }

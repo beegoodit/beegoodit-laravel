@@ -66,7 +66,7 @@ trait HasAvatar
         // Try to get color from tenant (if filament-tenancy is used)
         try {
             $tenant = filament()->getTenant();
-            if ($tenant) {
+            if ($tenant instanceof \Illuminate\Database\Eloquent\Model) {
                 // Try to use the accessor first (if HasBranding trait is used)
                 // The accessor will convert oklch to hex automatically
                 if (method_exists($tenant, 'getPrimaryColorAttribute') ||

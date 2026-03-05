@@ -10,8 +10,8 @@ use RectorLaravel\Set\LaravelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        __DIR__ . '/packages/*/src',
-        __DIR__ . '/packages/*/tests',
+        __DIR__.'/packages/*/src',
+        __DIR__.'/packages/*/tests',
     ]);
 
     // define sets of rules
@@ -27,6 +27,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     // skip specific rules or paths
     $rectorConfig->skip([
-        __DIR__ . '/packages/*/vendor',
+        __DIR__.'/packages/*/vendor',
     ]);
 };

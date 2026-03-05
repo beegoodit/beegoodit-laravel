@@ -81,6 +81,7 @@ class CookieConsent extends Component
     protected function hasConsented(): bool
     {
         $name = config('cookie-consent.cookie_name', config('cookie-consent.cookie_key'));
+
         return request()->cookie($name) !== null;
     }
 

@@ -88,7 +88,7 @@ trait ValidatesDocumentationStructure
         $docsPath = base_path('docs/knowledge-base');
 
         // Skip validation if directory doesn't exist (no docs configured)
-        if (!File::isDirectory($docsPath)) {
+        if (! File::isDirectory($docsPath)) {
             return;
         }
 
@@ -117,12 +117,12 @@ trait ValidatesDocumentationStructure
         }
 
         // Check for invalid folder names
-        if (!$hasValidLocale && $invalidFolders !== []) {
+        if (! $hasValidLocale && $invalidFolders !== []) {
             $this->handleInvalidStructure($invalidFolders);
         }
 
         // Check for missing fallback locale folder
-        if ($hasValidLocale && !$hasFallbackLocale) {
+        if ($hasValidLocale && ! $hasFallbackLocale) {
             $this->handleMissingFallbackLocale($fallbackLocale);
         }
     }
@@ -141,7 +141,7 @@ trait ValidatesDocumentationStructure
      */
     protected function handleInvalidStructure(array $invalidFolders): void
     {
-        $folders = implode(', ', array_map(fn($f): string => "'{$f}'", $invalidFolders));
+        $folders = implode(', ', array_map(fn ($f): string => "'{$f}'", $invalidFolders));
 
         $message = <<<MSG
 [Knowledge Base] Invalid documentation structure detected!
@@ -193,4 +193,3 @@ MSG;
         Log::warning($message);
     }
 }
-

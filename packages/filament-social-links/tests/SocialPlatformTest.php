@@ -7,9 +7,9 @@ use BeegoodIT\FilamentSocialLinks\Models\SocialPlatform;
 
 class SocialPlatformTest extends TestCase
 {
-    public function test_it_can_create_a_social_platform()
+    public function test_it_can_create_a_social_platform(): void
     {
-        $platform = SocialPlatform::create([
+        SocialPlatform::create([
             'name' => 'Custom Platform',
             'slug' => 'custom-platform',
             'base_url' => 'https://custom.com/',
@@ -20,7 +20,7 @@ class SocialPlatformTest extends TestCase
         ]);
     }
 
-    public function test_seeder_populates_default_platforms()
+    public function test_seeder_populates_default_platforms(): void
     {
         $seeder = new SocialPlatformSeeder;
         $seeder->run();
@@ -31,7 +31,7 @@ class SocialPlatformTest extends TestCase
         $this->assertDatabaseHas('social_platforms', ['slug' => 'telegram']);
     }
 
-    public function test_slug_is_unique()
+    public function test_slug_is_unique(): void
     {
         SocialPlatform::create([
             'name' => 'Platform 1',

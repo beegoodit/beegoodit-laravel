@@ -17,9 +17,9 @@ use Spatie\EloquentSortable\SortableTrait;
 class Partner extends Model implements Sortable
 {
     use HasActivePeriod;
+    use HasFactory;
     use HasUserStamps;
     use HasUuids;
-    use HasFactory;
     use SortableTrait;
 
     public array $sortable = [
@@ -56,7 +56,7 @@ class Partner extends Model implements Sortable
         return $this->morphTo();
     }
 
-    public function scopePlatform(Builder $query): Builder
+    protected function scopePlatform(Builder $query): Builder
     {
         return $query->whereNull('partnerable_id');
     }
@@ -77,7 +77,7 @@ class Partner extends Model implements Sortable
             return null;
         }
 
-        $disk = config('filament-partners.logo_disk') ?? (config('filesystems.default') === 's3' ? 's3' : 'public');
+        $disk = config('filament-partners.logo_disk', config('filesystems.default') === 's3' ? 's3' : 'public');
 
         if ($disk === 's3') {
             return Storage::disk('s3')->temporaryUrl($this->logo, now()->addHour());

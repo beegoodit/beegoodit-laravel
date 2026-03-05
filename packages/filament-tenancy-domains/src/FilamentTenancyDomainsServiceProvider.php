@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentTenancyDomains;
 
 use BeegoodIT\FilamentTenancyDomains\Http\Middleware\EnsureDomainContextMiddleware;
-use BeegoodIT\FilamentTenancyDomains\Http\Middleware\ResolveDomainMiddleware;
 use Illuminate\Support\ServiceProvider;
 
 class FilamentTenancyDomainsServiceProvider extends ServiceProvider

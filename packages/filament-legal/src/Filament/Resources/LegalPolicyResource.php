@@ -91,10 +91,10 @@ class LegalPolicyResource extends Resource
                 MorphToSelect::make('owner')
                     ->label(__('filament-legal::messages.Owner'))
                     ->types(collect(FilamentLegalPlugin::get()->getLegalableModels())
-                        ->map(fn ($model) => MorphToSelect\Type::make($model)->titleAttribute('name'))
+                        ->map(fn (string $model): \Filament\Forms\Components\MorphToSelect\Type => MorphToSelect\Type::make($model)->titleAttribute('name'))
                         ->toArray())
                     ->columnSpanFull()
-                    ->hidden(fn () => filament()->hasTenancy()),
+                    ->hidden(fn (): bool => filament()->hasTenancy()),
 
                 Section::make(__('filament-legal::messages.Content'))
                     ->description(__('filament-legal::messages.Provide the content for each supported language.'))

@@ -3,13 +3,9 @@
 namespace BeegoodIT\FilamentOAuth\Tests\Unit;
 
 use BeegoodIT\FilamentOAuth\Services\AvatarService;
-use BeegoodIT\FilamentOAuth\Services\TeamAssignmentService;
 use BeegoodIT\FilamentOAuth\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 class ServiceLogicTest extends TestCase
 {
@@ -31,13 +27,17 @@ class ServiceLogicTest extends TestCase
     public function test_avatar_service_handles_missing_avatar(): void
     {
         $user = $this->createMock(\Illuminate\Database\Eloquent\Model::class);
-        $oauthUser = new class {
-            public function getAvatar(): null { return null; }
+        $oauthUser = new class
+        {
+            public function getAvatar(): null
+            {
+                return null;
+            }
         };
 
-        $service = new AvatarService();
+        $service = new AvatarService;
         $service->syncAvatar($user, $oauthUser);
-        
+
         // No exceptions should be thrown, and no Http calls made
         $this->assertTrue(true);
     }

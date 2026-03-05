@@ -54,7 +54,7 @@ class PartnerResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $disk = config('filament-partners.logo_disk') ?? (config('filesystems.default') === 's3' ? 's3' : 'public');
+        $disk = config('filament-partners.logo_disk', config('filesystems.default') === 's3' ? 's3' : 'public');
         $directory = config('filament-partners.logo_directory', 'partners');
         $maxSize = config('filament-partners.logo_max_size', 2048);
 
@@ -83,11 +83,11 @@ class PartnerResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpan(1),
-                    FileUpload::make('logo')
+                FileUpload::make('logo')
                     ->label(__('filament-partners::partner.logo_label'))
                     ->image()
                     ->disk($disk)
-                    ->directory(fn (?Partner $record): string => $record
+                    ->directory(fn (?Partner $record): string => $record instanceof \BeegoodIT\FilamentPartners\Models\Partner
                         ? $directory.'/'.$record->id
                         : $directory
                     )
@@ -110,13 +110,13 @@ class PartnerResource extends Resource
                 DateTimePicker::make('active_from')
                     ->label(__('filament-partners::partner.active_from_label'))
                     ->required()
-                    ->default(Carbon::parse('1970-01-01 00:00:00'))
+                    ->default(\Illuminate\Support\Facades\Date::parse('1970-01-01 00:00:00'))
                     ->columnSpan(1),
 
                 DateTimePicker::make('active_to')
                     ->label(__('filament-partners::partner.active_to_label'))
                     ->required()
-                    ->default(Carbon::parse('9999-12-31 23:59:59'))
+                    ->default(\Illuminate\Support\Facades\Date::parse('9999-12-31 23:59:59'))
                     ->columnSpan(1),
             ]);
     }
@@ -127,16 +127,14 @@ class PartnerResource extends Resource
             ->columns([
                 ImageColumn::make('logo')
                     ->label(__('filament-partners::partner.logo_label'))
-                    ->disk(config('filament-partners.logo_disk') ?? (config('filesystems.default') === 's3' ? 's3' : 'public'))
+                    ->disk(config('filament-partners.logo_disk', config('filesystems.default') === 's3' ? 's3' : 'public'))
                     ->circular()
                     ->defaultImageUrl(fn (Partner $record): string => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&size=64'),
 
                 TextColumn::make('partnerable')
                     ->label(__('filament-partners::partner.partnerable_label'))
                     ->formatStateUsing(fn (Partner $record): string => $record->partnerable?->name ?? __('filament-partners::partner.partnerable_platform'))
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderBy('partnerable_type', $direction)->orderBy('partnerable_id', $direction);
-                    })
+                    ->sortable(query: fn(Builder $query, string $direction): Builder => $query->orderBy('partnerable_type', $direction)->orderBy('partnerable_id', $direction))
                     ->hidden(fn (): bool => \Filament\Facades\Filament::hasTenancy()),
 
                 TextColumn::make('type')
@@ -152,8 +150,8 @@ class PartnerResource extends Resource
 
                 IconColumn::make('url')
                     ->label(__('filament-partners::partner.url_label'))
-                    ->icon(fn (?string $state): string | null => ! empty($state) ? 'heroicon-o-arrow-top-right-on-square' : null)
-                    ->url(fn (?string $state): ?string => ! empty($state) ? $state : null)
+                    ->icon(fn (?string $state): ?string => in_array($state, [null, '', '0'], true) ? null : 'heroicon-o-arrow-top-right-on-square')
+                    ->url(fn (?string $state): ?string => in_array($state, [null, '', '0'], true) ? null : $state)
                     ->openUrlInNewTab()
                     ->tooltip(fn (?string $state): ?string => $state)
                     ->placeholder(''),

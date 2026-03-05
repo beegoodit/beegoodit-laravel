@@ -15,7 +15,7 @@ class SubjectModel extends Model
 
 uses(TestCase::class);
 
-it('groups timeline entries by year correctly', function () {
+it('groups timeline entries by year correctly', function (): void {
     $subject = new SubjectModel(['id' => 1]);
 
     // Create a mock widget that returns specific entries
@@ -31,9 +31,9 @@ it('groups timeline entries by year correctly', function () {
 
     $widget->subject = $subject;
     $widget->mockEntries = collect([
-        new TimelineEntry(title: 'Item 1', occurredAt: Carbon::parse('2024-01-01')),
-        new TimelineEntry(title: 'Item 2', occurredAt: Carbon::parse('2024-06-01')),
-        new TimelineEntry(title: 'Item 3', occurredAt: Carbon::parse('2025-01-01')),
+        new TimelineEntry(title: 'Item 1', occurredAt: \Illuminate\Support\Facades\Date::parse('2024-01-01')),
+        new TimelineEntry(title: 'Item 2', occurredAt: \Illuminate\Support\Facades\Date::parse('2024-06-01')),
+        new TimelineEntry(title: 'Item 3', occurredAt: \Illuminate\Support\Facades\Date::parse('2025-01-01')),
         new TimelineEntry(title: 'Origin', occurredAt: null),
     ]);
 

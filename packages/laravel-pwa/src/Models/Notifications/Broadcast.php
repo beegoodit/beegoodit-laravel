@@ -2,15 +2,15 @@
 
 namespace BeegoodIT\LaravelPwa\Models\Notifications;
 
+use BeegoodIT\LaravelPwa\States\Broadcasts\BroadcastState;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\ModelStates\HasStates;
-use BeegoodIT\LaravelPwa\States\Broadcasts\BroadcastState;
 
 class Broadcast extends Model
 {
-    use HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory, HasStates;
+    use HasStates, HasUuids, \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     protected static function newFactory()
     {
