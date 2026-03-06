@@ -53,6 +53,10 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../lang' => lang_path('vendor/filament-social-graph'),
             ], 'filament-social-graph-translations');
+
+            $this->publishes([
+                __DIR__.'/../resources/js/lightbox.js' => public_path('vendor/filament-social-graph/js/lightbox.js'),
+            ], 'filament-social-graph-assets');
         }
     }
 

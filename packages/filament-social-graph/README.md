@@ -11,6 +11,7 @@ Actor-centric feeds, subscriptions, and social graph primitives for Filament app
 - **Tenancy**: Optional team scoping for multi-tenant setups.
 - **Filament Admin resources**: `FeedItemResource` and `SubscriptionResource` for CRUD. Attachments via FileUpload field on Create/Edit.
 - **Livewire components**: Feed list, subscribe button (entity feeds use FeedController routes).
+- **Image lightbox**: Feed item attachment images open in an in-page lightbox with gallery navigation (prev/next, arrow keys) when multiple images are in a card.
 
 ## Installation
 
@@ -43,6 +44,14 @@ Publish translations to customize (optional; package includes en, de, es):
 ```bash
 php artisan vendor:publish --tag=filament-social-graph-translations
 ```
+
+**Feed page lightbox (image preview):** The feed item card opens attachment images in an in-page lightbox (overlay with prev/next for galleries, Escape to close, arrow keys when multiple images). Publish the lightbox script once so it is available; the feed content view pushes it via `@push('scripts')`:
+
+```bash
+php artisan vendor:publish --tag=filament-social-graph-assets
+```
+
+This copies `resources/js/lightbox.js` to `public/vendor/filament-social-graph/js/lightbox.js`. Ensure your feed page layout includes `@stack('scripts')`. If you use a **custom index view** (e.g. `feed_page.index_view`), include the overlay and script there: `@include('filament-social-graph::feed.partials.lightbox-overlay')` and `@push('scripts')` with `<script src="{{ asset('vendor/filament-social-graph/js/lightbox.js') }}"></script>`.
 
 ## Configuration
 

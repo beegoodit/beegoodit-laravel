@@ -58,27 +58,59 @@
     @endif
 
     @php
-        $attachments = $feedItem->attachments ?? [];
-        $disk = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getStorageDisk();
+        if (! isset($imageEntries)) {
+            $attachments = $feedItem->attachments ?? [];
+            $disk = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getStorageDisk();
+            $imagePaths = array_values(array_filter($attachments, \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath(...)));
+            $filePaths = array_values(array_filter($attachments, fn (string $path): bool => ! \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path)));
+            $imageEntries = array_map(fn (string $path): array => [
+                'path' => $path,
+                'url' => \Illuminate\Support\Facades\Storage::disk($disk)->url($path),
+                'filename' => basename($path),
+            ], $imagePaths);
+            $fileEntries = array_map(fn (string $path): array => [
+                'path' => $path,
+                'url' => \Illuminate\Support\Facades\Storage::disk($disk)->url($path),
+                'filename' => basename($path),
+            ], $filePaths);
+            $imageGridClass = count($imagePaths) <= 1 ? 'grid grid-cols-1 max-w-2xl' : (count($imagePaths) <= 4 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-2 sm:grid-cols-3 gap-2');
+        }
+        $hasAttachments = ! empty($imageEntries) || ! empty($fileEntries);
     @endphp
-    @if(!empty($attachments))
-        <div class="mt-3 flex flex-wrap gap-2">
-            @foreach($attachments as $path)
-                @php
-                    $url = \Illuminate\Support\Facades\Storage::disk($disk)->url($path);
-                    $filename = basename($path);
-                    $isImage = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path);
-                @endphp
-                @if($isImage)
-                    <a href="{{ $url }}" target="_blank" rel="noopener" class="block">
-                        <img src="{{ $url }}" alt="{{ $filename }}" class="max-h-48 rounded object-cover">
+    @if($hasAttachments)
+        @if(! empty($imageEntries))
+            <div class="mt-3 {{ $imageGridClass }}" data-lightbox-group>
+                @foreach($imageEntries as $entry)
+                    <a
+                        data-lightbox
+                        href="{{ $entry['url'] }}"
+                        class="block overflow-hidden rounded-lg border border-gray-200 shadow-sm transition hover:opacity-90 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:border-gray-600 dark:focus:ring-gray-500"
+                    >
+                        <span class="block aspect-video w-full">
+                            <img
+                                src="{{ $entry['url'] }}"
+                                alt="{{ $entry['filename'] }}"
+                                loading="lazy"
+                                class="h-full w-full object-cover"
+                            >
+                        </span>
                     </a>
-                @else
-                    <a href="{{ $url }}" target="_blank" rel="noopener" class="rounded bg-gray-100 px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                        {{ $filename }}
+                @endforeach
+            </div>
+        @endif
+        @if(! empty($fileEntries))
+            <div class="mt-3 flex flex-wrap gap-2">
+                @foreach($fileEntries as $entry)
+                    <a
+                        href="{{ $entry['url'] }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="rounded bg-gray-100 px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    >
+                        {{ $entry['filename'] }}
                     </a>
-                @endif
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+        @endif
     @endif
 </div>

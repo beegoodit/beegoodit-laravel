@@ -26,4 +26,8 @@ return [
     'navigation_group' => 'Red social',
     'section_metadata' => 'Metadatos',
     'section_content' => 'Contenido',
+    'lightbox_label' => 'Vista previa de imagen',
+    'lightbox_close' => 'Cerrar',
+    'lightbox_prev' => 'Imagen anterior',
+    'lightbox_next' => 'Siguiente imagen',
 ];

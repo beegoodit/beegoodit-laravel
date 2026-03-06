@@ -26,4 +26,8 @@ return [
     'navigation_group' => 'Social Graph',
     'section_metadata' => 'Metadata',
     'section_content' => 'Content',
+    'lightbox_label' => 'Image preview',
+    'lightbox_close' => 'Close',
+    'lightbox_prev' => 'Previous image',
+    'lightbox_next' => 'Next image',
 ];

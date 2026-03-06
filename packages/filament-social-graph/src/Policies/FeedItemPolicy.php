@@ -13,7 +13,7 @@ class FeedItemPolicy
      */
     public function create(?Authenticatable $user, mixed $entity = null): bool
     {
-        if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+        if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
             return false;
         }
 
@@ -35,7 +35,7 @@ class FeedItemPolicy
      */
     public function update(?Authenticatable $user, FeedItem $feedItem): bool
     {
-        if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+        if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
             return false;
         }
 

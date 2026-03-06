@@ -26,4 +26,8 @@ return [
     'navigation_group' => 'Soziales Netzwerk',
     'section_metadata' => 'Metadaten',
     'section_content' => 'Inhalt',
+    'lightbox_label' => 'Bildvorschau',
+    'lightbox_close' => 'Schließen',
+    'lightbox_prev' => 'Vorheriges Bild',
+    'lightbox_next' => 'Nächstes Bild',
 ];
