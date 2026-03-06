@@ -52,7 +52,7 @@
                         aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
                         onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); document.getElementById('feed-composer-attachments').click(); }"
                     >
-                        <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                        <span class="text-center text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
                     </div>
                     <input
                         type="file"

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class FeedComposer extends Component
+class FeedCreateForm extends Component
 {
     use AuthorizesRequests;
     use WithFileUploads;
@@ -72,7 +72,6 @@ class FeedComposer extends Component
 
     public function render(): View
     {
-        // return view('livewire.feed-rebuild-composer-quill-vanilla');
-        return view('filament-social-graph::livewire.feed-composer');
+        return view('filament-social-graph::livewire.feed-create-form');
     }
 }

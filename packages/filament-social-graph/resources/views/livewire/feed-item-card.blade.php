@@ -73,7 +73,7 @@
                 'url' => \Illuminate\Support\Facades\Storage::disk($disk)->url($path),
                 'filename' => basename($path),
             ], $filePaths);
-            $imageGridClass = count($imagePaths) <= 1 ? 'grid grid-cols-1 max-w-2xl' : (count($imagePaths) <= 4 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-2 sm:grid-cols-3 gap-2');
+            $imageGridClass = count($imagePaths) <= 1 ? 'grid grid-cols-1 max-w-2xl' : (count($imagePaths) <= 4 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2');
         }
         $hasAttachments = ! empty($imageEntries) || ! empty($fileEntries);
     @endphp

@@ -10,6 +10,7 @@ return [
     'load_more' => 'Load more',
     'edit_title' => 'Edit feed item',
     'edit' => 'Edit',
+    'keep' => 'Keep',
     'update' => 'Update',
     'cancel' => 'Cancel',
 ];

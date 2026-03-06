@@ -9,7 +9,7 @@
     @stack('styles')
 </head>
 <body class="antialiased bg-gray-50 dark:bg-gray-900">
-    <div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         @hasSection('content')
             @yield('content')
         @else

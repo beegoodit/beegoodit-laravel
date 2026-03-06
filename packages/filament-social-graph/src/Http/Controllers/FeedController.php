@@ -63,7 +63,9 @@ class FeedController
         $updateUrl = preg_replace('#/edit$#', '', $request->url());
         $feedUrl = preg_replace('#/feed/items/[^/]+/edit$#', '/feed', $request->url());
 
-        return view('filament-social-graph::feed.edit', [
+        $editView = config('filament-social-graph.feed_page.edit_view') ?? 'filament-social-graph::feed.edit';
+
+        return view($editView, [
             'entity' => $entity,
             'feedItem' => $feedItemModel,
             'layout' => $layout,

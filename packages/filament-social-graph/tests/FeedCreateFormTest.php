@@ -2,13 +2,13 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
-use BeegoodIT\FilamentSocialGraph\Livewire\FeedComposer;
+use BeegoodIT\FilamentSocialGraph\Livewire\FeedCreateForm;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-class FeedComposerTest extends TestCase
+class FeedCreateFormTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -30,7 +30,7 @@ class FeedComposerTest extends TestCase
 
         $file = UploadedFile::fake()->image('photo.jpg');
 
-        Livewire::test(FeedComposer::class, ['entity' => $user])
+        Livewire::test(FeedCreateForm::class, ['entity' => $user])
             ->set('subject', 'Test subject')
             ->set('body', '<p>Test body</p>')
             ->set('attachments', [$file])
@@ -47,7 +47,7 @@ class FeedComposerTest extends TestCase
         Storage::disk('public')->assertExists($item->attachments[0]);
     }
 
-    public function test_feed_composer_renders_drop_placeholder(): void
+    public function test_feed_create_form_renders_drop_placeholder(): void
     {
         $user = TestUser::create([
             'name' => 'Feed Owner',
@@ -57,7 +57,7 @@ class FeedComposerTest extends TestCase
 
         $this->actingAs($user);
 
-        Livewire::test(FeedComposer::class, ['entity' => $user])
+        Livewire::test(FeedCreateForm::class, ['entity' => $user])
             ->assertSee(__('filament-social-graph::feed_item.attachments_drop_placeholder'), false);
     }
 }

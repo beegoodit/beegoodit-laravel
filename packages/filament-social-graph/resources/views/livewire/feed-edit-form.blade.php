@@ -1,7 +1,3 @@
-@php
-    $existingPaths = $this->feedItem->attachments ?? [];
-    $editDisk = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getStorageDisk();
-@endphp
 <div class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
     <form wire:submit="updateItem" class="space-y-4">
         <div>
@@ -16,19 +12,17 @@
             </flux:field>
         </div>
         <div>
-            <flux:field>
-                <flux:label class="sr-only">{{ __('filament-social-graph::feed_item.body') }}</flux:label>
-                <div wire:ignore>
-                    <div id="feed-edit-body-editor" class="min-h-[100px] rounded-lg border border-zinc-200 bg-white dark:border-zinc-600 dark:bg-zinc-800" data-placeholder="{{ __('filament-social-graph::feed.composer_placeholder') }}"></div>
-                </div>
-                <input type="hidden" id="feed-edit-body" wire:model="body">
-                @error('body')
-                    <flux:error>{{ $message }}</flux:error>
-                @enderror
-            </flux:field>
+            <flux:label class="sr-only">{{ __('filament-social-graph::feed_item.body') }}</flux:label>
+            <div wire:ignore>
+                <div id="feed-edit-body-editor" class="min-h-[100px] rounded-lg border border-zinc-200 bg-white dark:border-zinc-600 dark:bg-zinc-800" data-placeholder="{{ __('filament-social-graph::feed.composer_placeholder') }}"></div>
+            </div>
+            <input type="hidden" id="feed-edit-body" wire:model="body">
+            @error('body')
+                <flux:error>{{ $message }}</flux:error>
+            @enderror
         </div>
         <div>
-            @if(count($existingPaths) > 0)
+            @if(count($this->existingPaths) > 0)
                 <flux:field>
                     <flux:label>{{ __('filament-social-graph::feed_item.attachments') }}</flux:label>
                     <div class="flex flex-wrap gap-3">
@@ -39,16 +33,16 @@
                                 $isImage = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path);
                                 $marked = in_array($path, $attachmentsRemove, true);
                             @endphp
-                            <div class="flex items-start gap-2 rounded border border-zinc-200 p-2 dark:border-zinc-600 {{ $marked ? 'opacity-50' : '' }}">
+                            <div class="grid grid-cols-1 grid-rows-1 items-start gap-2 rounded border border-zinc-200 p-2 dark:border-zinc-600 {{ $marked ? 'opacity-50' : '' }}">
                                 @if($isImage)
                                     <a href="{{ $url }}" target="_blank" rel="noopener" class="block shrink-0">
-                                        <img src="{{ $url }}" alt="{{ $filename }}" class="max-h-24 rounded object-cover">
+                                        <img src="{{ $url }}" alt="{{ $filename }}" class="aspect-3/2 max-h-24 rounded object-cover">
                                     </a>
                                 @else
                                     <a href="{{ $url }}" target="_blank" rel="noopener" class="text-sm text-zinc-600 dark:text-zinc-400">{{ $filename }}</a>
                                 @endif
                                 @if($marked)
-                                    <button type="button" wire:click="unmarkAttachmentForRemoval({{ json_encode($path) }})" class="text-sm text-primary-600 dark:text-primary-400">{{ __('filament-social-graph::feed.keep') ?? 'Keep' }}</button>
+                                    <button type="button" wire:click="unmarkAttachmentForRemoval({{ json_encode($path) }})" class="text-sm text-primary-600 dark:text-primary-400">{{ __('filament-social-graph::feed.keep') }}</button>
                                 @else
                                     <button type="button" wire:click="markAttachmentForRemoval({{ json_encode($path) }})" class="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200">{{ __('filament-social-graph::feed_item.attachments_remove') }}</button>
                                 @endif
@@ -57,6 +51,9 @@
                     </div>
                 </flux:field>
             @endif
+        </div>
+
+        <div>
             <flux:field>
                 <flux:label for="feed-edit-attachments">{{ __('filament-social-graph::feed_item.attachments_new') }}</flux:label>
                 <div
@@ -68,7 +65,7 @@
                     aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
                     onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); document.getElementById('feed-edit-attachments').click(); }"
                 >
-                    <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                    <span class="text-center text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
                 </div>
                 <input
                     type="file"
@@ -99,7 +96,7 @@
                 @endif
             </flux:field>
         </div>
-        <div class="flex gap-2">
+        <div class="flex justify-between">
             <a href="{{ $feedUrl }}" class="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700">
                 {{ __('filament-social-graph::feed.cancel') }}
             </a>

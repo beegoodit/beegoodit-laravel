@@ -10,6 +10,7 @@ return [
     'load_more' => 'Mehr laden',
     'edit_title' => 'Feed-Beitrag bearbeiten',
     'edit' => 'Bearbeiten',
+    'keep' => 'Behalten',
     'update' => 'Aktualisieren',
     'cancel' => 'Abbrechen',
 ];

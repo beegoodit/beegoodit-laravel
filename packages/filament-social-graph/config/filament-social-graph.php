@@ -52,6 +52,7 @@ return [
         'actor_feed_url_resolver' => null, // Closure(actor) => url, or null for default
         'feed_item_edit_url_resolver' => null, // Closure(FeedItem $feedItem): ?string, or null to hide edit link
         'feed_item_destroy_url_resolver' => null, // Closure(FeedItem $feedItem): ?string, or null to hide delete
+        'edit_view' => null, // App view name for GET feed edit (e.g. livewire.public-team-feed-edit); null = package feed.edit
     ],
 
 ];

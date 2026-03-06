@@ -23,6 +23,10 @@ class FeedEditForm extends Component
 
     public string $body = '';
 
+    public array $existingPaths = [];
+
+    public string $editDisk = '';
+
     /**
      * @var array<int, \Illuminate\Http\UploadedFile|\Livewire\Features\SupportFileUploads\TemporaryUploadedFile>
      */
@@ -39,6 +43,8 @@ class FeedEditForm extends Component
         $this->feedUrl = $feedUrl;
         $this->subject = $feedItem->subject ?? '';
         $this->body = $feedItem->body ?? '';
+        $this->existingPaths = $this->feedItem->attachments ?? [];
+        $this->editDisk = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getStorageDisk();
     }
 
     public function updateItem(): mixed
