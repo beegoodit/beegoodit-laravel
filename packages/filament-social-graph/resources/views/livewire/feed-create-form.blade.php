@@ -1,10 +1,19 @@
+@once
+@push('styles')
+<style>.feed-composer-expandable[x-cloak]{display:none !important}</style>
+@endpush
+@endonce
 <div>
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     @include('filament-social-graph::feed.partials.quill-dark-mode')
 
-    <div class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-        <form wire:submit.prevent="createItem" class="space-y-4">
-            <flux:field>
+    <div
+        class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800"
+        x-data="{ expanded: false }"
+        @click.outside="expanded = false"
+    >
+        <form wire:submit.prevent="createItem">
+            <flux:field @focus.capture="expanded = true">
                 <flux:label class="sr-only" for="feed-composer-subject">
                     {{ __('filament-social-graph::feed_item.subject') }}
                 </flux:label>
@@ -21,26 +30,37 @@
                 @enderror
             </flux:field>
 
-            <div>
-                <flux:label class="sr-only">
-                    {{ __('filament-social-graph::feed_item.body') }}
-                </flux:label>
+            <div
+                class="feed-composer-expandable mt-4 space-y-4"
+                x-show="expanded"
+                x-cloak
+                x-transition:enter="transition ease-out duration-1000"
+                x-transition:enter-start="opacity-0 -translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 -translate-y-2"
+            >
+                <div>
+                    <flux:label class="sr-only">
+                        {{ __('filament-social-graph::feed_item.body') }}
+                    </flux:label>
 
-                <div wire:ignore>
-                    <div
-                    id="{{ $quillId }}_editor"
-                    class="min-h-[120px] rounded-lg border border-zinc-200 bg-white dark:border-zinc-600 dark:bg-zinc-800"
-                    data-placeholder="{{ __('filament-social-graph::feed.composer_placeholder') }}"
-                ></div>
+                    <div wire:ignore>
+                        <div
+                        id="{{ $quillId }}_editor"
+                        class="min-h-[120px] rounded-lg border border-zinc-200 bg-white dark:border-zinc-600 dark:bg-zinc-800"
+                        data-placeholder="{{ __('filament-social-graph::feed.composer_placeholder') }}"
+                    ></div>
+                    </div>
+                    <input type="hidden" id="{{ $quillId }}_value" wire:model.defer="body">
+
+                    @error('body')
+                        <flux:error name="body">{{ $message }}</flux:error>
+                    @enderror
                 </div>
-                <input type="hidden" id="{{ $quillId }}_value" wire:model.defer="body">
 
-                @error('body')
-                    <flux:error name="body">{{ $message }}</flux:error>
-                @enderror
-            </div>
-
-            <div>
+                <div>
                 <flux:field>
                     <flux:label for="feed-composer-attachments">{{ __('filament-social-graph::feed_item.attachments') }}</flux:label>
                     <div
@@ -89,6 +109,7 @@
                     <span wire:loading.remove wire:target="createItem">{{ __('filament-social-graph::feed.post') }}</span>
                     <span wire:loading wire:target="createItem">{{ __('filament-social-graph::feed.posting') }}</span>
                 </flux:button>
+            </div>
             </div>
         </form>
     </div>
