@@ -154,9 +154,9 @@ class LaravelPwaServiceProvider extends ServiceProvider
 
     protected function registerBladeComponents(): void
     {
-        Blade::aliasComponent('laravel-pwa::components.push-prompt-teaser', 'pwa::push_prompt_teaser');
-        Blade::aliasComponent('laravel-pwa::components.pwa-nav', 'pwa::nav');
-        Blade::aliasComponent('laravel-pwa::components.pwa-header', 'pwa::header');
+        Blade::component('laravel-pwa::components.push-prompt-teaser', 'pwa::push_prompt_teaser');
+        Blade::component('laravel-pwa::components.pwa-nav', 'pwa::nav');
+        Blade::component('laravel-pwa::components.pwa-header', 'pwa::header');
     }
 
     protected function migrationExists(string|array $migrationNames): bool
