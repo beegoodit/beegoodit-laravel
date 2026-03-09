@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
 
 class FeedItemResource extends Resource
 {
@@ -88,14 +87,17 @@ class FeedItemResource extends Resource
                     ->schema([
                         ImageEntry::make('attachments_images')
                             ->label(__('filament-social-graph::feed_item.attachments'))
-                            ->getStateUsing(fn ($record): array => array_values(array_filter(
-                                $record->attachments ?? [],
-                                FeedItem::isImagePath(...)
-                            )))
+                            ->getStateUsing(fn ($record): array => array_map(
+                                FeedItem::getAttachmentUrl(...),
+                                array_values(array_filter(
+                                    $record->attachments ?? [],
+                                    FeedItem::isImagePath(...)
+                                ))
+                            ))
                             ->disk(FeedItem::getStorageDisk())
                             ->visibility('public')
                             ->imageHeight(192)
-                            ->url(fn (string $state): string => Storage::disk(FeedItem::getStorageDisk())->url($state))
+                            ->url(fn (string $state): string => $state)
                             ->openUrlInNewTab()
                             ->columnSpanFull()
                             ->hidden(fn ($record): bool => array_filter($record->attachments ?? [], FeedItem::isImagePath(...)) === []),
@@ -109,11 +111,10 @@ class FeedItemResource extends Resource
                                 if ($paths === []) {
                                     return '';
                                 }
-                                $disk = FeedItem::getStorageDisk();
                                 $links = array_map(
                                     fn (string $path): string => sprintf(
                                         '<a href="%s" target="_blank" rel="noopener" class="rounded bg-gray-100 px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">%s</a>',
-                                        e(Storage::disk($disk)->url($path)),
+                                        e(FeedItem::getAttachmentUrl($path)),
                                         e(basename($path))
                                     ),
                                     $paths

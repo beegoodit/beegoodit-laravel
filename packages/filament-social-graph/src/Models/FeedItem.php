@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Storage;
 
 class FeedItem extends Model
 {
@@ -64,6 +65,33 @@ class FeedItem extends Model
     public static function getStorageDisk(): string
     {
         return config('filesystems.default') === 's3' ? 's3' : 'public';
+    }
+
+    /**
+     * URL for an attachment path. Uses temporary (signed) URLs for S3 so private buckets work without public read.
+     * Delegates to FileStorageService when laravel-file-storage is present (same path as tenancy/avatar).
+     */
+    public static function getAttachmentUrl(string $path, ?\DateTimeInterface $expiresAt = null): string
+    {
+        $fileStorageServiceClass = 'BeegoodIT\LaravelFileStorage\Services\FileStorageService';
+        if (class_exists($fileStorageServiceClass) && app()->bound($fileStorageServiceClass)) {
+            $ttlMinutes = (int) config('filament-social-graph.attachments.signed_url_ttl_minutes', 60);
+            $url = app($fileStorageServiceClass)->url($path, $ttlMinutes, self::getStorageDisk());
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        $disk = self::getStorageDisk();
+        if ($disk === 's3') {
+            $expiresAt ??= now()->addMinutes(
+                (int) config('filament-social-graph.attachments.signed_url_ttl_minutes', 60)
+            );
+
+            return Storage::disk($disk)->temporaryUrl($path, $expiresAt);
+        }
+
+        return Storage::disk($disk)->url($path);
     }
 
     /**

@@ -37,6 +37,7 @@ return [
         'max_file_size_kb' => 5120,
         'allowed_mimes' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'],
         'multiple_upload_mode' => 'auto', // 'auto' | 'native' | 'single_per_request'
+        'signed_url_ttl_minutes' => 60,   // TTL for temporary (signed) URLs when using private S3/Spaces
     ],
 
     /*

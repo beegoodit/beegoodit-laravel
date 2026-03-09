@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentSocialGraph\Livewire;
 
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class FeedItemCard extends Component
@@ -21,12 +20,11 @@ class FeedItemCard extends Component
     public function getImageEntries(): array
     {
         $paths = $this->getImagePaths();
-        $disk = FeedItem::getStorageDisk();
         $entries = [];
         foreach ($paths as $path) {
             $entries[] = [
                 'path' => $path,
-                'url' => Storage::disk($disk)->url($path),
+                'url' => FeedItem::getAttachmentUrl($path),
                 'filename' => basename($path),
             ];
         }
@@ -40,12 +38,11 @@ class FeedItemCard extends Component
     public function getFileEntries(): array
     {
         $paths = $this->getFilePaths();
-        $disk = FeedItem::getStorageDisk();
         $entries = [];
         foreach ($paths as $path) {
             $entries[] = [
                 'path' => $path,
-                'url' => Storage::disk($disk)->url($path),
+                'url' => FeedItem::getAttachmentUrl($path),
                 'filename' => basename($path),
             ];
         }

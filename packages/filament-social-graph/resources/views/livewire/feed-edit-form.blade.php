@@ -28,7 +28,7 @@
                     <div class="flex flex-wrap gap-3">
                         @foreach($existingPaths as $path)
                             @php
-                                $url = Storage::disk($editDisk)->url($path);
+                                $url = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getAttachmentUrl($path);
                                 $filename = basename($path);
                                 $isImage = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path);
                                 $marked = in_array($path, $attachmentsRemove, true);

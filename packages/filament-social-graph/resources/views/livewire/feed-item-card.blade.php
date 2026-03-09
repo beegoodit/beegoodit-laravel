@@ -60,17 +60,16 @@
     @php
         if (! isset($imageEntries)) {
             $attachments = $feedItem->attachments ?? [];
-            $disk = \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getStorageDisk();
             $imagePaths = array_values(array_filter($attachments, \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath(...)));
             $filePaths = array_values(array_filter($attachments, fn (string $path): bool => ! \BeegoodIT\FilamentSocialGraph\Models\FeedItem::isImagePath($path)));
             $imageEntries = array_map(fn (string $path): array => [
                 'path' => $path,
-                'url' => \Illuminate\Support\Facades\Storage::disk($disk)->url($path),
+                'url' => \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getAttachmentUrl($path),
                 'filename' => basename($path),
             ], $imagePaths);
             $fileEntries = array_map(fn (string $path): array => [
                 'path' => $path,
-                'url' => \Illuminate\Support\Facades\Storage::disk($disk)->url($path),
+                'url' => \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getAttachmentUrl($path),
                 'filename' => basename($path),
             ], $filePaths);
             $imageGridClass = count($imagePaths) <= 1 ? 'grid grid-cols-1 max-w-2xl' : (count($imagePaths) <= 4 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2');
