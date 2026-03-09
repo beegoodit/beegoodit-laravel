@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph;
 
+use BeegoodIT\FilamentSocialGraph\Console\RegenerateFeedItemThumbnailsCommand;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedCreateForm;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedEditForm;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedItemCard;
@@ -37,6 +38,10 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-social-graph');
 
         if ($this->app->runningInConsole()) {
+            $this->commands([
+                RegenerateFeedItemThumbnailsCommand::class,
+            ]);
+
             $this->publishes([
                 __DIR__.'/../config/filament-social-graph.php' => config_path('filament-social-graph.php'),
             ], 'filament-social-graph-config');

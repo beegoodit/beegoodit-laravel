@@ -65,6 +65,7 @@
             $imageEntries = array_map(fn (string $path): array => [
                 'path' => $path,
                 'url' => \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getAttachmentUrl($path),
+                'thumbnail_url' => \BeegoodIT\FilamentSocialGraph\Models\FeedItem::getThumbnailUrl($path),
                 'filename' => basename($path),
             ], $imagePaths);
             $fileEntries = array_map(fn (string $path): array => [
@@ -87,7 +88,7 @@
                     >
                         <span class="block aspect-video w-full">
                             <img
-                                src="{{ $entry['url'] }}"
+                                src="{{ $entry['thumbnail_url'] ?? $entry['url'] }}"
                                 alt="{{ $entry['filename'] }}"
                                 loading="lazy"
                                 class="h-full w-full object-cover"

@@ -98,6 +98,37 @@ test('it removes attachments and deletes files from storage when attachments_rem
         ->and(Storage::disk('public')->exists($pathToKeep))->toBeTrue();
 });
 
+test('it deletes thumbnail when removing image attachment', function (): void {
+    Storage::fake('public');
+
+    $actor = TestUser::create([
+        'name' => 'Actor',
+        'email' => 'actor@example.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $imagePath = 'feed-item-attachments/remove-me.jpg';
+    $thumbPath = FeedItem::getThumbnailPath($imagePath);
+    Storage::disk('public')->put($imagePath, 'image content');
+    Storage::disk('public')->put($thumbPath, 'thumb content');
+
+    $feedItem = FeedItem::create([
+        'actor_type' => TestUser::class,
+        'actor_id' => $actor->getKey(),
+        'body' => 'With image',
+        'attachments' => [$imagePath],
+    ]);
+
+    UpdateFeedItem::run($feedItem, [
+        'subject' => $feedItem->subject,
+        'body' => $feedItem->body,
+        'attachments_remove' => [$imagePath],
+    ]);
+
+    expect(Storage::disk('public')->exists($imagePath))->toBeFalse()
+        ->and(Storage::disk('public')->exists($thumbPath))->toBeFalse();
+});
+
 test('it adds new attachment files when attachments provided', function (): void {
     Storage::fake('public');
 
@@ -130,6 +161,10 @@ test('it adds new attachment files when attachments provided', function (): void
     expect($feedItem->attachments)->toHaveCount(2)
         ->and($feedItem->attachments[0])->toBe($existingPath);
     expect(Storage::disk('public')->exists($feedItem->attachments[1]))->toBeTrue();
+
+    $newPath = $feedItem->attachments[1];
+    $thumbPath = FeedItem::getThumbnailPath($newPath);
+    expect(Storage::disk('public')->exists($thumbPath))->toBeTrue();
 });
 
 test('it throws validation exception when combined attachments exceed max_files', function (): void {

@@ -13,6 +13,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -88,7 +89,7 @@ class FeedItemResource extends Resource
                         ImageEntry::make('attachments_images')
                             ->label(__('filament-social-graph::feed_item.attachments'))
                             ->getStateUsing(fn ($record): array => array_map(
-                                FeedItem::getAttachmentUrl(...),
+                                FeedItem::getThumbnailUrl(...),
                                 array_values(array_filter(
                                     $record->attachments ?? [],
                                     FeedItem::isImagePath(...)
@@ -97,7 +98,7 @@ class FeedItemResource extends Resource
                             ->disk(FeedItem::getStorageDisk())
                             ->visibility('public')
                             ->imageHeight(192)
-                            ->url(fn (string $state): string => $state)
+                            ->url(fn (string $state): string => str_replace('/thumbs/', '/', $state))
                             ->openUrlInNewTab()
                             ->columnSpanFull()
                             ->hidden(fn ($record): bool => array_filter($record->attachments ?? [], FeedItem::isImagePath(...)) === []),
@@ -176,6 +177,13 @@ class FeedItemResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('preview')
+                    ->label(__('filament-social-graph::feed_item.preview'))
+                    ->getStateUsing(fn (FeedItem $record): ?string => $record->getFirstImageThumbnailUrl())
+                    ->url(fn (?string $state): ?string => $state)
+                    ->circular()
+                    ->placeholder('-'),
+
                 TextColumn::make('actor')
                     ->label(__('filament-social-graph::feed_item.actor'))
                     ->formatStateUsing(fn (FeedItem $record): string => $record->actor?->name ?? $record->actor_type)

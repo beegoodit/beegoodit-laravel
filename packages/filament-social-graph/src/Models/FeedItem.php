@@ -29,6 +29,43 @@ class FeedItem extends Model
         return in_array($ext, self::IMAGE_EXTENSIONS, true);
     }
 
+    /**
+     * Conventional thumbnail path for an attachment path (dir/filename.ext -> dir/thumbs/filename.ext).
+     */
+    public static function getThumbnailPath(string $path): string
+    {
+        $dir = pathinfo($path, PATHINFO_DIRNAME);
+        $basename = pathinfo($path, PATHINFO_BASENAME);
+        if ($dir === '.') {
+            return 'thumbs/'.$basename;
+        }
+
+        return rtrim($dir, '/').'/thumbs/'.$basename;
+    }
+
+    /**
+     * URL for the thumbnail path. No fallback to full URL; use regenerate command if thumbnail file is missing.
+     */
+    public static function getThumbnailUrl(string $path, ?\DateTimeInterface $expiresAt = null): string
+    {
+        return self::getAttachmentUrl(self::getThumbnailPath($path), $expiresAt);
+    }
+
+    /**
+     * First image attachment's thumbnail URL for use as feed item preview, or null if none.
+     */
+    public function getFirstImageThumbnailUrl(): ?string
+    {
+        $attachments = $this->attachments ?? [];
+        foreach ($attachments as $path) {
+            if (self::isImagePath($path)) {
+                return self::getThumbnailUrl($path);
+            }
+        }
+
+        return null;
+    }
+
     protected static function newFactory(): FeedItemFactory
     {
         return FeedItemFactory::new();

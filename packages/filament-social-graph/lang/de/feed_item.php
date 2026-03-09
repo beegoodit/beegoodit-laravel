@@ -20,6 +20,7 @@ return [
     'deleted' => 'Feed-Beitrag gelöscht.',
     'delete' => 'Löschen',
     'delete_confirm' => 'Möchtest du diesen Feed-Beitrag wirklich löschen?',
+    'preview' => 'Vorschau',
     'created_at' => 'Erstellt am',
     'body_required' => 'Das Feld Inhalt ist erforderlich.',
     'deleted_at' => 'Gelöscht am',

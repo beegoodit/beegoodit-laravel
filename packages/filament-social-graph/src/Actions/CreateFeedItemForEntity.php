@@ -4,6 +4,7 @@ namespace BeegoodIT\FilamentSocialGraph\Actions;
 
 use BeegoodIT\FilamentSocialGraph\Models\Concerns\HasSocialFeed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -37,6 +38,7 @@ class CreateFeedItemForEntity
         $paths = $this->storeAttachmentFiles($feedItem, $data['attachments'] ?? []);
         if ($paths !== []) {
             $feedItem->update(['attachments' => $paths]);
+            $this->generateThumbnailsForPaths($feedItem, $paths);
         }
 
         return $feedItem;
@@ -90,5 +92,19 @@ class CreateFeedItemForEntity
         }
 
         return $team instanceof Model ? $team->getKey() : (is_scalar($team) ? $team : null);
+    }
+
+    /**
+     * @param  array<int, string>  $paths
+     */
+    protected function generateThumbnailsForPaths(FeedItem $feedItem, array $paths): void
+    {
+        $disk = FeedItem::getStorageDisk();
+        $service = new FeedItemThumbnailService;
+        foreach ($paths as $path) {
+            if (FeedItem::isImagePath($path)) {
+                $service->generateThumbnail($disk, $path);
+            }
+        }
     }
 }

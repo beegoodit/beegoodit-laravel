@@ -15,7 +15,7 @@ class FeedItemCard extends Component
     }
 
     /**
-     * @return array<int, array{path: string, url: string, filename: string}>
+     * @return array<int, array{path: string, url: string, thumbnail_url: string, filename: string}>
      */
     public function getImageEntries(): array
     {
@@ -25,6 +25,7 @@ class FeedItemCard extends Component
             $entries[] = [
                 'path' => $path,
                 'url' => FeedItem::getAttachmentUrl($path),
+                'thumbnail_url' => FeedItem::getThumbnailUrl($path),
                 'filename' => basename($path),
             ];
         }

@@ -25,6 +25,9 @@ class DeleteFeedItem
         $disk = FeedItem::getStorageDisk();
         foreach ($paths as $path) {
             Storage::disk($disk)->delete($path);
+            if (FeedItem::isImagePath($path)) {
+                Storage::disk($disk)->delete(FeedItem::getThumbnailPath($path));
+            }
         }
     }
 }

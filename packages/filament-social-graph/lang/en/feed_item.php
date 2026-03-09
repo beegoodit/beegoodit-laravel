@@ -20,6 +20,7 @@ return [
     'deleted' => 'Feed item deleted.',
     'delete' => 'Delete',
     'delete_confirm' => 'Are you sure you want to delete this feed item?',
+    'preview' => 'Preview',
     'created_at' => 'Created At',
     'body_required' => 'The body field is required.',
     'deleted_at' => 'Deleted At',

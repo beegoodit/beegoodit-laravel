@@ -38,6 +38,11 @@ return [
         'allowed_mimes' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'],
         'multiple_upload_mode' => 'auto', // 'auto' | 'native' | 'single_per_request'
         'signed_url_ttl_minutes' => 60,   // TTL for temporary (signed) URLs when using private S3/Spaces
+        'thumbnails' => [
+            'width' => 400,
+            'height' => 400,
+            'quality' => 85,
+        ],
     ],
 
     /*

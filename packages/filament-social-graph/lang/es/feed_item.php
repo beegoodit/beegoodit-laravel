@@ -20,6 +20,7 @@ return [
     'deleted' => 'Elemento del feed eliminado.',
     'delete' => 'Eliminar',
     'delete_confirm' => '¿Seguro que quieres eliminar este elemento del feed?',
+    'preview' => 'Vista previa',
     'created_at' => 'Creado el',
     'body_required' => 'El campo contenido es obligatorio.',
     'deleted_at' => 'Eliminado el',

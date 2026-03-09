@@ -67,6 +67,9 @@ test('it creates feed item with attachments and stores files', function (): void
     $path = $feedItem->attachments[0];
     expect($path)->toContain('feed-item-attachments')
         ->and(Storage::disk('public')->exists($path))->toBeTrue();
+
+    $thumbPath = FeedItem::getThumbnailPath($path);
+    expect(Storage::disk('public')->exists($thumbPath))->toBeTrue();
 });
 
 test('it throws when entity does not use HasSocialFeed', function (): void {

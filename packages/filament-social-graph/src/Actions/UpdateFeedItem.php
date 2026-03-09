@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Actions;
 
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -22,6 +23,8 @@ class UpdateFeedItem
         $this->deleteAttachmentFiles($feedItem, $toRemove);
 
         $newPaths = $this->storeNewAttachmentFiles($feedItem, $data['attachments'] ?? []);
+        $this->generateThumbnailsForPaths($newPaths);
+
         $maxFiles = config('filament-social-graph.attachments.max_files', 5);
         if (count($keptPaths) + count($newPaths) > $maxFiles) {
             throw ValidationException::withMessages([
@@ -60,6 +63,9 @@ class UpdateFeedItem
         $disk = FeedItem::getStorageDisk();
         foreach ($paths as $path) {
             Storage::disk($disk)->delete($path);
+            if (FeedItem::isImagePath($path)) {
+                Storage::disk($disk)->delete(FeedItem::getThumbnailPath($path));
+            }
         }
     }
 
@@ -88,5 +94,22 @@ class UpdateFeedItem
         }
 
         return $paths;
+    }
+
+    /**
+     * @param  array<int, string>  $paths
+     */
+    protected function generateThumbnailsForPaths(array $paths): void
+    {
+        if ($paths === []) {
+            return;
+        }
+        $disk = FeedItem::getStorageDisk();
+        $service = new FeedItemThumbnailService;
+        foreach ($paths as $path) {
+            if (FeedItem::isImagePath($path)) {
+                $service->generateThumbnail($disk, $path);
+            }
+        }
     }
 }
