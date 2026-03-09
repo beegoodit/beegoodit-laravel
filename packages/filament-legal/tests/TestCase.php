@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentLegal\Tests;
 
 use BeegoodIT\FilamentLegal\FilamentLegalServiceProvider;
+use BeegoodIT\FilamentLegal\Models\Concerns\HasLegalDocuments;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -64,4 +65,9 @@ class User extends \Illuminate\Foundation\Auth\User
     protected $table = 'users';
 
     protected $guarded = [];
+}
+
+class UserWithLegal extends User
+{
+    use HasLegalDocuments;
 }

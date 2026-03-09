@@ -2,8 +2,6 @@
 
 namespace BeegoodIT\FilamentLegal\Tests;
 
-use BeegoodIT\FilamentLegal\Models\Concerns\HasLegalDocuments;
-
 class LegalIdentityTest extends TestCase
 {
     public function test_it_can_create_and_retrieve_legal_identity_for_an_owner(): void
@@ -34,13 +32,4 @@ class LegalIdentityTest extends TestCase
         $this->assertEquals($owner->getMorphClass(), $identity->owner_type);
         $this->assertEquals('2020-01-01', $identity->founded_at->toDateString());
     }
-}
-
-class UserWithLegal extends \Illuminate\Foundation\Auth\User
-{
-    use HasLegalDocuments;
-
-    protected $table = 'users';
-
-    protected $guarded = [];
 }
