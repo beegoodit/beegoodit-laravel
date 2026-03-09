@@ -56,6 +56,31 @@
         <div>
             <flux:field>
                 <flux:label for="feed-edit-attachments">{{ __('filament-social-graph::feed_item.attachments_new') }}</flux:label>
+                @if($useSinglePerRequestUpload)
+                <div
+                    x-data="{ maxFiles: @json(config('filament-social-graph.attachments.max_files', 5)), handleDrop(e) { e.preventDefault(); e.stopPropagation(); const files = e.dataTransfer.files; for (let i = 0; i < files.length; i++) { if ($wire.get('attachments').length >= this.maxFiles) break; $wire.upload('attachments', files[i], () => {}, () => {}, () => {}); } }, handleFileSelect(e) { const files = e.target.files; for (let i = 0; i < files.length; i++) { if ($wire.get('attachments').length >= this.maxFiles) break; $wire.upload('attachments', files[i], () => {}, () => {}, () => {}); } e.target.value = ''; } }"
+                    data-feed-drop-zone-single="feed-edit-attachments"
+                    class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
+                    role="button"
+                    tabindex="0"
+                    aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
+                    @drop.prevent="handleDrop($event)"
+                    @dragover.prevent
+                    @click="$refs.attachmentsInput.click()"
+                    @keydown.enter.prevent="$refs.attachmentsInput.click()"
+                    @keydown.space.prevent="$refs.attachmentsInput.click()"
+                >
+                    <span class="text-center text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                </div>
+                <input
+                    type="file"
+                    x-ref="attachmentsInput"
+                    id="feed-edit-attachments"
+                    class="sr-only"
+                    accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
+                    @change="handleFileSelect($event)"
+                >
+                @else
                 <div
                     class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
                     data-feed-drop-zone="feed-edit-attachments"
@@ -75,6 +100,7 @@
                     multiple
                     accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
                 >
+                @endif
                 <flux:description>{{ __('filament-social-graph::feed_item.attachments_hint', ['max_files' => config('filament-social-graph.attachments.max_files', 5), 'max_mb' => (int) (config('filament-social-graph.attachments.max_file_size_kb', 5120) / 1024)]) }}</flux:description>
                 @error('attachments')
                     <flux:error>{{ $message }}</flux:error>

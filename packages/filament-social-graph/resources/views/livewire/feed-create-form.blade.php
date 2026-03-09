@@ -63,6 +63,61 @@
                 <div>
                 <flux:field>
                     <flux:label for="feed-composer-attachments">{{ __('filament-social-graph::feed_item.attachments') }}</flux:label>
+                    @if($useSinglePerRequestUpload)
+                    <div
+                        x-data="{
+                            maxFiles: @json(config('filament-social-graph.attachments.max_files', 5)),
+                            log(msg, data, hyp) {
+                                fetch('http://127.0.0.1:7745/ingest/a6fe1387-9649-45b3-bfce-8ea7f7aee724',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'22ef35'},body:JSON.stringify({sessionId:'22ef35',location:'feed-create-form.blade',message:msg,data:data||{},hypothesisId:hyp,timestamp:Date.now()})}).catch(function(){});
+                            },
+                            handleDrop(e) {
+                                this.log('handleDrop called', { filesCount: e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files.length : 0 }, 'B');
+                                this.log('$wire check', { hasWire: typeof $wire !== 'undefined', wireType: typeof $wire }, 'A');
+                                if (typeof $wire === 'undefined') { this.log('$wire undefined abort', {}, 'A'); return; }
+                                e.preventDefault(); e.stopPropagation();
+                                const files = e.dataTransfer.files;
+                                for (let i = 0; i < files.length; i++) {
+                                    try {
+                                        if ($wire.get('attachments').length >= this.maxFiles) break;
+                                        this.log('calling $wire.upload', { i: i }, 'D');
+                                        $wire.upload('attachments', files[i], () => {}, () => {}, () => {});
+                                    } catch (err) {
+                                        this.log('upload throw', { err: String(err && err.message) }, 'A');
+                                    }
+                                }
+                            },
+                            handleFileSelect(e) {
+                                if (typeof $wire === 'undefined') return;
+                                const files = e.target.files;
+                                for (let i = 0; i < files.length; i++) {
+                                    if ($wire.get('attachments').length >= this.maxFiles) break;
+                                    $wire.upload('attachments', files[i], () => {}, () => {}, () => {});
+                                }
+                                e.target.value = '';
+                            }
+                        }"
+                        data-feed-drop-zone-single="feed-composer-attachments"
+                        class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
+                        role="button"
+                        tabindex="0"
+                        aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
+                        @drop.prevent="handleDrop($event)"
+                        @dragover.prevent
+                        @click="$refs.attachmentsInput.click()"
+                        @keydown.enter.prevent="$refs.attachmentsInput.click()"
+                        @keydown.space.prevent="$refs.attachmentsInput.click()"
+                    >
+                        <span class="text-center text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                    </div>
+                    <input
+                        type="file"
+                        x-ref="attachmentsInput"
+                        id="feed-composer-attachments"
+                        class="sr-only"
+                        accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
+                        @change="handleFileSelect($event)"
+                    >
+                    @else
                     <div
                         class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
                         data-feed-drop-zone="feed-composer-attachments"
@@ -82,6 +137,7 @@
                         multiple
                         accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
                     >
+                    @endif
                     <flux:description>{{ __('filament-social-graph::feed_item.attachments_hint', ['max_files' => config('filament-social-graph.attachments.max_files', 5), 'max_mb' => (int) (config('filament-social-graph.attachments.max_file_size_kb', 5120) / 1024)]) }}</flux:description>
                     @error('attachments')
                         <flux:error>{{ $message }}</flux:error>

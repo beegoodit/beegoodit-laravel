@@ -14,11 +14,15 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
+use function Livewire\on;
+
 class FilamentSocialGraphServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
         Gate::policy(FeedItem::class, FeedItemPolicy::class);
+
+        $this->registerLivewireUploadSkipRender();
 
         $this->app->booted(function (): void {
             $this->registerLivewireComponents();
@@ -63,6 +67,52 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/filament-social-graph.php', 'filament-social-graph');
+    }
+
+    /**
+     * Skip re-render for other components (e.g. FeedList) on file upload round-trips
+     * so the XHR response stays smaller. The component that had _finishUpload must
+     * still render so the new attachment appears in the form.
+     */
+    protected function registerLivewireUploadSkipRender(): void
+    {
+        $uploadOnlyKey = 'livewire.upload-only';
+        $uploadComponentIdKey = 'livewire.upload-component-id';
+
+        on('request', function (array $payload) use ($uploadOnlyKey): void {
+            foreach ($payload as $componentPayload) {
+                $calls = $componentPayload['calls'] ?? [];
+                foreach ($calls as $call) {
+                    $method = $call['method'] ?? '';
+                    if ($method === '_finishUpload' || $method === '_startUpload') {
+                        request()->attributes->set($uploadOnlyKey, true);
+
+                        return;
+                    }
+                }
+            }
+        });
+
+        on('call', function (object $component, string $method) use ($uploadComponentIdKey): void {
+            if ($method === '_finishUpload') {
+                request()->attributes->set($uploadComponentIdKey, $component->getId());
+            }
+        });
+
+        on('render', function (object $component) use ($uploadOnlyKey, $uploadComponentIdKey): void {
+            if (! request()->attributes->get($uploadOnlyKey)) {
+                return;
+            }
+            $uploadComponentId = request()->attributes->get($uploadComponentIdKey);
+            if ($uploadComponentId !== null && $component->getId() !== $uploadComponentId) {
+                $component->skipRender();
+            }
+        });
+
+        on('response', function () use ($uploadOnlyKey, $uploadComponentIdKey): void {
+            request()->attributes->remove($uploadOnlyKey);
+            request()->attributes->remove($uploadComponentIdKey);
+        });
     }
 
     protected function registerLivewireComponents(): void

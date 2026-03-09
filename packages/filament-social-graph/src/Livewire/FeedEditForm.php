@@ -4,6 +4,7 @@ namespace BeegoodIT\FilamentSocialGraph\Livewire;
 
 use BeegoodIT\FilamentSocialGraph\Actions\UpdateFeedItem;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Support\FeedAttachmentUploadMode;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Gate;
@@ -100,6 +101,8 @@ class FeedEditForm extends Component
 
     public function render(): View
     {
-        return view('filament-social-graph::livewire.feed-edit-form');
+        return view('filament-social-graph::livewire.feed-edit-form', [
+            'useSinglePerRequestUpload' => FeedAttachmentUploadMode::useSinglePerRequest(),
+        ]);
     }
 }

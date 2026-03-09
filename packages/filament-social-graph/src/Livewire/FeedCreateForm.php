@@ -4,6 +4,7 @@ namespace BeegoodIT\FilamentSocialGraph\Livewire;
 
 use BeegoodIT\FilamentSocialGraph\Actions\CreateFeedItemForEntity;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Support\FeedAttachmentUploadMode;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -72,6 +73,8 @@ class FeedCreateForm extends Component
 
     public function render(): View
     {
-        return view('filament-social-graph::livewire.feed-create-form');
+        return view('filament-social-graph::livewire.feed-create-form', [
+            'useSinglePerRequestUpload' => FeedAttachmentUploadMode::useSinglePerRequest(),
+        ]);
     }
 }
