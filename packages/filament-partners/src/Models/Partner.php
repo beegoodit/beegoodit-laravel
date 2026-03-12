@@ -77,7 +77,7 @@ class Partner extends Model implements Sortable
             return null;
         }
 
-        $disk = config('filament-partners.logo_disk', config('filesystems.default') === 's3' ? 's3' : 'public');
+        $disk = config('filesystems.default') === 's3' ? 's3' : 'public';
 
         if ($disk === 's3') {
             return Storage::disk('s3')->temporaryUrl($this->logo, now()->addHour());

@@ -7,7 +7,6 @@ use BeegoodIT\FilamentPartners\Filament\Resources\PartnerResource\Pages\CreatePa
 use BeegoodIT\FilamentPartners\Filament\Resources\PartnerResource\Pages\EditPartner;
 use BeegoodIT\FilamentPartners\Filament\Resources\PartnerResource\Pages\ListPartners;
 use BeegoodIT\FilamentPartners\Models\Partner;
-use Carbon\Carbon;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MorphToSelect;
@@ -54,7 +53,7 @@ class PartnerResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $disk = config('filament-partners.logo_disk', config('filesystems.default') === 's3' ? 's3' : 'public');
+        $disk = config('filesystems.default') === 's3' ? 's3' : 'public';
         $directory = config('filament-partners.logo_directory', 'partners');
         $maxSize = config('filament-partners.logo_max_size', 2048);
 
@@ -127,14 +126,14 @@ class PartnerResource extends Resource
             ->columns([
                 ImageColumn::make('logo')
                     ->label(__('filament-partners::partner.logo_label'))
-                    ->disk(config('filament-partners.logo_disk', config('filesystems.default') === 's3' ? 's3' : 'public'))
+                    ->disk(config('filesystems.default') === 's3' ? 's3' : 'public')
                     ->circular()
                     ->defaultImageUrl(fn (Partner $record): string => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&size=64'),
 
                 TextColumn::make('partnerable')
                     ->label(__('filament-partners::partner.partnerable_label'))
                     ->formatStateUsing(fn (Partner $record): string => $record->partnerable?->name ?? __('filament-partners::partner.partnerable_platform'))
-                    ->sortable(query: fn(Builder $query, string $direction): Builder => $query->orderBy('partnerable_type', $direction)->orderBy('partnerable_id', $direction))
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy('partnerable_type', $direction)->orderBy('partnerable_id', $direction))
                     ->hidden(fn (): bool => \Filament\Facades\Filament::hasTenancy()),
 
                 TextColumn::make('type')

@@ -35,7 +35,7 @@ php artisan vendor:publish --tag=filament-partners-config
 In `config/filament-partners.php` (or the published file):
 
 - **partnerable_models**: Array of Eloquent model class names that can own partners. Used in Admin for the partnerable MorphToSelect (e.g. `[\App\Models\Team::class, \App\Models\Tour::class]`). Leave empty if you only use platform partners or tenant-scoped panels.
-- **logo_disk**, **logo_directory**, **logo_max_size**: Logo upload settings.
+- **logo_directory**, **logo_max_size**: Logo upload settings. The logo disk is derived from `config('filesystems.default')` (s3 → s3 with signed URLs, otherwise public).
 
 ## Register the resource
 
