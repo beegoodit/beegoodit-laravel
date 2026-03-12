@@ -26,7 +26,7 @@ class BrandingSchema
                     ->maxSize(2048)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'])
                     ->helperText(__('filament-tenancy::messages.Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)'))
-                    ->visibility('public')
+                    ->visibility('private')
                     ->deletable()
                     ->moveFiles(),
 
