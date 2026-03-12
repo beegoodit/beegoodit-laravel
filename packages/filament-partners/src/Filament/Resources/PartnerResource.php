@@ -92,7 +92,7 @@ class PartnerResource extends Resource
                     )
                     ->maxSize($maxSize)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'])
-                    ->visibility('public')
+                    ->visibility('private')
                     ->deletable()
                     ->columnSpanFull(),
 
