@@ -41,6 +41,10 @@ class UserProfilePanelProvider extends PanelProvider
             $panel->registration();
         }
 
+        if (config('filament-user-profile.email_verification', false)) {
+            $panel->emailVerification();
+        }
+
         if (class_exists(FilamentSocialitePluginHelper::class)) {
             $providersList = [];
             $oauthProviders = config('filament-oauth.providers', []);

@@ -15,4 +15,16 @@ return [
 
     'registration' => false,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Email verification
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, the me panel will require email verification. Users must
+    | verify their email after registration before accessing protected routes.
+    |
+    */
+
+    'email_verification' => false,
+
 ];
