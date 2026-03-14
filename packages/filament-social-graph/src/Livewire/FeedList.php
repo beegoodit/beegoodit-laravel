@@ -21,11 +21,36 @@ class FeedList extends Component
 
     public int $perPage = 20;
 
-    public function mount(?string $feedId = null, ?string $entityType = null, ?string $entityId = null): void
-    {
+    public ?string $editRouteName = null;
+
+    public ?string $destroyRouteName = null;
+
+    /** @var array<string, mixed> */
+    public array $editRouteParams = [];
+
+    /** @var array<string, mixed> */
+    public array $destroyRouteParams = [];
+
+    /**
+     * @param  array<string, mixed>  $editRouteParams
+     * @param  array<string, mixed>  $destroyRouteParams
+     */
+    public function mount(
+        ?string $feedId = null,
+        ?string $entityType = null,
+        ?string $entityId = null,
+        ?string $editRouteName = null,
+        ?string $destroyRouteName = null,
+        array $editRouteParams = [],
+        array $destroyRouteParams = [],
+    ): void {
         $this->feedId = $feedId;
         $this->entityType = $entityType;
         $this->entityId = $entityId;
+        $this->editRouteName = $editRouteName;
+        $this->destroyRouteName = $destroyRouteName;
+        $this->editRouteParams = $editRouteParams;
+        $this->destroyRouteParams = $destroyRouteParams;
     }
 
     public function getFeedItems(): LengthAwarePaginator

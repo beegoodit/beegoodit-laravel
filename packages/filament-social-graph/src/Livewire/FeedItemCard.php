@@ -9,9 +9,50 @@ class FeedItemCard extends Component
 {
     public FeedItem $feedItem;
 
-    public function mount(FeedItem $feedItem): void
-    {
+    public ?string $editRouteName = null;
+
+    public ?string $destroyRouteName = null;
+
+    /** @var array<string, mixed> */
+    public array $editRouteParams = [];
+
+    /** @var array<string, mixed> */
+    public array $destroyRouteParams = [];
+
+    /**
+     * @param  array<string, mixed>  $editRouteParams
+     * @param  array<string, mixed>  $destroyRouteParams
+     */
+    public function mount(
+        FeedItem $feedItem,
+        ?string $editRouteName = null,
+        ?string $destroyRouteName = null,
+        array $editRouteParams = [],
+        array $destroyRouteParams = [],
+    ): void {
         $this->feedItem = $feedItem;
+        $this->editRouteName = $editRouteName;
+        $this->destroyRouteName = $destroyRouteName;
+        $this->editRouteParams = $editRouteParams;
+        $this->destroyRouteParams = $destroyRouteParams;
+    }
+
+    public function getEditUrl(): ?string
+    {
+        if ($this->editRouteName === null || $this->editRouteName === '') {
+            return null;
+        }
+
+        return route($this->editRouteName, array_merge($this->editRouteParams, ['feedItem' => $this->feedItem]));
+    }
+
+    public function getDestroyUrl(): ?string
+    {
+        if ($this->destroyRouteName === null || $this->destroyRouteName === '') {
+            return null;
+        }
+
+        return route($this->destroyRouteName, array_merge($this->destroyRouteParams, ['feedItem' => $this->feedItem]));
     }
 
     /**
@@ -90,6 +131,8 @@ class FeedItemCard extends Component
             'imageEntries' => $this->getImageEntries(),
             'fileEntries' => $this->getFileEntries(),
             'imageGridClass' => $this->getImageGridClass(),
+            'editUrl' => $this->getEditUrl(),
+            'destroyUrl' => $this->getDestroyUrl(),
         ]);
     }
 }
