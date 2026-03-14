@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Database\Factories;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,11 +15,8 @@ class FeedItemFactory extends Factory
 
     public function definition(): array
     {
-        $userModel = config('auth.providers.users.model', \App\Models\User::class);
-
         return [
-            'actor_type' => $userModel,
-            'actor_id' => \Illuminate\Support\Str::uuid(),
+            'feed_id' => Feed::factory(),
             'subject' => fake()->optional(0.5)->sentence(),
             'body' => fake()->optional(0.8)->paragraph(),
         ];

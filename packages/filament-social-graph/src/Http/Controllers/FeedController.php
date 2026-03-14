@@ -7,6 +7,7 @@ use BeegoodIT\FilamentSocialGraph\Actions\DeleteFeedItem;
 use BeegoodIT\FilamentSocialGraph\Actions\UpdateFeedItem;
 use BeegoodIT\FilamentSocialGraph\Http\Requests\StoreFeedItemRequest;
 use BeegoodIT\FilamentSocialGraph\Http\Requests\UpdateFeedItemRequest;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -26,8 +27,10 @@ class FeedController
         $quillId = 'feed-body-editor';
         $title = ($entity->name ?? class_basename($entity)).' - '.__('filament-social-graph::feed.title');
         $viewName = config('filament-social-graph.feed_page.index_view') ?: 'filament-social-graph::feed.index';
+        $feed = Feed::firstOrCreateForOwner($entity);
         $data = [
             'entity' => $entity,
+            'feed' => $feed,
             'layout' => $layout,
             'title' => $title,
             'stepTitle' => $stepTitle,
@@ -108,12 +111,14 @@ class FeedController
     protected function resolveFeedItemForEntity(Request $request, string $feedItemId): FeedItem
     {
         $entity = $this->entityFromRoute($request);
-        $feedItem = FeedItem::findOrFail($feedItemId);
+        $feedItem = FeedItem::with('feed')->findOrFail($feedItemId);
 
-        $actorMatches = $feedItem->actor_type === $entity->getMorphClass()
-            && (string) $feedItem->actor_id === (string) $entity->getKey();
+        $owner = $feedItem->feed?->owner;
+        $ownerMatches = $owner !== null
+            && $owner->getMorphClass() === $entity->getMorphClass()
+            && (string) $owner->getKey() === (string) $entity->getKey();
 
-        if (! $actorMatches) {
+        if (! $ownerMatches) {
             abort(404);
         }
 

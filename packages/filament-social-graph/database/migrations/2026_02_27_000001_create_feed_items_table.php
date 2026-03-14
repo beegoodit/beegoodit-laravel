@@ -10,8 +10,7 @@ return new class extends Migration
     {
         Schema::create('feed_items', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->string('actor_type', 255);
-            $table->uuid('actor_id');
+            $table->foreignUuid('feed_id')->constrained('feeds')->cascadeOnDelete();
             $table->string('subject')->nullable();
             $table->text('body')->nullable();
             $table->json('attachments')->nullable();
@@ -19,7 +18,7 @@ return new class extends Migration
             $table->foreignUuid('updated_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index(['actor_type', 'actor_id']);
+            $table->index('feed_id');
         });
     }
 

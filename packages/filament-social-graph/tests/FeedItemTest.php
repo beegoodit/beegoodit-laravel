@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,14 +25,15 @@ class FeedItemTest extends TestCase
 
         $this->assertDatabaseHas('feed_items', [
             'id' => $feedItem->id,
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => $feedItem->feed_id,
             'subject' => 'Hello World',
             'body' => 'This is a test post.',
         ]);
+        $this->assertSame(TestUser::class, $feedItem->feed->owner_type);
+        $this->assertSame((string) $user->id, (string) $feedItem->feed->owner_id);
     }
 
-    public function test_feed_item_has_actor_relationship(): void
+    public function test_feed_item_has_owner_relationship(): void
     {
         $user = TestUser::create([
             'name' => 'Actor',
@@ -39,14 +41,14 @@ class FeedItemTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => $feed->getKey(),
             'body' => 'Test',
         ]);
 
-        $this->assertEquals($user->id, $feedItem->actor->id);
-        $this->assertEquals('Actor', $feedItem->actor->name);
+        $this->assertEquals($user->id, $feedItem->owner->id);
+        $this->assertEquals('Actor', $feedItem->owner->name);
     }
 
     public function test_feed_item_tracks_userstamps(): void

@@ -4,7 +4,6 @@ namespace BeegoodIT\FilamentSocialGraph\Livewire;
 
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,14 +11,19 @@ class FeedList extends Component
 {
     use WithPagination;
 
+    public ?string $feedId = null;
+
+    /** @deprecated Use feedId instead. Kept for backward compatibility when view passes entityType/entityId. */
     public ?string $entityType = null;
 
+    /** @deprecated Use feedId instead. Kept for backward compatibility when view passes entityType/entityId. */
     public ?string $entityId = null;
 
     public int $perPage = 20;
 
-    public function mount(?string $entityType = null, ?string $entityId = null): void
+    public function mount(?string $feedId = null, ?string $entityType = null, ?string $entityId = null): void
     {
+        $this->feedId = $feedId;
         $this->entityType = $entityType;
         $this->entityId = $entityId;
     }
@@ -27,13 +31,13 @@ class FeedList extends Component
     public function getFeedItems(): LengthAwarePaginator
     {
         $query = FeedItem::query()
-            ->with(['actor'])->latest();
+            ->with(['feed.owner'])
+            ->latest();
 
-        if ($this->entityType && $this->entityId) {
-            $query->where(function (Builder $q): void {
-                $q->where('actor_type', $this->entityType)
-                    ->where('actor_id', $this->entityId);
-            });
+        if ($this->feedId !== null && $this->feedId !== '') {
+            $query->where('feed_id', $this->feedId);
+        } elseif ($this->entityType && $this->entityId) {
+            $query->whereHas('feed', fn ($q) => $q->where('owner_type', $this->entityType)->where('owner_id', $this->entityId));
         }
 
         if (config('filament-social-graph.tenancy.enabled') && function_exists('filament') && $tenant = filament()->getTenant()) {

@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 
 class FeedItemViewAttachmentsTest extends TestCase
@@ -37,9 +38,9 @@ class FeedItemViewAttachmentsTest extends TestCase
             'feed-item-attachments/chart.png',
         ];
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => $feed->getKey(),
             'body' => 'With mixed attachments',
             'attachments' => $paths,
         ]);

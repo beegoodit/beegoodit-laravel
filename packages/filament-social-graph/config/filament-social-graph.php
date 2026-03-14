@@ -18,10 +18,10 @@ return [
     ],
 
     /*
-     * Models that can act as actors (post feed items, subscribe).
+     * Models that can act as feed owners (post feed items, subscribe).
      * Example: [\App\Models\User::class, \App\Models\Team::class]
      */
-    'actor_models' => [],
+    'owner_models' => [],
 
     /*
      * Models that can have entity feeds (feeds scoped to an entity like a project, team).
@@ -56,7 +56,7 @@ return [
         'authorize_create_ability' => 'create', // Ability name for Gate (composer form visibility + submit auth)
         'authorize_update_ability' => 'update',
         'authorize_delete_ability' => 'delete',
-        'actor_feed_url_resolver' => null, // Closure(actor) => url, or null for default
+        'owner_feed_url_resolver' => null, // Closure(owner) => url, or null for default
         'feed_item_edit_url_resolver' => null, // Closure(FeedItem $feedItem): ?string, or null to hide edit link
         'feed_item_destroy_url_resolver' => null, // Closure(FeedItem $feedItem): ?string, or null to hide delete
         'edit_view' => null, // App view name for GET feed edit (e.g. livewire.public-team-feed-edit); null = package feed.edit

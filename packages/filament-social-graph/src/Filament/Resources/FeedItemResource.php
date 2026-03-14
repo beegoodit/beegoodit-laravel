@@ -5,8 +5,8 @@ namespace BeegoodIT\FilamentSocialGraph\Filament\Resources;
 use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedItemResource\Pages;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -66,9 +66,9 @@ class FeedItemResource extends Resource
                 Section::make(__('filament-social-graph::feed_item.section_metadata'))
                     ->columns(1)
                     ->schema([
-                        TextEntry::make('actor')
-                            ->label(__('filament-social-graph::feed_item.actor'))
-                            ->formatStateUsing(fn ($record) => $record->actor?->name ?? $record->actor_type),
+                        TextEntry::make('owner')
+                            ->label(__('filament-social-graph::feed_item.owner'))
+                            ->formatStateUsing(fn ($record) => $record->owner?->name ?? $record->feed?->owner_type),
                         TextEntry::make('created_at')
                             ->label(__('filament-social-graph::feed_item.created_at'))
                             ->dateTime(),
@@ -132,21 +132,27 @@ class FeedItemResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $actorModels = config('filament-social-graph.actor_models', []);
+        $ownerModels = config('filament-social-graph.owner_models', []);
+
+        $ownerOptions = collect($ownerModels)->flatMap(function (string $model): array {
+            return $model::query()
+                ->get()
+                ->mapWithKeys(fn (\Illuminate\Database\Eloquent\Model $record): array => [
+                    $record->getMorphClass().'|'.$record->getKey() => $record->getAttribute('name') ?? $record->getAttribute('email') ?? (string) $record->getKey(),
+                ])
+                ->all();
+        })->all();
 
         return $schema
             ->columns(2)
             ->components([
-                MorphToSelect::make('actor')
-                    ->label(__('filament-social-graph::feed_item.actor'))
-                    ->types(collect($actorModels)
-                        ->map(fn (string $model): MorphToSelect\Type => MorphToSelect\Type::make($model)->titleAttribute('name'))
-                        ->all())
+                Select::make('owner')
+                    ->label(__('filament-social-graph::feed_item.owner'))
+                    ->options($ownerOptions)
                     ->searchable()
-                    ->preload()
                     ->required()
                     ->columnSpanFull()
-                    ->hidden(empty($actorModels)),
+                    ->hidden(empty($ownerModels)),
 
                 TextInput::make('subject')
                     ->label(__('filament-social-graph::feed_item.subject'))
@@ -184,9 +190,9 @@ class FeedItemResource extends Resource
                     ->circular()
                     ->placeholder('-'),
 
-                TextColumn::make('actor')
-                    ->label(__('filament-social-graph::feed_item.actor'))
-                    ->formatStateUsing(fn (FeedItem $record): string => $record->actor?->name ?? $record->actor_type)
+                TextColumn::make('owner')
+                    ->label(__('filament-social-graph::feed_item.owner'))
+                    ->formatStateUsing(fn (FeedItem $record): string => $record->owner?->name ?? $record->feed?->owner_type ?? '-')
                     ->sortable(),
 
                 TextColumn::make('subject')

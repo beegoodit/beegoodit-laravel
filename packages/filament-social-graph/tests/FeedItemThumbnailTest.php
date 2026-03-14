@@ -53,8 +53,7 @@ class FeedItemThumbnailTest extends TestCase
         ]);
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'No attachments',
             'attachments' => [],
         ]);
@@ -74,8 +73,7 @@ class FeedItemThumbnailTest extends TestCase
         Storage::disk('public')->put($thumbPath, 'fake');
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'With image',
             'attachments' => [$path, 'feed-item-attachments/doc.pdf'],
         ]);
@@ -95,8 +93,7 @@ class FeedItemThumbnailTest extends TestCase
         ]);
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'Only PDF',
             'attachments' => ['feed-item-attachments/file.pdf'],
         ]);

@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Http\Controllers\FeedController;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +15,7 @@ class FeedControllerTest extends TestCase
         parent::setUp();
 
         $this->withoutVite();
-        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+        config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
         Route::model('entity', TestUser::class);
         Route::middleware('web')->group(function (): void {
@@ -63,7 +64,8 @@ class FeedControllerTest extends TestCase
         $item = FeedItem::first();
         $this->assertSame('Hello from controller', $item->body);
         $this->assertSame('Test subject', $item->subject);
-        $this->assertSame($user->getKey(), $item->actor_id);
+        $this->assertNotNull($item->feed_id);
+        $this->assertSame($user->getKey(), $item->feed->owner_id);
     }
 
     public function test_index_hides_composer_when_policy_denies(): void
@@ -112,9 +114,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Original',
         ]);
 
@@ -136,9 +138,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Original',
         ]);
 
@@ -163,9 +165,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $otherFeed = Feed::firstOrCreateForOwner($otherUser);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $otherUser->getKey(),
+            'feed_id' => $otherFeed->getKey(),
             'body' => 'Other post',
         ]);
 
@@ -184,9 +186,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'subject' => 'Old',
             'body' => 'Old body',
         ]);
@@ -214,9 +216,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Original',
         ]);
 
@@ -238,9 +240,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'To delete',
         ]);
 
@@ -262,9 +264,9 @@ class FeedControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Keep',
         ]);
 

@@ -9,6 +9,7 @@ use BeegoodIT\FilamentSocialGraph\Livewire\FeedItemCard;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedList;
 use BeegoodIT\FilamentSocialGraph\Livewire\SubscribeButton;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Observers\FeedItemObserver;
 use BeegoodIT\FilamentSocialGraph\Policies\FeedItemPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +23,7 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(FeedItem::class, FeedItemPolicy::class);
+        FeedItem::observe(FeedItemObserver::class);
 
         $this->registerLivewireUploadSkipRender();
 
@@ -47,8 +49,10 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
             ], 'filament-social-graph-config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations/2026_02_27_000000_create_feed_items_table.php' => database_path('migrations/2026_02_27_000000_create_feed_items_table.php'),
-                __DIR__.'/../database/migrations/2026_02_27_000001_create_subscriptions_table.php' => database_path('migrations/2026_02_27_000001_create_subscriptions_table.php'),
+                __DIR__.'/../database/migrations/2026_02_27_000000_create_feeds_table.php' => database_path('migrations/2026_02_27_000000_create_feeds_table.php'),
+                __DIR__.'/../database/migrations/2026_02_27_000001_create_feed_items_table.php' => database_path('migrations/2026_02_27_000001_create_feed_items_table.php'),
+                __DIR__.'/../database/migrations/2026_02_27_000002_create_feed_interactions_table.php' => database_path('migrations/2026_02_27_000002_create_feed_interactions_table.php'),
+                __DIR__.'/../database/migrations/2026_02_27_000003_create_subscriptions_table.php' => database_path('migrations/2026_02_27_000003_create_subscriptions_table.php'),
             ], 'filament-social-graph-migrations');
 
             $this->publishes([

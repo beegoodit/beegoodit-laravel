@@ -27,8 +27,7 @@ class FeedItemCardImageTest extends TestCase
         ]);
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'Post with one image',
             'attachments' => [$path],
         ]);
@@ -55,8 +54,7 @@ class FeedItemCardImageTest extends TestCase
         ]);
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'Post with two images',
             'attachments' => $paths,
         ]);
@@ -82,8 +80,7 @@ class FeedItemCardImageTest extends TestCase
         ]);
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'Mixed attachments',
             'attachments' => [$imagePath, $filePath],
         ]);
@@ -104,8 +101,7 @@ class FeedItemCardImageTest extends TestCase
         ]);
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'Post',
             'attachments' => [$path],
         ]);

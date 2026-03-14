@@ -2,31 +2,48 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Models\Concerns;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait HasSocialFeed
 {
     /**
-     * Get feed items posted by this model (actor).
+     * Get the feed owned by this model.
      */
-    public function feedItems(): HasMany
+    public function feed(): MorphOne
     {
-        return $this->hasMany(FeedItem::class, 'actor_id')
-            ->where('actor_type', $this->getMorphClass())
-            ->orderByDesc('created_at');
+        return $this->morphOne(Feed::class, 'owner');
     }
 
     /**
-     * Create a feed item as this actor.
+     * Get feed items posted to this model's feed.
+     */
+    public function feedItems(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            FeedItem::class,
+            Feed::class,
+            'owner_id',
+            'feed_id',
+            $this->getKeyName(),
+            'id'
+        )->where('feeds.owner_type', $this->getMorphClass())
+            ->orderByDesc('feed_items.created_at');
+    }
+
+    /**
+     * Create a feed item as this owner.
      *
      * @param  array{subject?: string, body?: string}  $data
      */
     public function createFeedItem(array $data): FeedItem
     {
+        $feed = Feed::firstOrCreateForOwner($this);
+
         $feedItem = new FeedItem([
-            'actor_type' => $this->getMorphClass(),
-            'actor_id' => $this->getKey(),
+            'feed_id' => $feed->getKey(),
             'subject' => $data['subject'] ?? null,
             'body' => $data['body'] ?? null,
         ]);

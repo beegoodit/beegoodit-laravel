@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Models\Concerns;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use BeegoodIT\FilamentSocialGraph\Models\Subscription;
 use Illuminate\Database\Eloquent\Builder;
@@ -85,16 +86,25 @@ trait HasSocialSubscriptions
             return collect();
         }
 
-        $query = FeedItem::query()
-            ->with(['actor'])
+        $feedIds = Feed::query()
             ->where(function (Builder $q) use ($subscriptions): void {
                 foreach ($subscriptions as $sub) {
                     $q->orWhere(function (Builder $inner) use ($sub): void {
-                        $inner->where('actor_type', $sub->feed_owner_type)
-                            ->where('actor_id', $sub->feed_owner_id);
+                        $inner->where('owner_type', $sub->feed_owner_type)
+                            ->where('owner_id', $sub->feed_owner_id);
                     });
                 }
-            })->latest()
+            })
+            ->pluck('id');
+
+        if ($feedIds->isEmpty()) {
+            return collect();
+        }
+
+        $query = FeedItem::query()
+            ->with(['feed.owner'])
+            ->whereIn('feed_id', $feedIds)
+            ->latest()
             ->limit($limit);
 
         if (config('filament-social-graph.tenancy.enabled') && $this->relationLoaded('team')) {

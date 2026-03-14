@@ -3,8 +3,10 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Actions\CreateFeedItemForEntity;
+use BeegoodIT\FilamentSocialGraph\Jobs\GenerateFeedItemThumbnailsJob;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 
 uses(TestCase::class);
@@ -30,20 +32,23 @@ test('it creates a feed item for an entity that uses HasSocialFeed', function ()
     $feedItem = $action($user, $data);
 
     expect($feedItem)->toBeInstanceOf(FeedItem::class)
-        ->and($feedItem->actor_type)->toBe(TestUser::class)
-        ->and($feedItem->actor_id)->toBe($user->getKey())
+        ->and($feedItem->feed_id)->not->toBeNull()
         ->and($feedItem->body)->toBe('Hello world')
         ->and($feedItem->subject)->toBe('Greeting');
+    $feed = $feedItem->feed;
+    expect($feed)->not->toBeNull()
+        ->and($feed->owner_type)->toBe(TestUser::class)
+        ->and($feed->owner_id)->toBe($user->getKey());
     $this->assertDatabaseHas('feed_items', [
         'id' => $feedItem->id,
-        'actor_type' => TestUser::class,
-        'actor_id' => $user->id,
+        'feed_id' => $feedItem->feed_id,
         'body' => 'Hello world',
     ]);
 });
 
 test('it creates feed item with attachments and stores files', function (): void {
     Storage::fake('public');
+    Queue::fake();
 
     $user = TestUser::create([
         'name' => 'Test User',
@@ -67,6 +72,10 @@ test('it creates feed item with attachments and stores files', function (): void
     $path = $feedItem->attachments[0];
     expect($path)->toContain('feed-item-attachments')
         ->and(Storage::disk('public')->exists($path))->toBeTrue();
+
+    Queue::assertPushed(GenerateFeedItemThumbnailsJob::class);
+    $job = new GenerateFeedItemThumbnailsJob($feedItem->getKey());
+    $job->handle(app(\BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService::class));
 
     $thumbPath = FeedItem::getThumbnailPath($path);
     expect(Storage::disk('public')->exists($thumbPath))->toBeTrue();

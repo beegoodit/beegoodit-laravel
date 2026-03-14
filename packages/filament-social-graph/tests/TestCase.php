@@ -30,9 +30,25 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
         config()->set('cache.default', 'array');
+        config()->set('queue.default', 'sync');
         config()->set('auth.providers.users.model', TestUser::class);
         config()->set('filament-social-graph.tenancy.enabled', false);
-        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+        config()->set('filament-social-graph.owner_models', [TestUser::class]);
+    }
+
+    /**
+     * Minimal valid JPEG bytes for thumbnail tests. Requires Intervention Image (GD or Imagick).
+     */
+    protected function minimalJpeg(): string
+    {
+        if (! class_exists(\Intervention\Image\ImageManager::class)) {
+            $this->markTestSkipped('Intervention Image not installed');
+        }
+        $driver = extension_loaded('gd') ? new \Intervention\Image\Drivers\Gd\Driver : new \Intervention\Image\Drivers\Imagick\Driver;
+        $manager = new \Intervention\Image\ImageManager($driver);
+        $image = $manager->create(10, 10)->fill('ccc');
+
+        return (string) $image->encodeByExtension('jpg', quality: 85);
     }
 
     protected function setUpDatabase(): void
@@ -52,8 +68,10 @@ class TestCase extends Orchestra
         });
 
         $migrations = [
-            __DIR__.'/../database/migrations/2026_02_27_000000_create_feed_items_table.php',
-            __DIR__.'/../database/migrations/2026_02_27_000001_create_subscriptions_table.php',
+            __DIR__.'/../database/migrations/2026_02_27_000000_create_feeds_table.php',
+            __DIR__.'/../database/migrations/2026_02_27_000001_create_feed_items_table.php',
+            __DIR__.'/../database/migrations/2026_02_27_000002_create_feed_interactions_table.php',
+            __DIR__.'/../database/migrations/2026_02_27_000003_create_subscriptions_table.php',
         ];
 
         foreach ($migrations as $path) {

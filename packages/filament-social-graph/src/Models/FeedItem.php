@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property-read \Illuminate\Database\Eloquent\Model|null $owner Owner of the feed (e.g. Team). Via feed->owner.
+ */
 class FeedItem extends Model
 {
     use HasFactory;
@@ -44,11 +46,16 @@ class FeedItem extends Model
     }
 
     /**
-     * URL for the thumbnail path. No fallback to full URL; use regenerate command if thumbnail file is missing.
+     * URL for the thumbnail path. Falls back to full-size attachment URL when thumbnail file does not exist yet.
      */
     public static function getThumbnailUrl(string $path, ?\DateTimeInterface $expiresAt = null): string
     {
-        return self::getAttachmentUrl(self::getThumbnailPath($path), $expiresAt);
+        $thumbPath = self::getThumbnailPath($path);
+        if (! Storage::disk(self::getStorageDisk())->exists($thumbPath)) {
+            return self::getAttachmentUrl($path, $expiresAt);
+        }
+
+        return self::getAttachmentUrl($thumbPath, $expiresAt);
     }
 
     /**
@@ -72,8 +79,7 @@ class FeedItem extends Model
     }
 
     protected $fillable = [
-        'actor_type',
-        'actor_id',
+        'feed_id',
         'team_id',
         'subject',
         'body',
@@ -89,9 +95,23 @@ class FeedItem extends Model
         ];
     }
 
-    public function actor(): MorphTo
+    public function feed(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Feed::class);
+    }
+
+    /**
+     * Owner of the feed this item belongs to (e.g. Team). Delegates to feed->owner.
+     * Exposed as attribute so it is not interpreted as an Eloquent relationship.
+     */
+    protected function owner(): ?Model
+    {
+        return $this->feed?->owner;
+    }
+
+    public function getOwnerAttribute(): ?Model
+    {
+        return $this->owner();
     }
 
     public function team(): BelongsTo
@@ -105,25 +125,21 @@ class FeedItem extends Model
     }
 
     /**
-     * URL for an attachment path. Uses temporary (signed) URLs for S3 so private buckets work without public read.
-     * Delegates to FileStorageService when laravel-file-storage is present (same path as tenancy/avatar).
+     * URL for an attachment path. Uses FileStorageService (signed URLs for S3, direct URLs for local).
      */
     public static function getAttachmentUrl(string $path, ?\DateTimeInterface $expiresAt = null): string
     {
-        $fileStorageServiceClass = 'BeegoodIT\LaravelFileStorage\Services\FileStorageService';
-        if (class_exists($fileStorageServiceClass) && app()->bound($fileStorageServiceClass)) {
-            $ttlMinutes = (int) config('filament-social-graph.attachments.signed_url_ttl_minutes', 60);
-            $url = app($fileStorageServiceClass)->url($path, $ttlMinutes, self::getStorageDisk());
-            if ($url !== null) {
-                return $url;
-            }
+        $service = app(\BeegoodIT\LaravelFileStorage\Services\FileStorageService::class);
+        $ttlMinutes = (int) config('filament-social-graph.attachments.signed_url_ttl_minutes', 60);
+        $url = $service->url($path, $ttlMinutes, self::getStorageDisk());
+
+        if ($url !== null) {
+            return $url;
         }
 
         $disk = self::getStorageDisk();
         if ($disk === 's3') {
-            $expiresAt ??= now()->addMinutes(
-                (int) config('filament-social-graph.attachments.signed_url_ttl_minutes', 60)
-            );
+            $expiresAt ??= now()->addMinutes($ttlMinutes);
 
             return Storage::disk($disk)->temporaryUrl($path, $expiresAt);
         }

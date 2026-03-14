@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('feed_items', function (Blueprint $table): void {
             if (! Schema::hasColumn('feed_items', 'team_id')) {
-                $table->foreignUuid('team_id')->nullable()->after('actor_id')->constrained('teams')->nullOnDelete();
+                $table->foreignUuid('team_id')->nullable()->after('feed_id')->constrained('teams')->nullOnDelete();
                 $table->index('team_id');
             }
         });

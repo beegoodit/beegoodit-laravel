@@ -66,7 +66,7 @@ In `config/filament-social-graph.php`:
 
 **Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files and their thumbnails are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
 
-**Thumbnails:** For each image attachment, the package generates a thumbnail (stored under `…/thumbs/` by path convention). New uploads get thumbnails automatically. `FeedItem::getThumbnailUrl($path)` always returns the thumbnail URL (no fallback to full size). To backfill thumbnails for existing feed items, run:
+**Thumbnails:** For each image attachment, the package generates a thumbnail (stored under `…/thumbs/` by path convention). When attachments change (create or update, from the feed or from Filament Admin), a queued job generates thumbnails asynchronously—run a queue worker for thumbnails to appear. `FeedItem::getThumbnailUrl($path)` returns the thumbnail URL when the file exists, otherwise falls back to the full-size attachment URL so images display until the job has run. To backfill thumbnails for existing feed items, run:
 
 ```bash
 php artisan feed-items:regenerate-thumbnails

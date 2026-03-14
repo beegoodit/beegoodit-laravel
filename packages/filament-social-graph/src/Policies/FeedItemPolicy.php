@@ -25,9 +25,9 @@ class FeedItemPolicy
             return false;
         }
 
-        $actorModels = config('filament-social-graph.actor_models', []);
+        $ownerModels = config('filament-social-graph.owner_models', []);
 
-        return in_array($entity->getMorphClass(), $actorModels, true);
+        return in_array($entity->getMorphClass(), $ownerModels, true);
     }
 
     /**
@@ -39,14 +39,14 @@ class FeedItemPolicy
             return false;
         }
 
-        $actor = $feedItem->actor;
-        if ($actor === null) {
+        $owner = $feedItem->owner;
+        if ($owner === null) {
             return true;
         }
 
-        $actorModels = config('filament-social-graph.actor_models', []);
+        $ownerModels = config('filament-social-graph.owner_models', []);
 
-        return in_array($actor->getMorphClass(), $actorModels, true);
+        return in_array($owner->getMorphClass(), $ownerModels, true);
     }
 
     /**

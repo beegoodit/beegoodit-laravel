@@ -1,7 +1,7 @@
 <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
     <div class="mb-2 flex flex-wrap items-center gap-2">
         <span class="font-medium text-gray-900 dark:text-white">
-            {{ $feedItem->actor?->name ?? class_basename($feedItem->actor_type) }}
+            {{ $feedItem->owner?->name ?? class_basename($feedItem->feed?->owner_type ?? '') }}
         </span>
         <span class="text-sm text-gray-500 dark:text-gray-400">
             {{ $feedItem->created_at->diffForHumans() }}

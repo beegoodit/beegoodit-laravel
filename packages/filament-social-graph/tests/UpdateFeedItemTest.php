@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Actions\UpdateFeedItem;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -22,9 +23,9 @@ test('it updates feed item subject and body', function (): void {
         'password' => bcrypt('password'),
     ]);
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'subject' => 'Old subject',
         'body' => 'Old body',
     ]);
@@ -47,9 +48,9 @@ test('it updates only provided fields', function (): void {
         'password' => bcrypt('password'),
     ]);
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'subject' => 'Keep subject',
         'body' => 'Old body',
     ]);
@@ -78,9 +79,9 @@ test('it removes attachments and deletes files from storage when attachments_rem
     Storage::disk('public')->put($pathToRemove, 'content');
     Storage::disk('public')->put($pathToKeep, 'content');
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'body' => 'With attachments',
         'attachments' => [$pathToRemove, $pathToKeep],
     ]);
@@ -112,9 +113,9 @@ test('it deletes thumbnail when removing image attachment', function (): void {
     Storage::disk('public')->put($imagePath, 'image content');
     Storage::disk('public')->put($thumbPath, 'thumb content');
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'body' => 'With image',
         'attachments' => [$imagePath],
     ]);
@@ -141,9 +142,9 @@ test('it adds new attachment files when attachments provided', function (): void
     $existingPath = 'feed-item-attachments/existing.jpg';
     Storage::disk('public')->put($existingPath, 'content');
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'body' => 'With one attachment',
         'attachments' => [$existingPath],
     ]);
@@ -178,9 +179,9 @@ test('it throws validation exception when combined attachments exceed max_files'
         'password' => bcrypt('password'),
     ]);
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'body' => 'Body',
         'attachments' => ['feed-item-attachments/a.pdf', 'feed-item-attachments/b.pdf'],
     ]);

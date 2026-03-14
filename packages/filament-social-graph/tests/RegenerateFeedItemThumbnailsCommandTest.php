@@ -25,8 +25,7 @@ class RegenerateFeedItemThumbnailsCommandTest extends TestCase
         Storage::disk('public')->put($path, $this->minimalJpeg());
 
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'With image',
             'attachments' => [$path],
         ]);
@@ -50,8 +49,7 @@ class RegenerateFeedItemThumbnailsCommandTest extends TestCase
         Storage::disk('public')->put($path, $this->minimalJpeg());
 
         FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'With image',
             'attachments' => [$path],
         ]);
@@ -75,8 +73,7 @@ class RegenerateFeedItemThumbnailsCommandTest extends TestCase
         Storage::disk('public')->put($thumbPath, 'existing-thumb');
 
         FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'With image',
             'attachments' => [$path],
         ]);
@@ -85,17 +82,5 @@ class RegenerateFeedItemThumbnailsCommandTest extends TestCase
 
         $this->assertSame('existing-thumb', Storage::disk('public')->get($thumbPath));
         $this->assertStringContainsString('skipped: 1', Artisan::output());
-    }
-
-    private function minimalJpeg(): string
-    {
-        if (! class_exists(\Intervention\Image\ImageManager::class)) {
-            $this->markTestSkipped('Intervention Image not installed');
-        }
-        $driver = extension_loaded('gd') ? new \Intervention\Image\Drivers\Gd\Driver : new \Intervention\Image\Drivers\Imagick\Driver;
-        $manager = new \Intervention\Image\ImageManager($driver);
-        $image = $manager->create(10, 10)->fill('ccc');
-
-        return (string) $image->encodeByExtension('jpg', quality: 85);
     }
 }

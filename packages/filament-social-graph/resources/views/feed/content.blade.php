@@ -14,6 +14,7 @@
 
         <div class="mt-6">
             @livewire(\BeegoodIT\FilamentSocialGraph\Livewire\FeedList::class, [
+                'feedId' => $feed?->getKey(),
                 'entityType' => $entity->getMorphClass(),
                 'entityId' => $entity->getKey(),
             ])

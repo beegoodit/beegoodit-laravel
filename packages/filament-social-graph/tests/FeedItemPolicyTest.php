@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Gate;
 
@@ -43,12 +44,12 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+        config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
         $this->assertTrue(Gate::allows('create', [FeedItem::class, $entity]));
     }
 
-    public function test_authenticated_user_cannot_create_for_entity_not_in_actor_models(): void
+    public function test_authenticated_user_cannot_create_for_entity_not_in_owner_models(): void
     {
         $user = TestUser::create([
             'name' => 'User',
@@ -64,7 +65,7 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        config()->set('filament-social-graph.actor_models', []);
+        config()->set('filament-social-graph.owner_models', []);
 
         $this->assertFalse(Gate::allows('create', [FeedItem::class, $entity]));
     }
@@ -79,9 +80,9 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($actor);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $actor->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Test',
         ]);
 
@@ -104,11 +105,11 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+        config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
+        $feed = Feed::firstOrCreateForOwner($actor);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $actor->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Test',
         ]);
 
@@ -131,11 +132,11 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        config()->set('filament-social-graph.actor_models', []);
+        config()->set('filament-social-graph.owner_models', []);
 
+        $feed = Feed::firstOrCreateForOwner($actor);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $actor->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Test',
         ]);
 
@@ -152,9 +153,9 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($actor);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $actor->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Test',
         ]);
 
@@ -177,11 +178,11 @@ class FeedItemPolicyTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+        config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
+        $feed = Feed::firstOrCreateForOwner($actor);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $actor->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => 'Test',
         ]);
 

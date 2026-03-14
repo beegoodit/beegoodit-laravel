@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedEditForm;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -27,9 +28,9 @@ class FeedEditFormTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'subject' => 'Old subject',
             'body' => '<p>Old body</p>',
         ]);
@@ -70,9 +71,9 @@ class FeedEditFormTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'subject' => 'Subject',
             'body' => '<p>Body</p>',
             'attachments' => [$existingPath],
@@ -114,9 +115,9 @@ class FeedEditFormTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'subject' => 'Subject',
             'body' => '<p>Body</p>',
             'attachments' => [$pathToRemove, $pathToKeep],

@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Actions\DeleteFeedItem;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,9 +21,9 @@ test('it deletes feed item', function (): void {
         'password' => bcrypt('password'),
     ]);
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'body' => 'Test',
     ]);
 
@@ -45,9 +46,9 @@ test('it deletes stored attachment files when deleting feed item', function (): 
     $path = 'feed-item-attachments/test-file.pdf';
     Storage::disk('public')->put($path, 'content');
 
+    $feed = Feed::firstOrCreateForOwner($actor);
     $feedItem = FeedItem::create([
-        'actor_type' => TestUser::class,
-        'actor_id' => $actor->getKey(),
+        'feed_id' => $feed->getKey(),
         'body' => 'With attachment',
         'attachments' => [$path],
     ]);

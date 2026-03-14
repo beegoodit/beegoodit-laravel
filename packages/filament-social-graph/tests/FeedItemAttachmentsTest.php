@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 
 class FeedItemAttachmentsTest extends TestCase
@@ -19,9 +20,9 @@ class FeedItemAttachmentsTest extends TestCase
             'feed-item-attachments/document.pdf',
         ];
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->id,
+            'feed_id' => $feed->getKey(),
             'body' => 'With attachments',
             'attachments' => $paths,
         ]);

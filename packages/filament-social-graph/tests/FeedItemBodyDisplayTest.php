@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
 use BeegoodIT\FilamentSocialGraph\Http\Controllers\FeedController;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -14,7 +15,7 @@ class FeedItemBodyDisplayTest extends TestCase
         parent::setUp();
 
         $this->withoutVite();
-        config()->set('filament-social-graph.actor_models', [TestUser::class]);
+        config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
         Route::model('entity', TestUser::class);
         Route::middleware('web')->group(function (): void {
@@ -31,9 +32,9 @@ class FeedItemBodyDisplayTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => '<p>Safe text</p><script>alert("evil")</script><strong>bold</strong>',
         ]);
 
@@ -53,9 +54,9 @@ class FeedItemBodyDisplayTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
+        $feed = Feed::firstOrCreateForOwner($user);
         $feedItem = FeedItem::create([
-            'actor_type' => TestUser::class,
-            'actor_id' => $user->getKey(),
+            'feed_id' => $feed->getKey(),
             'body' => '**Bold** and _italic_',
         ]);
 
