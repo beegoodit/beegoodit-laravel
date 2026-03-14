@@ -5,7 +5,6 @@ namespace BeegoodIT\FilamentSocialGraph\Actions;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 use BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -57,16 +56,7 @@ class UpdateFeedItem
      */
     protected function deleteAttachmentFiles(FeedItem $feedItem, array $paths): void
     {
-        if ($paths === []) {
-            return;
-        }
-        $disk = FeedItem::getStorageDisk();
-        foreach ($paths as $path) {
-            Storage::disk($disk)->delete($path);
-            if (FeedItem::isImagePath($path)) {
-                Storage::disk($disk)->delete(FeedItem::getThumbnailPath($path));
-            }
-        }
+        FeedItem::deleteStoredAttachments($paths);
     }
 
     /**

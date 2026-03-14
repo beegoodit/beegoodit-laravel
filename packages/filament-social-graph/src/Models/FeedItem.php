@@ -73,6 +73,25 @@ class FeedItem extends Model
         return null;
     }
 
+    /**
+     * Delete stored attachment files and their thumbnails (for images) from storage.
+     *
+     * @param  array<int, string>  $paths
+     */
+    public static function deleteStoredAttachments(array $paths): void
+    {
+        if ($paths === []) {
+            return;
+        }
+        $disk = self::getStorageDisk();
+        foreach ($paths as $path) {
+            Storage::disk($disk)->delete($path);
+            if (self::isImagePath($path)) {
+                Storage::disk($disk)->delete(self::getThumbnailPath($path));
+            }
+        }
+    }
+
     protected static function newFactory(): FeedItemFactory
     {
         return FeedItemFactory::new();

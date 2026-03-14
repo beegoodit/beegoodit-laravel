@@ -7,6 +7,11 @@ use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 
 class FeedItemObserver
 {
+    public function deleting(FeedItem $feedItem): void
+    {
+        FeedItem::deleteStoredAttachments($feedItem->attachments ?? []);
+    }
+
     public function saved(FeedItem $feedItem): void
     {
         if (! $feedItem->wasChanged('attachments')) {

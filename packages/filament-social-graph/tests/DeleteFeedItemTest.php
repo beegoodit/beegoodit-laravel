@@ -60,3 +60,30 @@ test('it deletes stored attachment files when deleting feed item', function (): 
     expect(FeedItem::find($feedItem->id))->toBeNull()
         ->and(Storage::disk('public')->exists($path))->toBeFalse();
 });
+
+test('direct model delete removes stored attachment files via observer', function (): void {
+    Storage::fake('public');
+
+    $actor = TestUser::create([
+        'name' => 'Actor',
+        'email' => 'actor@example.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $path = 'feed-item-attachments/direct-delete.pdf';
+    Storage::disk('public')->put($path, 'content');
+
+    $feed = Feed::firstOrCreateForOwner($actor);
+    $feedItem = FeedItem::create([
+        'feed_id' => $feed->getKey(),
+        'body' => 'Direct delete test',
+        'attachments' => [$path],
+    ]);
+
+    expect(Storage::disk('public')->exists($path))->toBeTrue();
+
+    $feedItem->delete();
+
+    expect(FeedItem::find($feedItem->id))->toBeNull()
+        ->and(Storage::disk('public')->exists($path))->toBeFalse();
+});
