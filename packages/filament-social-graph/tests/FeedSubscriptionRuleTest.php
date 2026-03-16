@@ -5,6 +5,7 @@ namespace BeegoodIT\FilamentSocialGraph\Tests;
 use BeegoodIT\FilamentSocialGraph\Http\Requests\StoreFeedSubscriptionRuleRequest;
 use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedSubscriptionRule;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 class FeedSubscriptionRuleTest extends TestCase
@@ -80,5 +81,53 @@ class FeedSubscriptionRuleTest extends TestCase
         $rule = FeedSubscriptionRule::factory()->forFeed($feed)->create();
 
         $this->assertTrue($rule->feed->is($feed));
+    }
+
+    public function test_team_id_is_set_from_feed_owner_when_tenancy_enabled_and_owner_is_team(): void
+    {
+        Config::set('filament-social-graph.tenancy.enabled', true);
+        Config::set('filament-social-graph.tenancy.team_model', TestTeam::class);
+
+        $team = TestTeam::create(['name' => 'T1']);
+        $feed = Feed::factory()->forOwner($team)->create();
+        $rule = FeedSubscriptionRule::factory()->forFeed($feed)->create([
+            'scope' => 'team_members',
+            'auto_subscribe' => true,
+        ]);
+
+        $this->assertSame($team->getKey(), $rule->team_id);
+        $this->assertDatabaseHas('feed_subscription_rules', [
+            'id' => $rule->getKey(),
+            'team_id' => $team->getKey(),
+        ]);
+    }
+
+    public function test_team_id_is_null_when_feed_owner_is_not_team_or_tenancy_disabled(): void
+    {
+        Config::set('filament-social-graph.tenancy.enabled', false);
+
+        $team = TestTeam::create(['name' => 'T1']);
+        $feed = Feed::factory()->forOwner($team)->create();
+        $rule = FeedSubscriptionRule::factory()->forFeed($feed)->create();
+
+        $this->assertNull($rule->team_id);
+    }
+
+    public function test_team_id_updates_when_rule_is_updated_to_different_feed_with_team_owner(): void
+    {
+        Config::set('filament-social-graph.tenancy.enabled', true);
+        Config::set('filament-social-graph.tenancy.team_model', TestTeam::class);
+
+        $team1 = TestTeam::create(['name' => 'T1']);
+        $team2 = TestTeam::create(['name' => 'T2']);
+        $feed1 = Feed::factory()->forOwner($team1)->create();
+        $feed2 = Feed::factory()->forOwner($team2)->create();
+
+        $rule = FeedSubscriptionRule::factory()->forFeed($feed1)->create();
+        $this->assertSame($team1->getKey(), $rule->team_id);
+
+        $rule->update(['feed_id' => $feed2->getKey()]);
+        $rule->refresh();
+        $this->assertSame($team2->getKey(), $rule->team_id);
     }
 }

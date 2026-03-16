@@ -10,4 +10,5 @@ return [
     'unsubscribable' => 'Nicht kündbar',
     'navigation_group' => 'Soziales Netzwerk',
     'scope_invalid' => 'Der gewählte Geltungsbereich ist ungültig.',
+    'subscriptions_count' => 'Abonnements',
 ];

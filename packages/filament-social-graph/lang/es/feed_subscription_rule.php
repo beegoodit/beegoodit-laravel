@@ -10,4 +10,5 @@ return [
     'unsubscribable' => 'No cancelable',
     'navigation_group' => 'Red social',
     'scope_invalid' => 'El ámbito seleccionado no es válido.',
+    'subscriptions_count' => 'Suscripciones',
 ];

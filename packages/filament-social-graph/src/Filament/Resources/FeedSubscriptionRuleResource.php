@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class FeedSubscriptionRuleResource extends Resource
 {
@@ -54,6 +55,11 @@ class FeedSubscriptionRuleResource extends Resource
     public static function getNavigationBadgeTooltip(): ?string
     {
         return __('filament-social-graph::feed_subscription_rule.plural');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->withCount('feedSubscriptions');
     }
 
     public static function form(Schema $schema): Schema
@@ -115,6 +121,11 @@ class FeedSubscriptionRuleResource extends Resource
                 TextColumn::make('scope')
                     ->label(__('filament-social-graph::feed_subscription_rule.scope'))
                     ->formatStateUsing(fn (string $state): string => $scopes[$state] ?? $state),
+
+                TextColumn::make('feed_subscriptions_count')
+                    ->label(__('filament-social-graph::feed_subscription_rule.subscriptions_count'))
+                    ->numeric()
+                    ->sortable(),
 
                 IconColumn::make('auto_subscribe')
                     ->label(__('filament-social-graph::feed_subscription_rule.auto_subscribe'))

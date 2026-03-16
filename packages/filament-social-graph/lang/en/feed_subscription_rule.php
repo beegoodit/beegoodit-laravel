@@ -10,4 +10,5 @@ return [
     'unsubscribable' => 'Unsubscribable',
     'navigation_group' => 'Social Graph',
     'scope_invalid' => 'The selected scope is invalid.',
+    'subscriptions_count' => 'Subscriptions',
 ];

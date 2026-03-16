@@ -106,6 +106,8 @@ Each resolver is invoked with `FeedSubscriptionRule $rule` and must return an it
 
 Implement a static (or instance) method with signature `(FeedSubscriptionRule $rule): iterable` that returns the subscribers for that scope (e.g. all users, users in the rule’s team, or tour members). The package calls the resolver when syncing subscriptions for a rule.
 
+**Rule `team_id`:** When tenancy is enabled and the `feed_subscription_rules.team_id` column exists, the package sets each rule's `team_id` from the **feed's owner** on save (when the owner is the tenancy team model). Scope resolvers like `team_members` therefore use the feed-owning team, not the current Filament tenant. Rules created or edited from the Admin panel (no tenant) still get the correct `team_id` from the selected feed's owner.
+
 ### Seeding default rules
 
 The package does **not** ship a seeder. Apps should create a seeder and run it from `DatabaseSeeder` (e.g. in production seed or a dedicated "defaults" run). Example:

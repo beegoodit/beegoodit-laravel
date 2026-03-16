@@ -84,6 +84,13 @@ class TestCase extends Orchestra
             $migration = include $path;
             $migration->up();
         }
+
+        Schema::table('feed_subscription_rules', function (Blueprint $table): void {
+            if (! Schema::hasColumn('feed_subscription_rules', 'team_id')) {
+                $table->foreignUuid('team_id')->nullable()->after('unsubscribable')->constrained('teams')->nullOnDelete();
+                $table->index('team_id');
+            }
+        });
     }
 }
 
