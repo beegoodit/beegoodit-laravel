@@ -3,7 +3,6 @@
 namespace BeegoodIT\FilamentSocialGraph\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateFeedSubscriptionRuleRequest extends FormRequest
 {
@@ -18,8 +17,7 @@ class UpdateFeedSubscriptionRuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subscribable_type' => ['required', 'string', Rule::in(config('filament-social-graph.subscribable_models', []))],
-            'subscribable_id' => ['required', 'uuid'],
+            'feed_id' => ['required', 'uuid', 'exists:feeds,id'],
             'scope' => StoreFeedSubscriptionRuleRequest::scopeValidationRules(),
             'auto_subscribe' => ['boolean'],
             'unsubscribable' => ['boolean'],

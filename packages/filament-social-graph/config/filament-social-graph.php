@@ -30,13 +30,6 @@ return [
     'entity_models' => [],
 
     /*
-     * Models that can be the target of a subscription rule (subscribable).
-     * Used by FeedSubscriptionRuleResource to build the subscribable MorphToSelect.
-     * Example: [\BeegoodIT\FilamentSocialGraph\Models\Feed::class, \App\Models\Tour::class]
-     */
-    'subscribable_models' => [],
-
-    /*
      * Allowed scope values and labels for subscription rules.
      * Apps can add scope values (e.g. 'tour_members' => 'Tour members') in published config.
      */
@@ -44,6 +37,13 @@ return [
         'all_users' => 'All users',
         'team_members' => 'Team members',
     ],
+
+    /*
+     * Resolvers that return subscribers (models using HasSocialSubscriptions) for each scope.
+     * Key = scope value (e.g. 'all_users'), value = [ClassName::class, 'method'] (callable, serializable for config:cache).
+     * Method signature: (FeedSubscriptionRule $rule): iterable<Model>. Do not use closures (non-serializable).
+     */
+    'subscription_rule_scope_resolver' => [],
 
     /*
      * Attachment limits for feed item create/edit (public forms).

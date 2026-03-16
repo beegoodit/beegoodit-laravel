@@ -10,15 +10,13 @@ return new class extends Migration
     {
         Schema::create('feed_subscription_rules', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->string('subscribable_type', 255);
-            $table->uuid('subscribable_id');
+            $table->foreignUuid('feed_id')->constrained('feeds')->cascadeOnDelete();
             $table->string('scope', 64);
             $table->boolean('auto_subscribe')->default(false);
             $table->boolean('unsubscribable')->default(false);
             $table->timestamps();
 
-            $table->unique(['subscribable_type', 'subscribable_id']);
-            $table->index(['subscribable_type', 'subscribable_id']);
+            $table->index('feed_id');
         });
     }
 

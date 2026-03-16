@@ -3,10 +3,10 @@
 namespace BeegoodIT\FilamentSocialGraph\Filament\Resources;
 
 use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedSubscriptionRuleResource\Pages;
+use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedSubscriptionRuleResource\RelationManagers\FeedSubscriptionsRelationManager;
 use BeegoodIT\FilamentSocialGraph\Http\Requests\StoreFeedSubscriptionRuleRequest;
 use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedSubscriptionRule;
-use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Panel;
@@ -58,33 +58,25 @@ class FeedSubscriptionRuleResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $subscribableModels = config('filament-social-graph.subscribable_models', []);
         $scopes = config('filament-social-graph.subscription_rule_scopes', []);
-
-        $subscribableTypes = collect($subscribableModels)->map(function (string $model): MorphToSelect\Type {
-            $type = MorphToSelect\Type::make($model);
-            if ($model === Feed::class) {
-                return $type
-                    ->titleAttribute('id')
-                    ->getOptionLabelFromRecordUsing(
-                        fn (\Illuminate\Database\Eloquent\Model $record): string => $record->owner?->name ?? $record->owner_type.' #'.($record->getKey() ?? '')
-                    );
-            }
-
-            return $type->titleAttribute('name');
-        })->all();
 
         return $schema
             ->columns(2)
             ->components([
-                MorphToSelect::make('subscribable')
-                    ->label(__('filament-social-graph::feed_subscription_rule.subscribable'))
-                    ->types($subscribableTypes)
+                Select::make('feed_id')
+                    ->label(__('filament-social-graph::feed_subscription_rule.feed'))
+                    ->relationship(
+                        name: 'feed',
+                        titleAttribute: 'id',
+                        modifyQueryUsing: fn ($query) => $query->with('owner')
+                    )
+                    ->getOptionLabelFromRecordUsing(
+                        fn (Feed $record): string => $record->owner?->name ?? $record->owner_type.' #'.$record->getKey()
+                    )
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->columnSpanFull()
-                    ->hidden(empty($subscribableModels)),
+                    ->columnSpanFull(),
 
                 Select::make('scope')
                     ->label(__('filament-social-graph::feed_subscription_rule.scope'))
@@ -109,18 +101,15 @@ class FeedSubscriptionRuleResource extends Resource
 
         return $table
             ->columns([
-                TextColumn::make('subscribable')
-                    ->label(__('filament-social-graph::feed_subscription_rule.subscribable'))
+                TextColumn::make('feed')
+                    ->label(__('filament-social-graph::feed_subscription_rule.feed'))
                     ->formatStateUsing(function (FeedSubscriptionRule $record): string {
-                        $subscribable = $record->subscribable;
-                        if ($subscribable === null) {
-                            return $record->subscribable_type.' #'.($record->subscribable_id ?? '');
-                        }
-                        if ($subscribable instanceof Feed) {
-                            return $subscribable->owner?->name ?? $record->subscribable_type.' #'.$record->subscribable_id;
+                        $feed = $record->feed;
+                        if ($feed === null) {
+                            return $record->feed_id ?? '';
                         }
 
-                        return $subscribable->name ?? $record->subscribable_type.' #'.$record->subscribable_id;
+                        return $feed->owner?->name ?? $feed->owner_type.' #'.$feed->getKey();
                     }),
 
                 TextColumn::make('scope')
@@ -155,6 +144,13 @@ class FeedSubscriptionRuleResource extends Resource
             'index' => Pages\ListFeedSubscriptionRules::route('/'),
             'create' => Pages\CreateFeedSubscriptionRule::route('/create'),
             'edit' => Pages\EditFeedSubscriptionRule::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            FeedSubscriptionsRelationManager::class,
         ];
     }
 }

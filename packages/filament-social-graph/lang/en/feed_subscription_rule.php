@@ -3,6 +3,7 @@
 return [
     'title' => 'Feed Subscription Rule',
     'plural' => 'Feed Subscription Rules',
+    'feed' => 'Feed',
     'subscribable' => 'Subscribable',
     'scope' => 'Scope',
     'auto_subscribe' => 'Auto-subscribe',

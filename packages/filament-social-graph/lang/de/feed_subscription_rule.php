@@ -3,6 +3,7 @@
 return [
     'title' => 'Feed-Abonnement-Regel',
     'plural' => 'Feed-Abonnement-Regeln',
+    'feed' => 'Feed',
     'subscribable' => 'Abonnierbar',
     'scope' => 'Geltungsbereich',
     'auto_subscribe' => 'Auto-Abonnement',

@@ -20,6 +20,7 @@ class FeedSubscription extends Model
         'subscriber_id',
         'feed_owner_type',
         'feed_owner_id',
+        'subscription_rule_id',
         'team_id',
     ];
 
@@ -31,6 +32,11 @@ class FeedSubscription extends Model
     public function feedOwner(): MorphTo
     {
         return $this->morphTo('feed_owner');
+    }
+
+    public function subscriptionRule(): BelongsTo
+    {
+        return $this->belongsTo(FeedSubscriptionRule::class, 'subscription_rule_id');
     }
 
     public function team(): BelongsTo

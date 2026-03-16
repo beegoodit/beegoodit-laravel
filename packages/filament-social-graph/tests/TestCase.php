@@ -34,11 +34,11 @@ class TestCase extends Orchestra
         config()->set('auth.providers.users.model', TestUser::class);
         config()->set('filament-social-graph.tenancy.enabled', false);
         config()->set('filament-social-graph.owner_models', [TestUser::class]);
-        config()->set('filament-social-graph.subscribable_models', [\BeegoodIT\FilamentSocialGraph\Models\Feed::class]);
         config()->set('filament-social-graph.subscription_rule_scopes', [
             'all_users' => 'All users',
             'team_members' => 'Team members',
         ]);
+        config()->set('filament-social-graph.entity_models', [TestTeam::class]);
     }
 
     /**

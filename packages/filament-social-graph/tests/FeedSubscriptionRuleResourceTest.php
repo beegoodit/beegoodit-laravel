@@ -37,7 +37,7 @@ class FeedSubscriptionRuleResourceTest extends TestCase
     public function test_can_create_rule_via_factory_and_resource_model_matches(): void
     {
         $feed = Feed::factory()->forOwner(TestTeam::create(['name' => 'T1']))->create();
-        $rule = FeedSubscriptionRule::factory()->forSubscribable($feed)->create([
+        $rule = FeedSubscriptionRule::factory()->forFeed($feed)->create([
             'scope' => 'all_users',
             'auto_subscribe' => true,
             'unsubscribable' => false,
@@ -45,8 +45,7 @@ class FeedSubscriptionRuleResourceTest extends TestCase
 
         $this->assertDatabaseHas('feed_subscription_rules', [
             'id' => $rule->id,
-            'subscribable_type' => Feed::class,
-            'subscribable_id' => $feed->getKey(),
+            'feed_id' => $feed->getKey(),
             'scope' => 'all_users',
         ]);
         $this->assertSame(FeedSubscriptionRule::class, FeedSubscriptionRuleResource::getModel());

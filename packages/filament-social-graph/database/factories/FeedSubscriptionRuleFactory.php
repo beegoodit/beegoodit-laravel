@@ -5,7 +5,6 @@ namespace BeegoodIT\FilamentSocialGraph\Database\Factories;
 use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedSubscriptionRule;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\BeegoodIT\FilamentSocialGraph\Models\FeedSubscriptionRule>
@@ -17,19 +16,17 @@ class FeedSubscriptionRuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'subscribable_type' => Feed::class,
-            'subscribable_id' => Str::uuid(),
+            'feed_id' => Feed::factory(),
             'scope' => 'all_users',
             'auto_subscribe' => true,
             'unsubscribable' => true,
         ];
     }
 
-    public function forSubscribable(\Illuminate\Database\Eloquent\Model $subscribable): static
+    public function forFeed(Feed $feed): static
     {
         return $this->state(fn (): array => [
-            'subscribable_type' => $subscribable->getMorphClass(),
-            'subscribable_id' => $subscribable->getKey(),
+            'feed_id' => $feed->getKey(),
         ]);
     }
 }

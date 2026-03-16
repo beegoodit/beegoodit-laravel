@@ -8,8 +8,12 @@ use BeegoodIT\FilamentSocialGraph\Livewire\FeedEditForm;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedItemCard;
 use BeegoodIT\FilamentSocialGraph\Livewire\FeedList;
 use BeegoodIT\FilamentSocialGraph\Livewire\SubscribeButton;
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Models\FeedSubscriptionRule;
 use BeegoodIT\FilamentSocialGraph\Observers\FeedItemObserver;
+use BeegoodIT\FilamentSocialGraph\Observers\FeedObserver;
+use BeegoodIT\FilamentSocialGraph\Observers\FeedSubscriptionRuleObserver;
 use BeegoodIT\FilamentSocialGraph\Policies\FeedItemPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +28,8 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
     {
         Gate::policy(FeedItem::class, FeedItemPolicy::class);
         FeedItem::observe(FeedItemObserver::class);
+        Feed::observe(FeedObserver::class);
+        FeedSubscriptionRule::observe(FeedSubscriptionRuleObserver::class);
 
         $this->registerLivewireUploadSkipRender();
 

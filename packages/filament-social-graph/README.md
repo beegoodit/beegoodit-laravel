@@ -63,8 +63,7 @@ In `config/filament-social-graph.php`:
 - **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer (form) visibility, **authorize_create_ability** (default `'create'`), **authorize_update_ability** (default `'update'`), **authorize_delete_ability** (default `'delete'`). Edit/Delete links on feed item cards are built from optional **FeedList** props: pass `editRouteName`, `destroyRouteName`, `editRouteParams`, `destroyRouteParams` from the view that renders the feed (e.g. platform vs team routes). See Authorization.
 - **attachments**: Limits for public feed create/edit forms: **max_files** (default `5`), **max_file_size_kb** (default `5120`), **allowed_mimes** (default `['jpg','jpeg','png','gif','webp','pdf']`), **multiple_upload_mode** (default `'auto'`). Used by `StoreFeedItemRequest` and `UpdateFeedItemRequest`. When Livewire’s temporary upload disk is S3, multiple file selection would normally throw `S3DoesntSupportMultipleFileUploads`; the package avoids this by using **multiple_upload_mode**: `'auto'` (default) uses per-file uploads when the temp disk is S3, otherwise native `<input multiple>`; `'native'` always uses native multiple (do not use with S3 temp); `'single_per_request'` always uses per-file uploads (e.g. for consistent UX). **attachments.thumbnails**: Image attachments get a generated thumbnail (width, height, quality; see `config/filament-social-graph.php`). Thumbnail URLs are used in the Filament list/view and on the public feed card; there is no fallback to the full image URL. For existing feed items created before thumbnails were enabled, run `php artisan feed-items:regenerate-thumbnails` (see Thumbnails below).
 - **resources.enabled**: Set to `false` to disable `FeedItemResource`, `FeedSubscriptionRuleResource`, and `FeedSubscriptionResource` when registering the plugin.
-- **subscribable_models**: Model class strings that can be the target of a subscription rule (e.g. `[\BeegoodIT\FilamentSocialGraph\Models\Feed::class, \App\Models\Tour::class]`). **Required for FeedSubscriptionRuleResource**: the subscribable MorphToSelect is hidden when empty. Used by the Filament Subscription Rule CRUD to choose which feed or entity the rule applies to.
-- **subscription_rule_scopes**: Allowed scope values and labels (e.g. `['all_users' => 'All users', 'team_members' => 'Team members']`). Apps can add scope values (e.g. `'tour_members' => 'Tour members'`) in published config. Package only stores the string and validates against this list; a later layer uses scope to resolve "who is subscribed" (see add-feed-auto-subscriptions plan).
+- **subscription_rule_scopes**: Allowed scope values and labels (e.g. `['all_users' => 'All users', 'team_members' => 'Team members']`). Apps can add scope values in published config. **subscription_rule_scope_resolver**: For each scope, register a callable (use class references `[Class::class, 'method']`, not closures) that returns subscribers for that rule—see *Scope resolvers* under Subscription rules.
 
 **Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files and their thumbnails are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
 
@@ -89,7 +88,23 @@ The feed composer (and any similar “Livewire + Flux + Quill” form) should fo
 
 ## Subscription rules
 
-Subscription rules define **scope**, **auto_subscribe**, and **unsubscribable** per subscribable entity (e.g. a Feed or a Tour). One rule per entity; multiple rules across entities are allowed. The package provides **FeedSubscriptionRuleResource** (List, Create, Edit, no View) in the same "Social Graph" navigation group. Set **subscribable_models** so the resource shows the subscribable selector (Feed, Tour, etc.). Set **subscription_rule_scopes** to define allowed scope values and labels; apps can add values (e.g. `tour_members`) in published config. A separate layer (resolver/syncer) uses these rules to determine who is auto-subscribed and whether unsubscribe is allowed; this CRUD only manages the data.
+Subscription rules define **scope**, **auto_subscribe**, and **unsubscribable** per **Feed**. Each rule is tied to one feed via `feed_id`. The package provides **FeedSubscriptionRuleResource** (List, Create, Edit, no View) in the same "Social Graph" navigation group; the form uses a Feed selector (from `Feed::query()`). Set **subscription_rule_scopes** to define allowed scope values and labels; apps can add values (e.g. `tour_members`) in published config. A separate layer (resolver/syncer) uses these rules to determine who is auto-subscribed and whether unsubscribe is allowed; this CRUD only manages the data.
+
+### Scope resolvers (subscription_rule_scope_resolver)
+
+For each scope value you use (e.g. `all_users`, `team_members`), configure a **resolver** in `subscription_rule_scope_resolver`. Resolvers must be **class references** (e.g. `[ClassName::class, 'resolve']`), not closures, so that `php artisan config:cache` works in production (closures are not serializable).
+
+Each resolver is invoked with `FeedSubscriptionRule $rule` and must return an iterable of models that use `HasSocialSubscriptions` (e.g. `User`). Example in published config:
+
+```php
+'subscription_rule_scope_resolver' => [
+    'all_users' => [\App\Support\FilamentSocialGraph\AllUsersScopeResolver::class, 'resolve'],
+    'team_members' => [\App\Support\FilamentSocialGraph\TeamMembersScopeResolver::class, 'resolve'],
+    'tour_members' => [\App\Support\FilamentSocialGraph\TourMembersScopeResolver::class, 'resolve'],
+],
+```
+
+Implement a static (or instance) method with signature `(FeedSubscriptionRule $rule): iterable` that returns the subscribers for that scope (e.g. all users, users in the rule’s team, or tour members). The package calls the resolver when syncing subscriptions for a rule.
 
 ### Seeding default rules
 
@@ -104,11 +119,11 @@ $team = \App\Models\Team::query()->where('slug', 'foosbeaver')->first();
 if ($team) {
     $feed = Feed::firstOrCreateForOwner($team);
     FeedSubscriptionRule::query()->firstOrCreate(
-        ['subscribable_type' => Feed::class, 'subscribable_id' => $feed->getKey()],
+        ['feed_id' => $feed->getKey()],
         ['scope' => 'all_users', 'auto_subscribe' => true, 'unsubscribable' => true]
     );
 }
-// Similarly for Tour if your app has a Tour model and subscribable_models includes it.
+// Similarly for another entity (e.g. Tour): create a feed with Feed::firstOrCreateForOwner($tour), then firstOrCreate the rule with that feed_id.
 ```
 
 ## Register the plugin
