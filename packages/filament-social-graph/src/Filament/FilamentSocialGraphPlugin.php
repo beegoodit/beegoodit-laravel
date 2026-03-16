@@ -3,7 +3,8 @@
 namespace BeegoodIT\FilamentSocialGraph\Filament;
 
 use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedItemResource;
-use BeegoodIT\FilamentSocialGraph\Filament\Resources\SubscriptionResource;
+use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedSubscriptionResource;
+use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedSubscriptionRuleResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
@@ -22,7 +23,8 @@ class FilamentSocialGraphPlugin implements Plugin
 
         $panel->resources([
             FeedItemResource::class,
-            SubscriptionResource::class,
+            FeedSubscriptionRuleResource::class,
+            FeedSubscriptionResource::class,
         ]);
     }
 

@@ -8,12 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table): void {
+        Schema::create('feed_subscriptions', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('subscriber_type', 255);
             $table->uuid('subscriber_id');
             $table->string('feed_owner_type', 255);
             $table->uuid('feed_owner_id');
+            $table->foreignUuid('subscription_rule_id')
+                ->nullable()
+                ->after('feed_owner_id')
+                ->constrained('feed_subscription_rules')
+                ->nullOnDelete();
             $table->timestamps();
 
             $table->unique(['subscriber_type', 'subscriber_id', 'feed_owner_type', 'feed_owner_id']);
@@ -23,6 +28,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('feed_subscriptions');
     }
 };

@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Subscription extends Model
+class FeedSubscription extends Model
 {
     use HasFactory;
     use HasUuids;
+
+    protected $table = 'feed_subscriptions';
 
     protected $fillable = [
         'subscriber_type',
@@ -39,5 +41,10 @@ class Subscription extends Model
     protected function getTeamModel(): string
     {
         return config('filament-social-graph.tenancy.team_model', \App\Models\Team::class);
+    }
+
+    protected static function newFactory(): FeedSubscriptionFactory
+    {
+        return FeedSubscriptionFactory::new();
     }
 }

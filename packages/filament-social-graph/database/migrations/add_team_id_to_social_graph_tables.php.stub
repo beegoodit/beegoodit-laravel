@@ -15,9 +15,16 @@ return new class extends Migration
             }
         });
 
-        Schema::table('subscriptions', function (Blueprint $table): void {
-            if (! Schema::hasColumn('subscriptions', 'team_id')) {
+        Schema::table('feed_subscriptions', function (Blueprint $table): void {
+            if (! Schema::hasColumn('feed_subscriptions', 'team_id')) {
                 $table->foreignUuid('team_id')->nullable()->after('feed_owner_id')->constrained('teams')->nullOnDelete();
+                $table->index('team_id');
+            }
+        });
+
+        Schema::table('feed_subscription_rules', function (Blueprint $table): void {
+            if (! Schema::hasColumn('feed_subscription_rules', 'team_id')) {
+                $table->foreignUuid('team_id')->nullable()->after('unsubscribable')->constrained('teams')->nullOnDelete();
                 $table->index('team_id');
             }
         });
@@ -29,7 +36,11 @@ return new class extends Migration
             $table->dropForeign(['team_id']);
         });
 
-        Schema::table('subscriptions', function (Blueprint $table): void {
+        Schema::table('feed_subscriptions', function (Blueprint $table): void {
+            $table->dropForeign(['team_id']);
+        });
+
+        Schema::table('feed_subscription_rules', function (Blueprint $table): void {
             $table->dropForeign(['team_id']);
         });
     }

@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'Suscripción',
-    'plural' => 'Suscripciones',
+    'title' => 'Suscripción al feed',
+    'plural' => 'Suscripciones al feed',
     'subscriber' => 'Suscriptor',
     'feed_owner' => 'Propietario del feed',
     'subscribe' => 'Suscribirse',

@@ -11,7 +11,7 @@ return [
     ],
 
     /*
-     * Whether Filament resources (FeedItem, Subscription) are registered.
+     * Whether Filament resources (FeedItem, FeedSubscription, FeedSubscriptionRule) are registered.
      */
     'resources' => [
         'enabled' => true,
@@ -28,6 +28,22 @@ return [
      * Example: [\App\Models\Team::class, \App\Models\Project::class]
      */
     'entity_models' => [],
+
+    /*
+     * Models that can be the target of a subscription rule (subscribable).
+     * Used by FeedSubscriptionRuleResource to build the subscribable MorphToSelect.
+     * Example: [\BeegoodIT\FilamentSocialGraph\Models\Feed::class, \App\Models\Tour::class]
+     */
+    'subscribable_models' => [],
+
+    /*
+     * Allowed scope values and labels for subscription rules.
+     * Apps can add scope values (e.g. 'tour_members' => 'Tour members') in published config.
+     */
+    'subscription_rule_scopes' => [
+        'all_users' => 'All users',
+        'team_members' => 'Team members',
+    ],
 
     /*
      * Attachment limits for feed item create/edit (public forms).

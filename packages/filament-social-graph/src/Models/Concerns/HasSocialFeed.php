@@ -63,7 +63,7 @@ trait HasSocialFeed
     public function subscribers()
     {
         return $this->morphMany(
-            \BeegoodIT\FilamentSocialGraph\Models\Subscription::class,
+            \BeegoodIT\FilamentSocialGraph\Models\FeedSubscription::class,
             'feed_owner'
         );
     }

@@ -2,9 +2,9 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Tests;
 
-use BeegoodIT\FilamentSocialGraph\Models\Subscription;
+use BeegoodIT\FilamentSocialGraph\Models\FeedSubscription;
 
-class SubscriptionTest extends TestCase
+class FeedSubscriptionTest extends TestCase
 {
     public function test_it_can_subscribe_to_a_feed(): void
     {
@@ -22,7 +22,7 @@ class SubscriptionTest extends TestCase
 
         $subscription = $subscriber->subscribeTo($feedOwner);
 
-        $this->assertDatabaseHas('subscriptions', [
+        $this->assertDatabaseHas('feed_subscriptions', [
             'id' => $subscription->id,
             'subscriber_type' => TestUser::class,
             'subscriber_id' => $subscriber->id,
@@ -72,6 +72,6 @@ class SubscriptionTest extends TestCase
         $sub2 = $subscriber->subscribeTo($feedOwner);
 
         $this->assertEquals($sub1->id, $sub2->id);
-        $this->assertEquals(1, Subscription::count());
+        $this->assertEquals(1, FeedSubscription::count());
     }
 }

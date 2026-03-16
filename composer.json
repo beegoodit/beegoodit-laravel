@@ -32,6 +32,7 @@
             "BeegoodIT\\FilamentKnowledgeBase\\": "packages/filament-knowledge-base/src/",
             "BeegoodIT\\LaravelPwa\\": "packages/laravel-pwa/src/",
             "BeegoodIT\\FilamentSocialGraph\\": "packages/filament-social-graph/src/",
+            "BeegoodIT\\FilamentSocialGraph\\Database\\Factories\\": "packages/filament-social-graph/database/factories/",
             "BeegoodIT\\FilamentSocialLinks\\": "packages/filament-social-links/src/",
             "BeegoodIT\\FilamentSocialLinks\\Database\\Seeders\\": "packages/filament-social-links/database/seeders/",
             "BeegoodIT\\FilamentSocialLinks\\Database\\Factories\\": "packages/filament-social-links/database/factories/",

@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'Abonnement',
-    'plural' => 'Abonnements',
+    'title' => 'Feed-Abonnement',
+    'plural' => 'Feed-Abonnements',
     'subscriber' => 'Abonnent',
     'feed_owner' => 'Feed-Inhaber',
     'subscribe' => 'Abonnieren',

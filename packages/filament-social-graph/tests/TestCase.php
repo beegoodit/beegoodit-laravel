@@ -34,6 +34,11 @@ class TestCase extends Orchestra
         config()->set('auth.providers.users.model', TestUser::class);
         config()->set('filament-social-graph.tenancy.enabled', false);
         config()->set('filament-social-graph.owner_models', [TestUser::class]);
+        config()->set('filament-social-graph.subscribable_models', [\BeegoodIT\FilamentSocialGraph\Models\Feed::class]);
+        config()->set('filament-social-graph.subscription_rule_scopes', [
+            'all_users' => 'All users',
+            'team_members' => 'Team members',
+        ]);
     }
 
     /**
@@ -71,7 +76,8 @@ class TestCase extends Orchestra
             __DIR__.'/../database/migrations/2026_02_27_000000_create_feeds_table.php',
             __DIR__.'/../database/migrations/2026_02_27_000001_create_feed_items_table.php',
             __DIR__.'/../database/migrations/2026_02_27_000002_create_feed_interactions_table.php',
-            __DIR__.'/../database/migrations/2026_02_27_000003_create_subscriptions_table.php',
+            __DIR__.'/../database/migrations/2026_02_27_000003_create_feed_subscription_rules_table.php',
+            __DIR__.'/../database/migrations/2026_02_27_000004_create_feed_subscriptions_table.php',
         ];
 
         foreach ($migrations as $path) {

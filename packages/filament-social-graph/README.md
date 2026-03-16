@@ -9,7 +9,7 @@ Actor-centric feeds, subscriptions, and social graph primitives for Filament app
 - **Subscriptions**: Subscribe/unsubscribe to actors; home feed aggregates items from subscribed feeds.
 - **Entity feeds**: Feeds scoped to entities (e.g. team feed, project feed) alongside the global home feed.
 - **Tenancy**: Optional team scoping for multi-tenant setups.
-- **Filament Admin resources**: `FeedItemResource` and `SubscriptionResource` for CRUD. Attachments via FileUpload field on Create/Edit.
+- **Filament Admin resources**: `FeedItemResource`, `FeedSubscriptionResource`, and `FeedSubscriptionRuleResource` for CRUD. Attachments via FileUpload field on Create/Edit.
 - **Livewire components**: Feed list, subscribe button (entity feeds use FeedController routes).
 - **Image lightbox**: Feed item attachment images open in an in-page lightbox with gallery navigation (prev/next, arrow keys) when multiple images are in a card.
 
@@ -58,11 +58,13 @@ This copies `resources/js/lightbox.js` to `public/vendor/filament-social-graph/j
 In `config/filament-social-graph.php`:
 
 - **tenancy**: Enable/disable team scoping; configure `team_model` and `team_resolver`.
-- **actor_models**: **Required for CRUD.** Models that can post and subscribe (e.g. `[\App\Models\User::class, \App\Models\Team::class]`). The actor selector in `FeedItemResource` and `SubscriptionResource` is hidden when empty.
+- **actor_models**: **Required for CRUD.** Models that can post and subscribe (e.g. `[\App\Models\User::class, \App\Models\Team::class]`). The actor selector in `FeedItemResource` and `FeedSubscriptionResource` is hidden when empty.
 - **entity_models**: Models that can have entity feeds (e.g. `[\App\Models\Team::class]`).
 - **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer (form) visibility, **authorize_create_ability** (default `'create'`), **authorize_update_ability** (default `'update'`), **authorize_delete_ability** (default `'delete'`). Edit/Delete links on feed item cards are built from optional **FeedList** props: pass `editRouteName`, `destroyRouteName`, `editRouteParams`, `destroyRouteParams` from the view that renders the feed (e.g. platform vs team routes). See Authorization.
 - **attachments**: Limits for public feed create/edit forms: **max_files** (default `5`), **max_file_size_kb** (default `5120`), **allowed_mimes** (default `['jpg','jpeg','png','gif','webp','pdf']`), **multiple_upload_mode** (default `'auto'`). Used by `StoreFeedItemRequest` and `UpdateFeedItemRequest`. When Livewire’s temporary upload disk is S3, multiple file selection would normally throw `S3DoesntSupportMultipleFileUploads`; the package avoids this by using **multiple_upload_mode**: `'auto'` (default) uses per-file uploads when the temp disk is S3, otherwise native `<input multiple>`; `'native'` always uses native multiple (do not use with S3 temp); `'single_per_request'` always uses per-file uploads (e.g. for consistent UX). **attachments.thumbnails**: Image attachments get a generated thumbnail (width, height, quality; see `config/filament-social-graph.php`). Thumbnail URLs are used in the Filament list/view and on the public feed card; there is no fallback to the full image URL. For existing feed items created before thumbnails were enabled, run `php artisan feed-items:regenerate-thumbnails` (see Thumbnails below).
-- **resources.enabled**: Set to `false` to disable `FeedItemResource` and `SubscriptionResource` when registering the plugin.
+- **resources.enabled**: Set to `false` to disable `FeedItemResource`, `FeedSubscriptionRuleResource`, and `FeedSubscriptionResource` when registering the plugin.
+- **subscribable_models**: Model class strings that can be the target of a subscription rule (e.g. `[\BeegoodIT\FilamentSocialGraph\Models\Feed::class, \App\Models\Tour::class]`). **Required for FeedSubscriptionRuleResource**: the subscribable MorphToSelect is hidden when empty. Used by the Filament Subscription Rule CRUD to choose which feed or entity the rule applies to.
+- **subscription_rule_scopes**: Allowed scope values and labels (e.g. `['all_users' => 'All users', 'team_members' => 'Team members']`). Apps can add scope values (e.g. `'tour_members' => 'Tour members'`) in published config. Package only stores the string and validates against this list; a later layer uses scope to resolve "who is subscribed" (see add-feed-auto-subscriptions plan).
 
 **Attachment storage:** Attachments are stored as JSON paths in `feed_items.attachments`. On the **public feed** (create/edit forms) and in **Filament Admin** (FileUpload field), files are stored on the disk returned by `FeedItem::getStorageDisk()` (public or S3): directory `feed-item-attachments/`, or `feed-item-attachments/{team_id}/` when tenancy is enabled and a team is set. When a feed item is **deleted**, its attachment files and their thumbnails are removed from storage. Ensure PHP `upload_max_filesize` and `post_max_size` are sufficient for uploads.
 
@@ -85,9 +87,33 @@ When using **Flux UI** components inside a Livewire component that also uses the
 
 The feed composer (and any similar “Livewire + Flux + Quill” form) should follow this pattern so Flux remains visible after Livewire hydration.
 
+## Subscription rules
+
+Subscription rules define **scope**, **auto_subscribe**, and **unsubscribable** per subscribable entity (e.g. a Feed or a Tour). One rule per entity; multiple rules across entities are allowed. The package provides **FeedSubscriptionRuleResource** (List, Create, Edit, no View) in the same "Social Graph" navigation group. Set **subscribable_models** so the resource shows the subscribable selector (Feed, Tour, etc.). Set **subscription_rule_scopes** to define allowed scope values and labels; apps can add values (e.g. `tour_members`) in published config. A separate layer (resolver/syncer) uses these rules to determine who is auto-subscribed and whether unsubscribe is allowed; this CRUD only manages the data.
+
+### Seeding default rules
+
+The package does **not** ship a seeder. Apps should create a seeder and run it from `DatabaseSeeder` (e.g. in production seed or a dedicated "defaults" run). Example:
+
+```php
+use BeegoodIT\FilamentSocialGraph\Models\Feed;
+use BeegoodIT\FilamentSocialGraph\Models\FeedSubscriptionRule;
+
+// Resolve platform team and its feed; resolve platform Tour if applicable.
+$team = \App\Models\Team::query()->where('slug', 'foosbeaver')->first();
+if ($team) {
+    $feed = Feed::firstOrCreateForOwner($team);
+    FeedSubscriptionRule::query()->firstOrCreate(
+        ['subscribable_type' => Feed::class, 'subscribable_id' => $feed->getKey()],
+        ['scope' => 'all_users', 'auto_subscribe' => true, 'unsubscribable' => true]
+    );
+}
+// Similarly for Tour if your app has a Tour model and subscribable_models includes it.
+```
+
 ## Register the plugin
 
-The plugin does **not** auto-register. Add it explicitly to the Filament panel where you want FeedItem and Subscription CRUD:
+The plugin does **not** auto-register. Add it explicitly to the Filament panel where you want FeedItem, Subscription Rule, and Subscription CRUD:
 
 ```php
 // AdminPanelProvider or PortalPanelProvider
@@ -103,13 +129,13 @@ The plugin does **not** auto-register. Add it explicitly to the Filament panel w
 | **Admin** (no `->tenant()`) | None | Platform-wide CRUD. All feed items visible. `team_id` stays `null` on create unless set via form. |
 | **Portal** (with `->tenant()`) | `Filament::getTenant()` | Tenant-scoped. List/create/edit scoped to current tenant. `team_id` set automatically on create. |
 
-`FeedItemResource` and `SubscriptionResource` use `tenantOwnershipRelationshipName = 'team'`. On a non-tenant Admin panel, tenant scoping is not applied; on a tenant-aware Portal panel, records are scoped by team.
+`FeedItemResource`, `FeedSubscriptionResource`, and `FeedSubscriptionRuleResource` use `tenantOwnershipRelationshipName = 'team'`. On a non-tenant Admin panel, tenant scoping is not applied; on a tenant-aware Portal panel, records are scoped by team.
 
 ## Package vs app responsibilities
 
 | In package | In app |
 |------------|--------|
-| FeedItemResource, SubscriptionResource (List, Create, View, Edit) | Register plugin on desired panel (Admin or Portal) |
+| FeedItemResource, FeedSubscriptionResource, FeedSubscriptionRuleResource (List, Create, View, Edit) | Register plugin on desired panel (Admin or Portal) |
 | Form schema, table columns, filters | Configure `actor_models` for your domain (User, Team, Person, etc.) |
 | Userstamps on models | Publish and run migrations (including team_id if tenancy needed) |
 | Translations, config defaults | Add `HasSocialFeed` / `HasSocialSubscriptions` traits to models |

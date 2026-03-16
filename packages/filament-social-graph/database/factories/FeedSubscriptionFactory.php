@@ -2,15 +2,15 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Database\Factories;
 
-use BeegoodIT\FilamentSocialGraph\Models\Subscription;
+use BeegoodIT\FilamentSocialGraph\Models\FeedSubscription;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\BeegoodIT\FilamentSocialGraph\Models\Subscription>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\BeegoodIT\FilamentSocialGraph\Models\FeedSubscription>
  */
-class SubscriptionFactory extends Factory
+class FeedSubscriptionFactory extends Factory
 {
-    protected $model = Subscription::class;
+    protected $model = FeedSubscription::class;
 
     public function definition(): array
     {

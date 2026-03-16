@@ -4,7 +4,7 @@ namespace BeegoodIT\FilamentSocialGraph\Models\Concerns;
 
 use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
-use BeegoodIT\FilamentSocialGraph\Models\Subscription;
+use BeegoodIT\FilamentSocialGraph\Models\FeedSubscription;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
@@ -17,7 +17,7 @@ trait HasSocialSubscriptions
      */
     public function subscriptions(): MorphMany
     {
-        return $this->morphMany(Subscription::class, 'subscriber');
+        return $this->morphMany(FeedSubscription::class, 'subscriber');
     }
 
     /**
@@ -25,7 +25,7 @@ trait HasSocialSubscriptions
      *
      * @param  \Illuminate\Database\Eloquent\Model  $feedOwner
      */
-    public function subscribeTo($feedOwner): Subscription
+    public function subscribeTo($feedOwner): FeedSubscription
     {
         $match = [
             'subscriber_type' => $this->getMorphClass(),
@@ -35,14 +35,14 @@ trait HasSocialSubscriptions
         ];
 
         $additional = [];
-        if (config('filament-social-graph.tenancy.enabled') && Schema::hasColumn((new Subscription)->getTable(), 'team_id')) {
+        if (config('filament-social-graph.tenancy.enabled') && Schema::hasColumn((new FeedSubscription)->getTable(), 'team_id')) {
             $teamId = $this->resolveTeamIdForSubscription($feedOwner);
             if ($teamId !== null) {
                 $additional['team_id'] = $teamId;
             }
         }
 
-        return Subscription::firstOrCreate($match, $additional);
+        return FeedSubscription::firstOrCreate($match, $additional);
     }
 
     /**
@@ -52,7 +52,7 @@ trait HasSocialSubscriptions
      */
     public function unsubscribeFrom($feedOwner): bool
     {
-        return (bool) Subscription::query()
+        return (bool) FeedSubscription::query()
             ->where('subscriber_type', $this->getMorphClass())
             ->where('subscriber_id', $this->getKey())
             ->where('feed_owner_type', $feedOwner->getMorphClass())
@@ -67,7 +67,7 @@ trait HasSocialSubscriptions
      */
     public function isSubscribedTo($feedOwner): bool
     {
-        return Subscription::query()
+        return FeedSubscription::query()
             ->where('subscriber_type', $this->getMorphClass())
             ->where('subscriber_id', $this->getKey())
             ->where('feed_owner_type', $feedOwner->getMorphClass())

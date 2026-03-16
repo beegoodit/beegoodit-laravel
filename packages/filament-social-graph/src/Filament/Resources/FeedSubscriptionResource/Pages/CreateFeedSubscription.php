@@ -1,14 +1,14 @@
 <?php
 
-namespace BeegoodIT\FilamentSocialGraph\Filament\Resources\SubscriptionResource\Pages;
+namespace BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedSubscriptionResource\Pages;
 
-use BeegoodIT\FilamentSocialGraph\Filament\Resources\SubscriptionResource;
+use BeegoodIT\FilamentSocialGraph\Filament\Resources\FeedSubscriptionResource;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateSubscription extends CreateRecord
+class CreateFeedSubscription extends CreateRecord
 {
-    protected static string $resource = SubscriptionResource::class;
+    protected static string $resource = FeedSubscriptionResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
