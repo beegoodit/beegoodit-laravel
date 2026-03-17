@@ -11,4 +11,8 @@ return [
     'navigation_group' => 'Red social',
     'scope_invalid' => 'El ámbito seleccionado no es válido.',
     'subscriptions_count' => 'Suscripciones',
+
+    'scope_all_users' => 'Todos los usuarios',
+    'scope_team_members' => 'Miembros del equipo',
+    'scope_tour_members' => 'Miembros del tour',
 ];

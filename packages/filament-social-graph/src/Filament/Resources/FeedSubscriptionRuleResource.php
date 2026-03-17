@@ -62,6 +62,20 @@ class FeedSubscriptionRuleResource extends Resource
         return parent::getEloquentQuery()->withCount('feedSubscriptions');
     }
 
+    public static function getTranslatedScopeOptions(): array
+    {
+        $scopes = config('filament-social-graph.subscription_rule_scopes', []);
+        $options = [];
+        foreach ($scopes as $key => $label) {
+            $translationKey = 'filament-social-graph::feed_subscription_rule.scope_'.$key;
+            $translated = __($translationKey);
+
+            $options[$key] = $translated !== $translationKey ? $translated : $label;
+        }
+
+        return $options;
+    }
+
     public static function form(Schema $schema): Schema
     {
         $scopes = config('filament-social-graph.subscription_rule_scopes', []);
@@ -86,7 +100,7 @@ class FeedSubscriptionRuleResource extends Resource
 
                 Select::make('scope')
                     ->label(__('filament-social-graph::feed_subscription_rule.scope'))
-                    ->options($scopes)
+                    ->options(static::getTranslatedScopeOptions())
                     ->required()
                     ->rules(StoreFeedSubscriptionRuleRequest::scopeValidationRules())
                     ->hidden(empty($scopes)),
@@ -103,8 +117,6 @@ class FeedSubscriptionRuleResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $scopes = config('filament-social-graph.subscription_rule_scopes', []);
-
         return $table
             ->columns([
                 TextColumn::make('feed')
@@ -120,7 +132,7 @@ class FeedSubscriptionRuleResource extends Resource
 
                 TextColumn::make('scope')
                     ->label(__('filament-social-graph::feed_subscription_rule.scope'))
-                    ->formatStateUsing(fn (string $state): string => $scopes[$state] ?? $state),
+                    ->formatStateUsing(fn (string $state): string => static::getTranslatedScopeOptions()[$state] ?? $state),
 
                 TextColumn::make('feed_subscriptions_count')
                     ->label(__('filament-social-graph::feed_subscription_rule.subscriptions_count'))
