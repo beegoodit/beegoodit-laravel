@@ -53,32 +53,32 @@ class FeedSubscriptionResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $actorModels = config('filament-social-graph.actor_models', []);
+        $ownerModels = config('filament-social-graph.owner_models', []);
 
         return $schema
             ->columns(2)
             ->components([
                 MorphToSelect::make('subscriber')
                     ->label(__('filament-social-graph::feed_subscription.subscriber'))
-                    ->types(collect($actorModels)
+                    ->types(collect($ownerModels)
                         ->map(fn (string $model): MorphToSelect\Type => MorphToSelect\Type::make($model)->titleAttribute('name'))
                         ->all())
                     ->searchable()
                     ->preload()
                     ->required()
                     ->columnSpanFull()
-                    ->hidden(empty($actorModels)),
+                    ->hidden(empty($ownerModels)),
 
                 MorphToSelect::make('feedOwner')
                     ->label(__('filament-social-graph::feed_subscription.feed_owner'))
-                    ->types(collect($actorModels)
+                    ->types(collect($ownerModels)
                         ->map(fn (string $model): MorphToSelect\Type => MorphToSelect\Type::make($model)->titleAttribute('name'))
                         ->all())
                     ->searchable()
                     ->preload()
                     ->required()
                     ->columnSpanFull()
-                    ->hidden(empty($actorModels)),
+                    ->hidden(empty($ownerModels)),
             ]);
     }
 

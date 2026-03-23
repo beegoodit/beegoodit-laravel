@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentSocialGraph\Observers;
 
-use BeegoodIT\FilamentSocialGraph\Jobs\GenerateFeedItemThumbnailsJob;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
 
 class FeedItemObserver
@@ -28,7 +27,7 @@ class FeedItemObserver
         }
 
         if ($hasImage) {
-            GenerateFeedItemThumbnailsJob::dispatch($feedItem->getKey());
+            dispatch(new \BeegoodIT\FilamentSocialGraph\Jobs\GenerateFeedItemThumbnailsJob($feedItem->getKey()));
         }
     }
 }

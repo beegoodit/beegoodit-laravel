@@ -134,14 +134,12 @@ class FeedItemResource extends Resource
     {
         $ownerModels = config('filament-social-graph.owner_models', []);
 
-        $ownerOptions = collect($ownerModels)->flatMap(function (string $model): array {
-            return $model::query()
-                ->get()
-                ->mapWithKeys(fn (\Illuminate\Database\Eloquent\Model $record): array => [
-                    $record->getMorphClass().'|'.$record->getKey() => $record->getAttribute('name') ?? $record->getAttribute('email') ?? (string) $record->getKey(),
-                ])
-                ->all();
-        })->all();
+        $ownerOptions = collect($ownerModels)->flatMap(fn (string $model): array => $model::query()
+            ->get()
+            ->mapWithKeys(fn (\Illuminate\Database\Eloquent\Model $record): array => [
+                $record->getMorphClass().'|'.$record->getKey() => $record->getAttribute('name') ?? $record->getAttribute('email') ?? (string) $record->getKey(),
+            ])
+            ->all())->all();
 
         return $schema
             ->columns(2)

@@ -21,7 +21,7 @@ trait HasSocialSubscriptions
     }
 
     /**
-     * Subscribe to another actor's feed.
+     * Subscribe to another owner's feed.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $feedOwner
      */
@@ -46,7 +46,7 @@ trait HasSocialSubscriptions
     }
 
     /**
-     * Unsubscribe from another actor's feed.
+     * Unsubscribe from another owner's feed.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $feedOwner
      */
@@ -61,7 +61,7 @@ trait HasSocialSubscriptions
     }
 
     /**
-     * Check if this actor is subscribed to another's feed.
+     * Check if this model is subscribed to another owner's feed.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $feedOwner
      */

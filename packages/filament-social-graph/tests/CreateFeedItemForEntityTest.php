@@ -75,7 +75,7 @@ test('it creates feed item with attachments and stores files', function (): void
 
     Queue::assertPushed(GenerateFeedItemThumbnailsJob::class);
     $job = new GenerateFeedItemThumbnailsJob($feedItem->getKey());
-    $job->handle(app(\BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService::class));
+    $job->handle(resolve(\BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService::class));
 
     $thumbPath = FeedItem::getThumbnailPath($path);
     expect(Storage::disk('public')->exists($thumbPath))->toBeTrue();

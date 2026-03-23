@@ -54,7 +54,7 @@ class FeedSubscriptionRule extends Model
         }
 
         $feed = $this->getFeedForSync();
-        if ($feed === null) {
+        if (! $feed instanceof \BeegoodIT\FilamentSocialGraph\Models\Feed) {
             $this->team_id = null;
 
             return;

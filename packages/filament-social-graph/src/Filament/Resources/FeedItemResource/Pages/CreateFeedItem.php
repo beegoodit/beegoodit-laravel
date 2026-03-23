@@ -15,7 +15,7 @@ class CreateFeedItem extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $owner = $this->resolveOwnerFromData($data);
-        if ($owner === null) {
+        if (! $owner instanceof \Illuminate\Database\Eloquent\Model) {
             throw ValidationException::withMessages([
                 'data.owner' => __('filament-social-graph::feed_item.owner_required_hint'),
             ]);
@@ -46,7 +46,7 @@ class CreateFeedItem extends CreateRecord
         }
         if (is_string($owner) && str_contains($owner, '|')) {
             [$ownerType, $ownerId] = explode('|', $owner, 2);
-            if (! empty($ownerType) && ! empty($ownerId)) {
+            if ($ownerType !== '' && $ownerType !== '0' && ($ownerId !== '' && $ownerId !== '0')) {
                 return $ownerType::query()->find($ownerId);
             }
         }

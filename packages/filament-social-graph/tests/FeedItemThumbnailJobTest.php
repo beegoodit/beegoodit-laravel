@@ -34,9 +34,7 @@ class FeedItemThumbnailJobTest extends TestCase
         ]);
         $feedItem->update(['attachments' => [$path]]);
 
-        Queue::assertPushed(GenerateFeedItemThumbnailsJob::class, function (GenerateFeedItemThumbnailsJob $job) use ($feedItem): bool {
-            return $job->feedItemId === $feedItem->getKey();
-        });
+        Queue::assertPushed(GenerateFeedItemThumbnailsJob::class, fn (GenerateFeedItemThumbnailsJob $job): bool => $job->feedItemId === $feedItem->getKey());
     }
 
     public function test_saving_feed_item_without_image_attachments_does_not_dispatch_job(): void
@@ -79,9 +77,7 @@ class FeedItemThumbnailJobTest extends TestCase
         Queue::fake();
         $feedItem->update(['attachments' => [$path]]);
 
-        Queue::assertPushed(GenerateFeedItemThumbnailsJob::class, function (GenerateFeedItemThumbnailsJob $job) use ($feedItem): bool {
-            return $job->feedItemId === $feedItem->getKey();
-        });
+        Queue::assertPushed(GenerateFeedItemThumbnailsJob::class, fn (GenerateFeedItemThumbnailsJob $job): bool => $job->feedItemId === $feedItem->getKey());
     }
 
     public function test_job_generates_thumbnails(): void
@@ -103,7 +99,7 @@ class FeedItemThumbnailJobTest extends TestCase
         $this->assertFalse(Storage::disk('public')->exists(FeedItem::getThumbnailPath($path)));
 
         $job = new GenerateFeedItemThumbnailsJob($feedItem->getKey());
-        $job->handle(app(\BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService::class));
+        $job->handle(resolve(\BeegoodIT\FilamentSocialGraph\Services\FeedItemThumbnailService::class));
 
         $this->assertTrue(Storage::disk('public')->exists(FeedItem::getThumbnailPath($path)));
     }

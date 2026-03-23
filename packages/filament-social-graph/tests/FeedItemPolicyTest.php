@@ -28,7 +28,7 @@ class FeedItemPolicyTest extends TestCase
         $this->assertTrue(Gate::allows('create', [FeedItem::class, null]));
     }
 
-    public function test_authenticated_user_can_create_for_entity_in_actor_models(): void
+    public function test_authenticated_user_can_create_for_entity_in_owner_models(): void
     {
         $user = TestUser::create([
             'name' => 'User',
@@ -74,13 +74,13 @@ class FeedItemPolicyTest extends TestCase
     {
         $this->assertGuest();
 
-        $actor = TestUser::create([
-            'name' => 'Actor',
-            'email' => 'actor@example.com',
+        $owner = TestUser::create([
+            'name' => 'Owner',
+            'email' => 'owner@example.com',
             'password' => bcrypt('password'),
         ]);
 
-        $feed = Feed::firstOrCreateForOwner($actor);
+        $feed = Feed::firstOrCreateForOwner($owner);
         $feedItem = FeedItem::create([
             'feed_id' => $feed->getKey(),
             'body' => 'Test',
@@ -89,7 +89,7 @@ class FeedItemPolicyTest extends TestCase
         $this->assertFalse(Gate::allows('update', $feedItem));
     }
 
-    public function test_authenticated_user_can_update_feed_item_when_actor_in_actor_models(): void
+    public function test_authenticated_user_can_update_feed_item_when_owner_in_owner_models(): void
     {
         $user = TestUser::create([
             'name' => 'User',
@@ -99,15 +99,15 @@ class FeedItemPolicyTest extends TestCase
 
         $this->actingAs($user);
 
-        $actor = TestUser::create([
-            'name' => 'Actor',
-            'email' => 'actor@example.com',
+        $owner = TestUser::create([
+            'name' => 'Owner',
+            'email' => 'owner@example.com',
             'password' => bcrypt('password'),
         ]);
 
         config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
-        $feed = Feed::firstOrCreateForOwner($actor);
+        $feed = Feed::firstOrCreateForOwner($owner);
         $feedItem = FeedItem::create([
             'feed_id' => $feed->getKey(),
             'body' => 'Test',
@@ -116,7 +116,7 @@ class FeedItemPolicyTest extends TestCase
         $this->assertTrue(Gate::allows('update', $feedItem));
     }
 
-    public function test_authenticated_user_cannot_update_feed_item_when_actor_not_in_actor_models(): void
+    public function test_authenticated_user_cannot_update_feed_item_when_owner_not_in_owner_models(): void
     {
         $user = TestUser::create([
             'name' => 'User',
@@ -126,15 +126,15 @@ class FeedItemPolicyTest extends TestCase
 
         $this->actingAs($user);
 
-        $actor = TestUser::create([
-            'name' => 'Actor',
-            'email' => 'actor@example.com',
+        $owner = TestUser::create([
+            'name' => 'Owner',
+            'email' => 'owner@example.com',
             'password' => bcrypt('password'),
         ]);
 
         config()->set('filament-social-graph.owner_models', []);
 
-        $feed = Feed::firstOrCreateForOwner($actor);
+        $feed = Feed::firstOrCreateForOwner($owner);
         $feedItem = FeedItem::create([
             'feed_id' => $feed->getKey(),
             'body' => 'Test',
@@ -147,13 +147,13 @@ class FeedItemPolicyTest extends TestCase
     {
         $this->assertGuest();
 
-        $actor = TestUser::create([
-            'name' => 'Actor',
-            'email' => 'actor@example.com',
+        $owner = TestUser::create([
+            'name' => 'Owner',
+            'email' => 'owner@example.com',
             'password' => bcrypt('password'),
         ]);
 
-        $feed = Feed::firstOrCreateForOwner($actor);
+        $feed = Feed::firstOrCreateForOwner($owner);
         $feedItem = FeedItem::create([
             'feed_id' => $feed->getKey(),
             'body' => 'Test',
@@ -162,7 +162,7 @@ class FeedItemPolicyTest extends TestCase
         $this->assertFalse(Gate::allows('delete', $feedItem));
     }
 
-    public function test_authenticated_user_can_delete_feed_item_when_actor_in_actor_models(): void
+    public function test_authenticated_user_can_delete_feed_item_when_owner_in_owner_models(): void
     {
         $user = TestUser::create([
             'name' => 'User',
@@ -172,15 +172,15 @@ class FeedItemPolicyTest extends TestCase
 
         $this->actingAs($user);
 
-        $actor = TestUser::create([
-            'name' => 'Actor',
-            'email' => 'actor@example.com',
+        $owner = TestUser::create([
+            'name' => 'Owner',
+            'email' => 'owner@example.com',
             'password' => bcrypt('password'),
         ]);
 
         config()->set('filament-social-graph.owner_models', [TestUser::class]);
 
-        $feed = Feed::firstOrCreateForOwner($actor);
+        $feed = Feed::firstOrCreateForOwner($owner);
         $feedItem = FeedItem::create([
             'feed_id' => $feed->getKey(),
             'body' => 'Test',

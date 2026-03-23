@@ -34,7 +34,7 @@ class Feed extends Model
 
     public function feedItems(): HasMany
     {
-        return $this->hasMany(FeedItem::class)->orderByDesc('created_at');
+        return $this->hasMany(FeedItem::class)->latest();
     }
 
     public function feedSubscriptionRules(): HasMany

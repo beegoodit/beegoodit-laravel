@@ -24,7 +24,7 @@ class RegenerateFeedItemThumbnailsCommandTest extends TestCase
         $path = 'feed-item-attachments/photo.jpg';
         Storage::disk('public')->put($path, $this->minimalJpeg());
 
-        $feedItem = FeedItem::create([
+        FeedItem::create([
             'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
             'body' => 'With image',
             'attachments' => [$path],

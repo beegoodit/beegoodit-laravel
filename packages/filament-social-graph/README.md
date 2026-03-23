@@ -1,12 +1,12 @@
 # Filament Social Graph
 
-Actor-centric feeds, subscriptions, and social graph primitives for Filament applications. Add feed items, follow/unfollow flows, and home feeds with polymorphic actors (User, Team, etc.).
+Owner-centric feeds, subscriptions, and social graph primitives for Filament applications. Add feed items, follow/unfollow flows, and home feeds with polymorphic owners (User, Team, etc.).
 
 ## Features
 
-- **Polymorphic actors**: Any model (User, Team, etc.) can post feed items and subscribe to others via `HasSocialFeed` and `HasSocialSubscriptions`.
+- **Polymorphic owners**: Any model (User, Team, etc.) can post feed items and subscribe to others via `HasSocialFeed` and `HasSocialSubscriptions`.
 - **Feed items**: Subject, body (WYSIWYG rich text; stored as HTML, sanitized on display), attachments (multi-file upload stored as JSON paths; client-side preview on create/edit).
-- **Subscriptions**: Subscribe/unsubscribe to actors; home feed aggregates items from subscribed feeds.
+- **Subscriptions**: Subscribe/unsubscribe to feed owners; home feed aggregates items from subscribed feeds.
 - **Entity feeds**: Feeds scoped to entities (e.g. team feed, project feed) alongside the global home feed.
 - **Tenancy**: Optional team scoping for multi-tenant setups.
 - **Filament Admin resources**: `FeedItemResource`, `FeedSubscriptionResource`, and `FeedSubscriptionRuleResource` for CRUD. Attachments via FileUpload field on Create/Edit.
@@ -33,7 +33,7 @@ php artisan vendor:publish --tag=social-graph-team-migration
 php artisan migrate
 ```
 
-Publish config (recommended; required for `actor_models`):
+Publish config (recommended; required for `owner_models`):
 
 ```bash
 php artisan vendor:publish --tag=filament-social-graph-config
@@ -58,7 +58,7 @@ This copies `resources/js/lightbox.js` to `public/vendor/filament-social-graph/j
 In `config/filament-social-graph.php`:
 
 - **tenancy**: Enable/disable team scoping; configure `team_model` and `team_resolver`.
-- **actor_models**: **Required for CRUD.** Models that can post and subscribe (e.g. `[\App\Models\User::class, \App\Models\Team::class]`). The actor selector in `FeedItemResource` and `FeedSubscriptionResource` is hidden when empty.
+- **owner_models**: **Required for CRUD.** Models that can post and subscribe (e.g. `[\App\Models\User::class, \App\Models\Team::class]`). The owner selector in `FeedItemResource` and `FeedSubscriptionResource` is hidden when empty.
 - **entity_models**: Models that can have entity feeds (e.g. `[\App\Models\Team::class]`).
 - **feed_page**: **layout**, **index_view** (optional app view for GET feed, e.g. breadcrumb wrapper), composer (form) visibility, **authorize_create_ability** (default `'create'`), **authorize_update_ability** (default `'update'`), **authorize_delete_ability** (default `'delete'`). Edit/Delete links on feed item cards are built from optional **FeedList** props: pass `editRouteName`, `destroyRouteName`, `editRouteParams`, `destroyRouteParams` from the view that renders the feed (e.g. platform vs team routes). See Authorization.
 - **attachments**: Limits for public feed create/edit forms: **max_files** (default `5`), **max_file_size_kb** (default `5120`), **allowed_mimes** (default `['jpg','jpeg','png','gif','webp','pdf']`), **multiple_upload_mode** (default `'auto'`). Used by `StoreFeedItemRequest` and `UpdateFeedItemRequest`. When Livewire’s temporary upload disk is S3, multiple file selection would normally throw `S3DoesntSupportMultipleFileUploads`; the package avoids this by using **multiple_upload_mode**: `'auto'` (default) uses per-file uploads when the temp disk is S3, otherwise native `<input multiple>`; `'native'` always uses native multiple (do not use with S3 temp); `'single_per_request'` always uses per-file uploads (e.g. for consistent UX). **attachments.thumbnails**: Image attachments get a generated thumbnail (width, height, quality; see `config/filament-social-graph.php`). Thumbnail URLs are used in the Filament list/view and on the public feed card; there is no fallback to the full image URL. For existing feed items created before thumbnails were enabled, run `php artisan feed-items:regenerate-thumbnails` (see Thumbnails below).
@@ -153,14 +153,14 @@ The plugin does **not** auto-register. Add it explicitly to the Filament panel w
 | In package | In app |
 |------------|--------|
 | FeedItemResource, FeedSubscriptionResource, FeedSubscriptionRuleResource (List, Create, View, Edit) | Register plugin on desired panel (Admin or Portal) |
-| Form schema, table columns, filters | Configure `actor_models` for your domain (User, Team, Person, etc.) |
+| Form schema, table columns, filters | Configure `owner_models` for your domain (User, Team, Person, etc.) |
 | Userstamps on models | Publish and run migrations (including team_id if tenancy needed) |
 | Translations, config defaults | Add `HasSocialFeed` / `HasSocialSubscriptions` traits to models |
 
 ## FeedItem CRUD setup checklist
 
 1. **Install** the package and run migrations.
-2. **Publish config** and set `actor_models` (required for the actor selector).
+2. **Publish config** and set `owner_models` (required for the owner selector).
 3. **Register the plugin** on your Admin or Portal panel via `->plugins([...])`.
 4. **Add traits** to models that should post or subscribe.
 5. If using tenancy, **publish and run** the `social-graph-team-migration`.
@@ -208,13 +208,13 @@ For entity feeds (e.g. team feed), the preferred approach is **GET index + POST 
 - `PUT /{team:slug}/feed/items/{feedItem}` → `[FeedController::class, 'update']`
 - `DELETE /{team:slug}/feed/items/{feedItem}` → `[FeedController::class, 'destroy']`
 
-`{feedItem}` is the feed item’s id (UUID). The controller resolves the item and ensures it belongs to the entity (actor scope). Edit/delete use **authorize_update_ability** and **authorize_delete_ability** (default `'update'` and `'delete'`). To show Edit/Delete links on feed item cards, pass optional **FeedList** props from the view that renders the feed: `editRouteName`, `destroyRouteName`, `editRouteParams`, `destroyRouteParams` (e.g. team-scoped or platform route names with params). The card builds the URL per item with `route($editRouteName, array_merge($editRouteParams, ['feedItem' => $feedItem]))`.
+`{feedItem}` is the feed item’s id (UUID). The controller resolves the item and ensures it belongs to the entity (owner scope). Edit/delete use **authorize_update_ability** and **authorize_delete_ability** (default `'update'` and `'delete'`). To show Edit/Delete links on feed item cards, pass optional **FeedList** props from the view that renders the feed: `editRouteName`, `destroyRouteName`, `editRouteParams`, `destroyRouteParams` (e.g. team-scoped or platform route names with params). The card builds the URL per item with `route($editRouteName, array_merge($editRouteParams, ['feedItem' => $feedItem]))`.
 
 Optionally set `feed_page.index_view` in config to an app view that wraps the package feed content (e.g. breadcrumb + `@include('filament-social-graph::feed.content', ['entity' => $entity, 'showComposer' => $showComposer])`).
 
 ### 6. Authorization (composer visibility and create)
 
-Whether the feed composer is shown on an entity feed (e.g. team feed) and whether a user can create a feed item there is controlled by Laravel’s Gate/policy. The package ships a default **FeedItemPolicy** with a `create(?User $user, $entity)` method: guests cannot create; authenticated users can create for the global feed (`$entity` null); for entity feeds, creation is allowed only when the entity’s morph class is in `actor_models`. The package registers this policy for `FeedItem::class`, so no app setup is required for the default behavior.
+Whether the feed composer is shown on an entity feed (e.g. team feed) and whether a user can create a feed item there is controlled by Laravel’s Gate/policy. The package ships a default **FeedItemPolicy** with a `create(?User $user, $entity)` method: guests cannot create; authenticated users can create for the global feed (`$entity` null); for entity feeds, creation is allowed only when the entity’s morph class is in `owner_models`. The package registers this policy for `FeedItem::class`, so no app setup is required for the default behavior.
 
 To restrict who can post (e.g. only team members), register your own policy in `AppServiceProvider` or `AuthServiceProvider`:
 
@@ -243,9 +243,9 @@ public function create(?Authenticatable $user, mixed $entity = null): bool
     if ($entity instanceof \App\Models\Team) {
         return $user instanceof \App\Models\User && $user->isTeamAdmin($entity);
     }
-    // Other entities: e.g. allow when in config('filament-social-graph.actor_models')
-    $actorModels = config('filament-social-graph.actor_models', []);
-    return in_array($entity->getMorphClass(), $actorModels, true);
+    // Other entities: e.g. allow when in config('filament-social-graph.owner_models')
+    $ownerModels = config('filament-social-graph.owner_models', []);
+    return in_array($entity->getMorphClass(), $ownerModels, true);
 }
 ```
 

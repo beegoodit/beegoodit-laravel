@@ -15,13 +15,13 @@ beforeEach(function (): void {
 });
 
 test('it deletes feed item', function (): void {
-    $actor = TestUser::create([
-        'name' => 'Actor',
-        'email' => 'actor@example.com',
+    $owner = TestUser::create([
+        'name' => 'Owner',
+        'email' => 'owner@example.com',
         'password' => bcrypt('password'),
     ]);
 
-    $feed = Feed::firstOrCreateForOwner($actor);
+    $feed = Feed::firstOrCreateForOwner($owner);
     $feedItem = FeedItem::create([
         'feed_id' => $feed->getKey(),
         'body' => 'Test',
@@ -37,16 +37,16 @@ test('it deletes feed item', function (): void {
 test('it deletes stored attachment files when deleting feed item', function (): void {
     Storage::fake('public');
 
-    $actor = TestUser::create([
-        'name' => 'Actor',
-        'email' => 'actor@example.com',
+    $owner = TestUser::create([
+        'name' => 'Owner',
+        'email' => 'owner@example.com',
         'password' => bcrypt('password'),
     ]);
 
     $path = 'feed-item-attachments/test-file.pdf';
     Storage::disk('public')->put($path, 'content');
 
-    $feed = Feed::firstOrCreateForOwner($actor);
+    $feed = Feed::firstOrCreateForOwner($owner);
     $feedItem = FeedItem::create([
         'feed_id' => $feed->getKey(),
         'body' => 'With attachment',
@@ -64,16 +64,16 @@ test('it deletes stored attachment files when deleting feed item', function (): 
 test('direct model delete removes stored attachment files via observer', function (): void {
     Storage::fake('public');
 
-    $actor = TestUser::create([
-        'name' => 'Actor',
-        'email' => 'actor@example.com',
+    $owner = TestUser::create([
+        'name' => 'Owner',
+        'email' => 'owner@example.com',
         'password' => bcrypt('password'),
     ]);
 
     $path = 'feed-item-attachments/direct-delete.pdf';
     Storage::disk('public')->put($path, 'content');
 
-    $feed = Feed::firstOrCreateForOwner($actor);
+    $feed = Feed::firstOrCreateForOwner($owner);
     $feedItem = FeedItem::create([
         'feed_id' => $feed->getKey(),
         'body' => 'Direct delete test',

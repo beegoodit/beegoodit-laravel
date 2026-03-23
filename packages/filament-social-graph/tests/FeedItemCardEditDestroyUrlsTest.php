@@ -15,8 +15,8 @@ class FeedItemCardEditDestroyUrlsTest extends TestCase
         parent::setUp();
         app()->setLocale('en');
         $locale = 'en';
-        Route::get('/feed/items/{feedItem}/edit', fn () => null)->name("{$locale}.platform.feed.items.edit");
-        Route::delete('/feed/items/{feedItem}', fn () => null)->name("{$locale}.platform.feed.items.destroy");
+        Route::get('/feed/items/{feedItem}/edit', fn (): null => null)->name("{$locale}.platform.feed.items.edit");
+        Route::delete('/feed/items/{feedItem}', fn (): null => null)->name("{$locale}.platform.feed.items.destroy");
     }
 
     public function test_feed_item_card_shows_edit_and_destroy_links_when_route_props_passed(): void
@@ -63,7 +63,7 @@ class FeedItemCardEditDestroyUrlsTest extends TestCase
         ]);
 
         Livewire::actingAs($user);
-        $html = Livewire::test(FeedItemCard::class, ['feedItem' => $feedItem])
+        Livewire::test(FeedItemCard::class, ['feedItem' => $feedItem])
             ->assertDontSee(__('filament-social-graph::feed.edit'), false)
             ->html();
     }

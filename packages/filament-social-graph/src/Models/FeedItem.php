@@ -128,7 +128,7 @@ class FeedItem extends Model
         return $this->feed?->owner;
     }
 
-    public function getOwnerAttribute(): ?Model
+    protected function getOwnerAttribute(): ?Model
     {
         return $this->owner();
     }
@@ -148,7 +148,7 @@ class FeedItem extends Model
      */
     public static function getAttachmentUrl(string $path, ?\DateTimeInterface $expiresAt = null): string
     {
-        $service = app(\BeegoodIT\LaravelFileStorage\Services\FileStorageService::class);
+        $service = resolve(\BeegoodIT\LaravelFileStorage\Services\FileStorageService::class);
         $ttlMinutes = (int) config('filament-social-graph.attachments.signed_url_ttl_minutes', 60);
         $url = $service->url($path, $ttlMinutes, self::getStorageDisk());
 

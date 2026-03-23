@@ -57,7 +57,7 @@ class FeedCreateFormUploadModeTest extends TestCase
     public function test_renders_native_multiple_input_when_mode_is_auto_and_temp_disk_is_local(): void
     {
         config()->set('filament-social-graph.attachments.multiple_upload_mode', 'auto');
-        config()->set('livewire.temporary_file_upload.disk', null);
+        config()->set('livewire.temporary_file_upload.disk');
         config()->set('filesystems.default', 'local');
 
         $user = TestUser::create([

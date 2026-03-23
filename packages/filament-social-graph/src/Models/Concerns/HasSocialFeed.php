@@ -58,7 +58,7 @@ trait HasSocialFeed
     }
 
     /**
-     * Get subscribers to this actor's feed.
+     * Get subscribers to this owner's feed.
      */
     public function subscribers()
     {
