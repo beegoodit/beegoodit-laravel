@@ -42,7 +42,7 @@
                 $rendered = \Illuminate\Support\Str::markdown($body);
             }
         @endphp
-        <div class="prose prose-sm dark:prose-invert max-w-none">
+        <div class="feed-item-prose prose prose-sm dark:prose-invert max-w-none">
             {!! $rendered !!}
         </div>
     @endif

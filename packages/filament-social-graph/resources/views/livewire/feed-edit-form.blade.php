@@ -1,5 +1,40 @@
-<div class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-    <form wire:submit="updateItem" class="space-y-4">
+<div
+    class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800"
+    x-data="{
+        dropZoneActive: false,
+        uploadingCount: 0,
+        maxFiles: @json(config('filament-social-graph.attachments.max_files', 5)),
+        handleDrop(e) {
+            if (typeof $wire === 'undefined') return;
+            e.preventDefault();
+            e.stopPropagation();
+            this.dropZoneActive = false;
+            const files = e.dataTransfer.files;
+            this.uploadingCount = files.length;
+            for (let i = 0; i < files.length; i++) {
+                if ($wire.get('attachments').length >= this.maxFiles) break;
+                const done = () => { this.uploadingCount = Math.max(0, this.uploadingCount - 1); };
+                $wire.upload('attachments', files[i], done, done, () => {});
+            }
+        },
+        handleFileSelect(e) {
+            if (typeof $wire === 'undefined') return;
+            const files = e.target.files;
+            this.uploadingCount = files.length;
+            for (let i = 0; i < files.length; i++) {
+                if ($wire.get('attachments').length >= this.maxFiles) break;
+                const done = () => { this.uploadingCount = Math.max(0, this.uploadingCount - 1); };
+                $wire.upload('attachments', files[i], done, done, () => {});
+            }
+            e.target.value = '';
+        }
+    }"
+>
+    <form
+        wire:submit="updateItem"
+        class="space-y-4"
+        @submit.capture="if (uploadingCount > 0) { $event.preventDefault(); $event.stopImmediatePropagation(); }"
+    >
         <div>
             <flux:field>
                 <flux:label class="sr-only" for="feed-edit-subject">{{ __('filament-social-graph::feed_item.subject') }}</flux:label>
@@ -58,19 +93,22 @@
                 <flux:label for="feed-edit-attachments">{{ __('filament-social-graph::feed_item.attachments_new') }}</flux:label>
                 @if($useSinglePerRequestUpload)
                 <div
-                    x-data="{ maxFiles: @json(config('filament-social-graph.attachments.max_files', 5)), handleDrop(e) { e.preventDefault(); e.stopPropagation(); const files = e.dataTransfer.files; for (let i = 0; i < files.length; i++) { if ($wire.get('attachments').length >= this.maxFiles) break; $wire.upload('attachments', files[i], () => {}, () => {}, () => {}); } }, handleFileSelect(e) { const files = e.target.files; for (let i = 0; i < files.length; i++) { if ($wire.get('attachments').length >= this.maxFiles) break; $wire.upload('attachments', files[i], () => {}, () => {}, () => {}); } e.target.value = ''; } }"
                     data-feed-drop-zone-single="feed-edit-attachments"
                     class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
+                    :class="{ 'border-primary-500 bg-primary-500/10 ring-2 ring-primary-400/50 dark:border-primary-500 dark:bg-primary-500/20': dropZoneActive, 'ring-2 ring-amber-400/50 dark:ring-amber-400/50': uploadingCount > 0 }"
                     role="button"
                     tabindex="0"
                     aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
+                    @dragenter.prevent="dropZoneActive = true"
+                    @dragleave.prevent="if (!$event.currentTarget.contains($event.relatedTarget)) dropZoneActive = false"
                     @drop.prevent="handleDrop($event)"
                     @dragover.prevent
                     @click="$refs.attachmentsInput.click()"
                     @keydown.enter.prevent="$refs.attachmentsInput.click()"
                     @keydown.space.prevent="$refs.attachmentsInput.click()"
                 >
-                    <span class="text-center text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                    <span class="text-center text-sm text-zinc-600 dark:text-zinc-400" x-show="uploadingCount === 0">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
+                    <span class="text-center text-sm text-amber-600 dark:text-amber-400" x-show="uploadingCount > 0" x-cloak>{{ __('filament-social-graph::feed.uploading_files') }}</span>
                 </div>
                 <input
                     type="file"
@@ -83,12 +121,15 @@
                 @else
                 <div
                     class="flex min-h-[7.5rem] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition dark:border-zinc-600"
+                    :class="{ 'border-primary-500 bg-primary-500/10 ring-2 ring-primary-400/50 dark:border-primary-500 dark:bg-primary-500/20': dropZoneActive }"
                     data-feed-drop-zone="feed-edit-attachments"
                     onclick="document.getElementById('feed-edit-attachments').click()"
                     role="button"
                     tabindex="0"
                     aria-label="{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}"
                     onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); document.getElementById('feed-edit-attachments').click(); }"
+                    @dragenter.prevent="dropZoneActive = true"
+                    @dragleave.prevent="if (!$event.currentTarget.contains($event.relatedTarget)) dropZoneActive = false"
                 >
                     <span class="text-center text-sm text-zinc-600 dark:text-zinc-400">{{ __('filament-social-graph::feed_item.attachments_drop_placeholder') }}</span>
                 </div>
@@ -126,10 +167,29 @@
             <a href="{{ $feedUrl }}" class="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700">
                 {{ __('filament-social-graph::feed.cancel') }}
             </a>
-            <flux:button type="submit" variant="primary" size="base" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="updateItem">{{ __('filament-social-graph::feed.update') }}</span>
-                <span wire:loading wire:target="updateItem">{{ __('filament-social-graph::feed.updating') ?? 'Updating…' }}</span>
-            </flux:button>
+            <span
+                class="inline-block"
+                :class="{ 'pointer-events-none opacity-50 cursor-not-allowed': uploadingCount > 0 }"
+                @click.capture="if (uploadingCount > 0) $event.preventDefault(); $event.stopPropagation(); $event.stopImmediatePropagation()"
+            >
+                <flux:button type="submit" variant="primary" size="base" wire:loading.attr="disabled" wire:target="updateItem,attachments" class="inline-flex items-center gap-2">
+                    <span wire:loading.remove wire:target="updateItem" x-show="uploadingCount === 0" x-transition>{{ __('filament-social-graph::feed.update') }}</span>
+                    <span wire:loading wire:target="updateItem" x-show="uploadingCount === 0" x-transition class="inline-flex items-center gap-2">
+                        {{ __('filament-social-graph::feed.updating') ?? 'Updating…' }}
+                        <svg class="animate-spin size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                    <span x-show="uploadingCount > 0" x-cloak x-transition class="inline-flex items-center gap-2">
+                        {{ __('filament-social-graph::feed.uploading_files') }}
+                        <svg class="animate-spin size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                </flux:button>
+            </span>
         </div>
     </form>
 </div>

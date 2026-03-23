@@ -6,6 +6,7 @@ return [
     'composer_placeholder' => '¿Qué quieres compartir?',
     'post' => 'Publicar',
     'posting' => 'Publicando…',
+    'uploading_files' => 'Subiendo archivos…',
     'no_items' => 'Aún no hay elementos en el feed.',
     'load_more' => 'Cargar más',
     'edit_title' => 'Editar elemento del feed',
