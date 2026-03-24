@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'Branding' => 'Branding',
+    'Team Logo' => 'Csapat logó',
+    'Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)' => 'Töltse fel a csapat logóját (JPG, PNG, GIF, WebP vagy SVG, max 2MB)',
+    'Primary Brand Color' => 'Elsődleges brand szín',
+    'Main color for buttons, links, and accents' => 'Fő szín gombokhoz, linkekhez és kiemelésekhez',
+    'Secondary Color' => 'Másodlagos szín',
+    'Additional brand color if needed' => 'További brand szín ha szükséges',
+    'URL-friendly identifier. Auto-generated from name, but can be customized.' => 'URL-barát azonosító. Automatikusan generált a névből, de testreszabható.',
+    'Team Profile' => 'Csapat profil',
+    'Register team' => 'Csapat regisztrálása',
+    'Settings' => 'Beállítások',
+    'Uploaded' => 'Feltöltve',
+    'Missing' => 'Hiányzik',
+    'Logo looks great!' => 'A logó remekül néz ki!',
+    'Adding a logo improves brand recognition.' => 'A logó hozzáadása javítja a brand felismerhetőségét.',
+    'Brand Colors' => 'Brand színek',
+    'Defined' => 'Megadva',
+    'Default' => 'Alapértelmezett',
+    'Your brand identity is set.' => 'A brand identitása beállítva.',
+    'Set brand colors to customize the team portal.' => 'Állítsa be a brand színeket a csapat portál testreszabásához.',
+    'Custom URL' => 'Egyéni URL',
+    'Customized' => 'Testreszabott',
+    'Standard' => 'Standard',
+    'Web Presence' => 'Web jelenlét',
+    'Active' => 'Aktív',
+    'Inactive' => 'Inaktív',
+    'Custom domain is configured.' => 'Az egyéni domain be van állítva.',
+    'Connect a custom domain for a professional look.' => 'Kapcsoljon egyéni domaint professzionális megjelenésért.',
+    'models' => [
+        'team' => [
+            'attributes' => [
+                'name' => 'Név',
+                'slug' => 'Slug',
+            ],
+        ],
+    ],
+];

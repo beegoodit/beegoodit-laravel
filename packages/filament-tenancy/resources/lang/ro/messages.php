@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'Branding' => 'Branding',
+    'Team Logo' => 'Logo echipă',
+    'Upload your team logo (JPG, PNG, GIF, WebP or SVG, max 2MB)' => 'Încarcă logo-ul echipei (JPG, PNG, GIF, WebP sau SVG, max 2MB)',
+    'Primary Brand Color' => 'Culoare brand principală',
+    'Main color for buttons, links, and accents' => 'Culoare principală pentru butoane, linkuri și accente',
+    'Secondary Color' => 'Culoare secundară',
+    'Additional brand color if needed' => 'Culoare brand suplimentară dacă e cazul',
+    'URL-friendly identifier. Auto-generated from name, but can be customized.' => 'Identificator URL. Generat automat din nume, dar poate fi personalizat.',
+    'Team Profile' => 'Profil echipă',
+    'Register team' => 'Înregistrează echipa',
+    'Settings' => 'Setări',
+    'Uploaded' => 'Încărcat',
+    'Missing' => 'Lipsă',
+    'Logo looks great!' => 'Logo-ul arată minunat!',
+    'Adding a logo improves brand recognition.' => 'Adăugarea unui logo îmbunătățește recunoașterea brandului.',
+    'Brand Colors' => 'Culori brand',
+    'Defined' => 'Definit',
+    'Default' => 'Implicit',
+    'Your brand identity is set.' => 'Identitatea brandului este setată.',
+    'Set brand colors to customize the team portal.' => 'Setează culorile brandului pentru a personaliza portalul echipei.',
+    'Custom URL' => 'URL personalizat',
+    'Customized' => 'Personalizat',
+    'Standard' => 'Standard',
+    'Web Presence' => 'Prezență web',
+    'Active' => 'Activ',
+    'Inactive' => 'Inactiv',
+    'Custom domain is configured.' => 'Domeniul personalizat este configurat.',
+    'Connect a custom domain for a professional look.' => 'Conectează un domeniu personalizat pentru un aspect profesional.',
+    'models' => [
+        'team' => [
+            'attributes' => [
+                'name' => 'Nume',
+                'slug' => 'Slug',
+            ],
+        ],
+    ],
+];
