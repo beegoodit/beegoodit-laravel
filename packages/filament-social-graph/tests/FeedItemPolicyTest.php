@@ -8,6 +8,27 @@ use Illuminate\Support\Facades\Gate;
 
 class FeedItemPolicyTest extends TestCase
 {
+    public function test_guest_can_view_any_and_view_feed_item(): void
+    {
+        $this->assertGuest();
+
+        $this->assertTrue(Gate::allows('viewAny', FeedItem::class));
+
+        $owner = TestUser::create([
+            'name' => 'Owner',
+            'email' => 'owner@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $feed = Feed::firstOrCreateForOwner($owner);
+        $feedItem = FeedItem::create([
+            'feed_id' => $feed->getKey(),
+            'body' => 'Test',
+        ]);
+
+        $this->assertTrue(Gate::allows('view', $feedItem));
+    }
+
     public function test_guest_cannot_create_feed_item(): void
     {
         $this->assertGuest();

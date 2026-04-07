@@ -9,6 +9,7 @@ use BeegoodIT\FilamentSocialGraph\Http\Requests\StoreFeedItemRequest;
 use BeegoodIT\FilamentSocialGraph\Http\Requests\UpdateFeedItemRequest;
 use BeegoodIT\FilamentSocialGraph\Models\Feed;
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Support\FeedItemPlainDescription;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class FeedController
 
     public function edit(Request $request): View
     {
-        $feedItemId = $request->route('feedItem');
+        $feedItemId = $this->routeFeedItemKey($request);
         $entity = $this->entityFromRoute($request);
         $feedItemModel = $this->resolveFeedItemForEntity($request, $feedItemId);
 
@@ -78,9 +79,55 @@ class FeedController
         ]);
     }
 
+    public function show(Request $request): View
+    {
+        $feedItemId = $this->routeFeedItemKey($request);
+        $entity = $this->entityFromRoute($request);
+        $feedItemModel = $this->resolveFeedItemForEntity($request, $feedItemId);
+        $feedItemModel->loadMissing('feed.owner');
+
+        $ability = config('filament-social-graph.feed_page.authorize_view_ability', 'view');
+        Gate::authorize($ability, $feedItemModel);
+
+        $layout = config('filament-social-graph.feed_page.layout', 'filament-social-graph::layouts.app');
+        $title = $feedItemModel->subject ?: __('filament-social-graph::feed.show_title');
+        $feedUrl = preg_replace('#/feed/items/[^/]+$#', '/feed', $request->url());
+
+        $showView = config('filament-social-graph.feed_page.show_view') ?? 'filament-social-graph::feed.show';
+
+        $feedItemEditRouteName = null;
+        $feedItemDestroyRouteName = null;
+        $feedItemEditRouteParams = [];
+        $feedItemDestroyRouteParams = [];
+
+        if (config('filament-social-graph.feed_page.use_teams_feed_item_routes', false)) {
+            $team = $request->route()?->parameter('team');
+            if ($team instanceof Model) {
+                $loc = app()->getLocale();
+                $feedItemEditRouteName = "{$loc}.teams.feed.items.edit";
+                $feedItemDestroyRouteName = "{$loc}.teams.feed.items.destroy";
+                $feedItemEditRouteParams = ['team' => $team];
+                $feedItemDestroyRouteParams = ['team' => $team];
+            }
+        }
+
+        return view($showView, [
+            'entity' => $entity,
+            'feedItem' => $feedItemModel,
+            'layout' => $layout,
+            'title' => $title,
+            'feedUrl' => $feedUrl,
+            'metaDescription' => FeedItemPlainDescription::for($feedItemModel),
+            'feedItemEditRouteName' => $feedItemEditRouteName,
+            'feedItemDestroyRouteName' => $feedItemDestroyRouteName,
+            'feedItemEditRouteParams' => $feedItemEditRouteParams,
+            'feedItemDestroyRouteParams' => $feedItemDestroyRouteParams,
+        ]);
+    }
+
     public function update(UpdateFeedItemRequest $request): RedirectResponse
     {
-        $feedItemId = $request->route('feedItem');
+        $feedItemId = $this->routeFeedItemKey($request);
         $this->entityFromRoute($request);
         $feedItem = $this->resolveFeedItemForEntity($request, $feedItemId);
 
@@ -93,7 +140,7 @@ class FeedController
 
     public function destroy(Request $request): RedirectResponse
     {
-        $feedItemId = $request->route('feedItem');
+        $feedItemId = $this->routeFeedItemKey($request);
         $this->entityFromRoute($request);
         $feedItem = $this->resolveFeedItemForEntity($request, $feedItemId);
 
@@ -108,10 +155,11 @@ class FeedController
     /**
      * Resolve feed item by id and ensure it belongs to the entity from the route.
      */
-    protected function resolveFeedItemForEntity(Request $request, string $feedItemId): FeedItem
+    protected function resolveFeedItemForEntity(Request $request, FeedItem|string $feedItemId): FeedItem
     {
         $entity = $this->entityFromRoute($request);
-        $feedItem = FeedItem::with('feed')->findOrFail($feedItemId);
+        $key = $feedItemId instanceof FeedItem ? $feedItemId->getKey() : $feedItemId;
+        $feedItem = FeedItem::with('feed')->findOrFail($key);
 
         $owner = $feedItem->feed?->owner;
         $ownerMatches = $owner !== null
@@ -157,5 +205,18 @@ class FeedController
         }
 
         throw new \InvalidArgumentException('Feed route must bind an Eloquent model (e.g. team, entity).');
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    protected function routeFeedItemKey(Request $request): string
+    {
+        $param = $request->route('feedItem');
+        if ($param instanceof FeedItem) {
+            return (string) $param->getKey();
+        }
+
+        return (string) $param;
     }
 }

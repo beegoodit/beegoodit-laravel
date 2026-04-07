@@ -16,6 +16,7 @@ class FeedItemCardEditDestroyUrlsTest extends TestCase
         app()->setLocale('en');
         $locale = 'en';
         Route::get('/feed/items/{feedItem}/edit', fn (): null => null)->name("{$locale}.platform.feed.items.edit");
+        Route::get('/feed/items/{feedItem}', fn (): null => null)->name("{$locale}.platform.feed.items.show");
         Route::delete('/feed/items/{feedItem}', fn (): null => null)->name("{$locale}.platform.feed.items.destroy");
     }
 
@@ -47,6 +48,32 @@ class FeedItemCardEditDestroyUrlsTest extends TestCase
         $component->assertSee($editUrl, false);
         $component->assertSee($destroyUrl, false);
         $component->assertSee(__('filament-social-graph::feed.edit'), false);
+    }
+
+    public function test_feed_item_card_shows_permalink_when_show_route_passed(): void
+    {
+        $user = TestUser::create([
+            'name' => 'Poster',
+            'email' => 'poster-show@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $feedItem = FeedItem::create([
+            'feed_id' => \BeegoodIT\FilamentSocialGraph\Models\Feed::firstOrCreateForOwner($user)->getKey(),
+            'subject' => 'Linked subject',
+            'body' => 'Post body',
+        ]);
+
+        $showUrl = route('en.platform.feed.items.show', ['feedItem' => $feedItem]);
+
+        Livewire::actingAs($user);
+        Livewire::test(FeedItemCard::class, [
+            'feedItem' => $feedItem,
+            'showRouteName' => 'en.platform.feed.items.show',
+            'showRouteParams' => [],
+        ])
+            ->assertSee($showUrl, false)
+            ->assertSee('Linked subject', false);
     }
 
     public function test_feed_item_card_hides_edit_and_destroy_when_route_props_not_passed(): void
@@ -84,13 +111,18 @@ class FeedItemCardEditDestroyUrlsTest extends TestCase
         $editUrl = route('en.platform.feed.items.edit', ['feedItem' => $feedItem]);
 
         Livewire::actingAs($user);
+        $showUrl = route('en.platform.feed.items.show', ['feedItem' => $feedItem]);
+
         Livewire::test(FeedList::class, [
             'feedId' => $feedItem->feed_id,
             'editRouteName' => 'en.platform.feed.items.edit',
             'destroyRouteName' => 'en.platform.feed.items.destroy',
             'editRouteParams' => [],
             'destroyRouteParams' => [],
+            'showRouteName' => 'en.platform.feed.items.show',
+            'showRouteParams' => [],
         ])
-            ->assertSee($editUrl, false);
+            ->assertSee($editUrl, false)
+            ->assertSee($showUrl, false);
     }
 }

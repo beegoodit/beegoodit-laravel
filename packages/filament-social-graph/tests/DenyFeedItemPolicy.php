@@ -8,6 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class DenyFeedItemPolicy
 {
+    public function viewAny(?Authenticatable $user): bool
+    {
+        return true;
+    }
+
+    public function view(?Authenticatable $user, FeedItem $feedItem): bool
+    {
+        return true;
+    }
+
     public function create(?Authenticatable $user, ?Model $entity = null): bool
     {
         return false;

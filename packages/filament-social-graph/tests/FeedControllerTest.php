@@ -22,6 +22,7 @@ class FeedControllerTest extends TestCase
             Route::get('feed/{entity}', [FeedController::class, 'index'])->name('feed.index');
             Route::post('feed/{entity}', [FeedController::class, 'store'])->name('feed.store');
             Route::get('feed/{entity}/items/{feedItem}/edit', [FeedController::class, 'edit'])->name('feed.items.edit');
+            Route::get('feed/{entity}/items/{feedItem}', [FeedController::class, 'show'])->name('feed.items.show');
             Route::put('feed/{entity}/items/{feedItem}', [FeedController::class, 'update'])->name('feed.items.update');
             Route::delete('feed/{entity}/items/{feedItem}', [FeedController::class, 'destroy'])->name('feed.items.destroy');
         });
@@ -176,6 +177,74 @@ class FeedControllerTest extends TestCase
         $response = $this->get(route('feed.items.edit', ['entity' => $user->getKey(), 'feedItem' => $feedItem->id]));
 
         $response->assertNotFound();
+    }
+
+    public function test_show_returns_200_for_guest_when_item_belongs_to_entity(): void
+    {
+        $owner = TestUser::create([
+            'name' => 'Feed Owner',
+            'email' => 'owner@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $feed = Feed::firstOrCreateForOwner($owner);
+        $feedItem = FeedItem::create([
+            'feed_id' => $feed->getKey(),
+            'subject' => 'Hello',
+            'body' => 'Body text',
+        ]);
+
+        $response = $this->get(route('feed.items.show', ['entity' => $owner->getKey(), 'feedItem' => $feedItem->id]));
+
+        $response->assertOk();
+        $response->assertSeeHtml('Hello');
+        $response->assertSeeHtml(__('filament-social-graph::feed.back_to_feed'));
+    }
+
+    public function test_show_returns_404_when_feed_item_not_in_scope(): void
+    {
+        $user = TestUser::create([
+            'name' => 'Feed Owner',
+            'email' => 'owner@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $otherUser = TestUser::create([
+            'name' => 'Other',
+            'email' => 'other@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $otherFeed = Feed::firstOrCreateForOwner($otherUser);
+        $feedItem = FeedItem::create([
+            'feed_id' => $otherFeed->getKey(),
+            'body' => 'Other post',
+        ]);
+
+        $response = $this->get(route('feed.items.show', ['entity' => $user->getKey(), 'feedItem' => $feedItem->id]));
+
+        $response->assertNotFound();
+    }
+
+    public function test_show_returns_403_when_policy_denies_view(): void
+    {
+        Gate::policy(FeedItem::class, DenyViewFeedItemPolicy::class);
+
+        $owner = TestUser::create([
+            'name' => 'Feed Owner',
+            'email' => 'owner@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $feed = Feed::firstOrCreateForOwner($owner);
+        $feedItem = FeedItem::create([
+            'feed_id' => $feed->getKey(),
+            'body' => 'Post',
+        ]);
+
+        $response = $this->get(route('feed.items.show', ['entity' => $owner->getKey(), 'feedItem' => $feedItem->id]));
+
+        $response->assertForbidden();
     }
 
     public function test_update_modifies_feed_item_and_redirects(): void

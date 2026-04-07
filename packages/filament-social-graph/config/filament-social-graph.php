@@ -72,8 +72,11 @@ return [
         'authorize_create_ability' => 'create', // Ability name for Gate (composer form visibility + submit auth)
         'authorize_update_ability' => 'update',
         'authorize_delete_ability' => 'delete',
+        'authorize_view_ability' => 'view', // Ability for GET feed item show (permalink)
+        'use_teams_feed_item_routes' => false, // When true, show() passes teams.feed.items.{edit,destroy} route names if route has a {team} parameter
         'owner_feed_url_resolver' => null, // Closure(owner) => url, or null for default
         'edit_view' => null, // App view name for GET feed edit (e.g. livewire.public-team-feed-edit); null = package feed.edit
+        'show_view' => null, // App view name for GET feed item show; null = package feed.show
     ],
 
 ];

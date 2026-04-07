@@ -9,6 +9,22 @@ use Illuminate\Database\Eloquent\Model;
 class FeedItemPolicy
 {
     /**
+     * Determine whether the user can view any feed items (e.g. feed index). Public feeds allow guests by default.
+     */
+    public function viewAny(?Authenticatable $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can view the feed item (e.g. permalink). Public feeds allow guests by default.
+     */
+    public function view(?Authenticatable $user, FeedItem $feedItem): bool
+    {
+        return true;
+    }
+
+    /**
      * Determine whether the user can create a feed item (for the given entity feed, or global feed when entity is null).
      */
     public function create(?Authenticatable $user, mixed $entity = null): bool

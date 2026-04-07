@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentSocialGraph\Livewire;
 
 use BeegoodIT\FilamentSocialGraph\Models\FeedItem;
+use BeegoodIT\FilamentSocialGraph\Support\FeedItemPlainDescription;
 use Livewire\Component;
 
 class FeedItemCard extends Component
@@ -19,9 +20,20 @@ class FeedItemCard extends Component
     /** @var array<string, mixed> */
     public array $destroyRouteParams = [];
 
+    public ?string $showRouteName = null;
+
+    /** @var array<string, mixed> */
+    public array $showRouteParams = [];
+
+    /**
+     * When true, single-image grids use full content width (e.g. branded permalink beside info layout).
+     */
+    public bool $fullWidthImageGrid = false;
+
     /**
      * @param  array<string, mixed>  $editRouteParams
      * @param  array<string, mixed>  $destroyRouteParams
+     * @param  array<string, mixed>  $showRouteParams
      */
     public function mount(
         FeedItem $feedItem,
@@ -29,12 +41,18 @@ class FeedItemCard extends Component
         ?string $destroyRouteName = null,
         array $editRouteParams = [],
         array $destroyRouteParams = [],
+        ?string $showRouteName = null,
+        array $showRouteParams = [],
+        bool $fullWidthImageGrid = false,
     ): void {
         $this->feedItem = $feedItem;
         $this->editRouteName = $editRouteName;
         $this->destroyRouteName = $destroyRouteName;
         $this->editRouteParams = $editRouteParams;
         $this->destroyRouteParams = $destroyRouteParams;
+        $this->showRouteName = $showRouteName;
+        $this->showRouteParams = $showRouteParams;
+        $this->fullWidthImageGrid = $fullWidthImageGrid;
     }
 
     public function getEditUrl(): ?string
@@ -53,6 +71,15 @@ class FeedItemCard extends Component
         }
 
         return route($this->destroyRouteName, array_merge($this->destroyRouteParams, ['feedItem' => $this->feedItem]));
+    }
+
+    public function getShowUrl(): ?string
+    {
+        if ($this->showRouteName === null || $this->showRouteName === '') {
+            return null;
+        }
+
+        return route($this->showRouteName, array_merge($this->showRouteParams, ['feedItem' => $this->feedItem]));
     }
 
     /**
@@ -116,7 +143,9 @@ class FeedItemCard extends Component
     {
         $count = count($this->getImagePaths());
         if ($count <= 1) {
-            return 'grid grid-cols-1 max-w-2xl';
+            return $this->fullWidthImageGrid
+                ? 'grid w-full max-w-none grid-cols-1'
+                : 'grid grid-cols-1 max-w-2xl';
         }
         if ($count <= 4) {
             return 'grid grid-cols-2 gap-2';
@@ -127,12 +156,19 @@ class FeedItemCard extends Component
 
     public function render()
     {
+        $feedItem = $this->feedItem;
+
         return view('filament-social-graph::livewire.feed-item-card', [
             'imageEntries' => $this->getImageEntries(),
             'fileEntries' => $this->getFileEntries(),
             'imageGridClass' => $this->getImageGridClass(),
             'editUrl' => $this->getEditUrl(),
             'destroyUrl' => $this->getDestroyUrl(),
+            'showUrl' => $this->getShowUrl(),
+            'feedItemShareTitle' => filled($feedItem->subject)
+                ? $feedItem->subject
+                : __('filament-social-graph::feed.show_title'),
+            'feedItemShareDescription' => FeedItemPlainDescription::for($feedItem),
         ]);
     }
 }

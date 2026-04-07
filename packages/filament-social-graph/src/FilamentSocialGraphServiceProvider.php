@@ -15,6 +15,7 @@ use BeegoodIT\FilamentSocialGraph\Observers\FeedItemObserver;
 use BeegoodIT\FilamentSocialGraph\Observers\FeedObserver;
 use BeegoodIT\FilamentSocialGraph\Observers\FeedSubscriptionRuleObserver;
 use BeegoodIT\FilamentSocialGraph\Policies\FeedItemPolicy;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -44,6 +45,8 @@ class FilamentSocialGraphServiceProvider extends ServiceProvider
             $this->loadTranslationsFrom($publishedPath, 'filament-social-graph');
         }
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-social-graph');
+
+        Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'filament-social-graph');
 
         if ($this->app->runningInConsole()) {
             $this->commands([

@@ -6,6 +6,8 @@
             'destroyRouteName' => $destroyRouteName,
             'editRouteParams' => $editRouteParams ?? [],
             'destroyRouteParams' => $destroyRouteParams ?? [],
+            'showRouteName' => $showRouteName,
+            'showRouteParams' => $showRouteParams ?? [],
         ], key($feedItem->id))
     @empty
         <p class="text-gray-500 dark:text-gray-400">

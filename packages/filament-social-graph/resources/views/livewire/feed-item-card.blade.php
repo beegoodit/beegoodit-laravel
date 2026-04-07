@@ -1,11 +1,21 @@
-<div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+<div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
     <div class="mb-2 flex flex-wrap items-center gap-2">
         <span class="font-medium text-gray-900 dark:text-white">
             {{ $feedItem->owner?->name ?? class_basename($feedItem->feed?->owner_type ?? '') }}
         </span>
-        <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ $feedItem->created_at->diffForHumans() }}
-        </span>
+        @if(! empty($showUrl))
+            <a
+                href="{{ $showUrl }}"
+                class="text-sm text-gray-500 hover:text-gray-700 hover:underline dark:text-gray-400 dark:hover:text-gray-300"
+                title="{{ __('filament-social-graph::feed.open_post') }}"
+            >
+                {{ $feedItem->created_at->diffForHumans() }}
+            </a>
+        @else
+            <span class="text-sm text-gray-500 dark:text-gray-400">
+                {{ $feedItem->created_at->diffForHumans() }}
+            </span>
+        @endif
         <div class="ml-auto flex items-center gap-2">
             @if(isset($editUrl) && $editUrl && \Illuminate\Support\Facades\Gate::allows('update', $feedItem))
                 <flux:button href="{{ $editUrl }}" variant="outline" size="sm">
@@ -26,7 +36,13 @@
 
     @if($feedItem->subject)
         <h3 class="mb-1 font-semibold text-gray-900 dark:text-white">
-            {{ $feedItem->subject }}
+            @if(! empty($showUrl))
+                <a href="{{ $showUrl }}" class="hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:focus:ring-gray-500 rounded">
+                    {{ $feedItem->subject }}
+                </a>
+            @else
+                {{ $feedItem->subject }}
+            @endif
         </h3>
     @endif
 
@@ -102,5 +118,13 @@
                 @endforeach
             </div>
         @endif
+    @endif
+
+    @if(! empty($showUrl))
+        <x-filament-social-graph::feed-item-share-inline
+            :url="$showUrl"
+            :title="$feedItemShareTitle"
+            :description="$feedItemShareDescription"
+        />
     @endif
 </div>
