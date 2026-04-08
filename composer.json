@@ -43,6 +43,7 @@
             "BeegoodIT\\FilamentPartners\\Database\\Factories\\": "packages/filament-partners/database/factories/",
             "BeegoodIT\\FilamentEntryLinks\\": "packages/filament-entry-links/src/",
             "BeegoodIT\\FilamentEntryLinks\\Database\\Factories\\": "packages/filament-entry-links/database/factories/",
+            "BeegoodIT\\FilamentOpeningTimes\\": "packages/filament-opening-times/src/",
             "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/"
         }
     },
@@ -66,6 +67,7 @@
             "BeegoodIT\\FilamentLegal\\Tests\\": "packages/filament-legal/tests/",
             "BeegoodIT\\FilamentPartners\\Tests\\": "packages/filament-partners/tests/",
             "BeegoodIT\\FilamentEntryLinks\\Tests\\": "packages/filament-entry-links/tests/",
+            "BeegoodIT\\FilamentOpeningTimes\\Tests\\": "packages/filament-opening-times/tests/",
             "BeegoodIT\\FilamentTimeline\\Tests\\": "packages/filament-timeline/tests/"
         }
     },
