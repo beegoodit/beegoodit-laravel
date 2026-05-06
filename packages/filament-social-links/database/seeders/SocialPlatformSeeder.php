@@ -73,6 +73,13 @@ class SocialPlatformSeeder extends Seeder
                 'icon' => 'fab-linkedin',
                 'sort_order' => 90,
             ],
+            [
+                'name' => 'Web',
+                'slug' => 'web',
+                'base_url' => 'https://',
+                'icon' => 'heroicon-o-globe-alt',
+                'sort_order' => 100,
+            ],
         ];
 
         foreach ($platforms as $platform) {

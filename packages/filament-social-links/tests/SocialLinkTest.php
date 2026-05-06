@@ -69,6 +69,42 @@ class SocialLinkTest extends TestCase
         $this->assertEquals('https://tiktok.com/@foosbeaver', $link->url);
     }
 
+    public function test_it_generates_web_url_from_domain_handle(): void
+    {
+        $platform = SocialPlatform::create([
+            'name' => 'Web',
+            'slug' => 'web',
+            'base_url' => 'https://',
+            'icon' => 'heroicon-o-globe-alt',
+        ]);
+
+        $link = new SocialLink([
+            'social_platform_id' => $platform->id,
+            'handle' => 'example.com',
+        ]);
+        $link->setRelation('platform', $platform);
+
+        $this->assertEquals('https://example.com', $link->url);
+    }
+
+    public function test_it_preserves_full_web_url_handles(): void
+    {
+        $platform = SocialPlatform::create([
+            'name' => 'Web',
+            'slug' => 'web',
+            'base_url' => 'https://',
+            'icon' => 'heroicon-o-globe-alt',
+        ]);
+
+        $link = new SocialLink([
+            'social_platform_id' => $platform->id,
+            'handle' => 'https://example.com',
+        ]);
+        $link->setRelation('platform', $platform);
+
+        $this->assertEquals('https://example.com', $link->url);
+    }
+
     public function test_it_tracks_userstamps(): void
     {
         $user = User::create([

@@ -41,6 +41,14 @@ class SocialLink extends Model
                 $baseUrl = (string) $this->platform->base_url;
                 $handle = ltrim($this->handle, '/@');
 
+                if (str_starts_with($handle, 'https://') || str_starts_with($handle, 'http://')) {
+                    return $handle;
+                }
+
+                if (in_array($baseUrl, ['https://', 'http://'], true)) {
+                    return $baseUrl.$handle;
+                }
+
                 if (str_ends_with($baseUrl, '@')) {
                     return $baseUrl.$handle;
                 }

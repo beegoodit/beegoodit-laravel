@@ -29,6 +29,7 @@ class SocialPlatformTest extends TestCase
         $this->assertDatabaseHas('social_platforms', ['slug' => 'instagram']);
         $this->assertDatabaseHas('social_platforms', ['slug' => 'tiktok']);
         $this->assertDatabaseHas('social_platforms', ['slug' => 'telegram']);
+        $this->assertDatabaseHas('social_platforms', ['slug' => 'web']);
     }
 
     public function test_slug_is_unique(): void
