@@ -16,10 +16,12 @@
         "orchestra/testbench": "^9.0",
         "pestphp/pest": "^4.1",
         "pestphp/pest-plugin-laravel": "^4.0",
+        "phpmd/phpmd": "^2.15",
         "rector/rector": "^2.3"
     },
     "autoload": {
         "psr-4": {
+            "BeegoodIT\\EloquentReadonlyAttributes\\": "packages/eloquent-readonly-attributes/src/",
             "BeegoodIT\\EloquentUserstamps\\": "packages/eloquent-userstamps/src/",
             "BeegoodIT\\LaravelFileStorage\\": "packages/laravel-file-storage/src/",
             "BeegoodIT\\LaravelCookieConsent\\": "packages/laravel-cookie-consent/src/",
@@ -50,6 +52,7 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
+            "BeegoodIT\\EloquentReadonlyAttributes\\Tests\\": "packages/eloquent-readonly-attributes/tests/",
             "BeegoodIT\\EloquentUserstamps\\Tests\\": "packages/eloquent-userstamps/tests/",
             "BeegoodIT\\LaravelFileStorage\\Tests\\": "packages/laravel-file-storage/tests/",
             "BeegoodIT\\LaravelCookieConsent\\Tests\\": "packages/laravel-cookie-consent/tests/",
