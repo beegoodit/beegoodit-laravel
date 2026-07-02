@@ -17,7 +17,7 @@ trait HasReadonlyAttributes
             $violations = $model->readonlyAttributeViolations();
 
             if ($violations !== []) {
-                throw new ReadonlyAttributeViolation($violations);
+                throw ReadonlyAttributeViolation::forAttributes($violations);
             }
         });
     }

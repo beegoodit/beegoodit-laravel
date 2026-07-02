@@ -37,7 +37,7 @@ class Tournament extends Model
 }
 ```
 
-When `saving` runs, including during creation, the trait intersects the model's dirty attributes with the configured gates. If a dirty attribute's gate returns `true`, saving is aborted with `ReadonlyAttributeViolation`.
+When `saving` runs, including during creation, the trait intersects the model's dirty attributes with the configured gates. If a dirty attribute's gate returns `true`, saving is aborted with `ReadonlyAttributeViolation`, a `ValidationException` with field-level error messages that HTTP clients and Filament can render as validation errors.
 
 Unlisted attributes are not guarded. Laravel housekeeping timestamps such as `created_at` and `updated_at` are skipped so normal saves can continue.
 

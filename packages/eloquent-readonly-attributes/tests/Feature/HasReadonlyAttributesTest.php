@@ -5,6 +5,7 @@ use BeegoodIT\EloquentReadonlyAttributes\ReadonlyAttributes;
 use BeegoodIT\EloquentReadonlyAttributes\ReadonlyAttributeViolation;
 use BeegoodIT\EloquentReadonlyAttributes\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\ValidationException;
 
 uses(TestCase::class);
 
@@ -19,7 +20,13 @@ it('blocks dirty readonly attributes when their gate returns true', function ():
     $model->status = 'published';
 
     expect(fn () => $model->save())
-        ->toThrow(ReadonlyAttributeViolation::class, 'Readonly attributes cannot be changed: status');
+        ->toThrow(function (ReadonlyAttributeViolation $exception): bool {
+            expect($exception)->toBeInstanceOf(ValidationException::class);
+            expect($exception->attributes())->toBe(['status']);
+            expect($exception->errors())->toHaveKey('status');
+
+            return true;
+        });
 });
 
 it('allows dirty guarded attributes when their gate returns false', function (): void {
@@ -101,6 +108,15 @@ it('does not block Laravel timestamp housekeeping attributes', function (): void
     $model->update(['description' => 'After']);
 
     expect($model->refresh()->description)->toBe('After');
+});
+
+it('maps readonly violations to a nested form state path', function (): void {
+    $exception = ReadonlyAttributeViolation::forAttributes(['published_at', 'start_at']);
+
+    expect($exception->errorsForStatePath('data'))->toBe([
+        'data.published_at' => [$exception->errors()['published_at'][0]],
+        'data.start_at' => [$exception->errors()['start_at'][0]],
+    ]);
 });
 
 class ReadonlyTestModel extends Model
