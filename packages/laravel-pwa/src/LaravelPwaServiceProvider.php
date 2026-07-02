@@ -78,6 +78,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
         // Publish CSS
         $this->publishes([
             __DIR__.'/../resources/css/push-prompt.css' => public_path('css/push-prompt.css'),
+            __DIR__.'/../resources/css/pwa-nav.css' => public_path('css/pwa-nav.css'),
         ], 'pwa-css');
 
         // Register commands
@@ -134,6 +135,10 @@ class LaravelPwaServiceProvider extends ServiceProvider
                 'trackOpen',
             ])->name('pwa.notifications.open');
         });
+
+        Route::get('/vendor/laravel-pwa/{asset}', \BeegoodIT\LaravelPwa\Http\Controllers\AssetController::class)
+            ->where('asset', 'pwa-nav\.css|push-prompt\.css')
+            ->name('laravel-pwa.assets');
     }
 
     protected function registerNotificationChannel(): void
@@ -149,7 +154,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
 
         Blade::directive('pwaScripts', fn (): string => "<?php echo \"<script src='\" . asset('js/push-notifications.js') . \"'></script>\"; ?>");
 
-        Blade::directive('pwaStyles', fn (): string => "<?php echo \"<link rel='stylesheet' href='\" . asset('css/push-prompt.css') . \"'>\"; ?>");
+        Blade::directive('pwaStyles', fn (): string => "<?php echo view('laravel-pwa::partials.pwa-styles')->render(); ?>");
     }
 
     protected function registerBladeComponents(): void

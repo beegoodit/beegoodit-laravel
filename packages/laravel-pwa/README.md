@@ -114,38 +114,135 @@ This will automatically register:
 
 For standalone PWA mode, the browser hides the URL bar. You can add an in-app bottom navigation bar and slide-up menu using the `<x-pwa::nav>` component.
 
-1. **Configure bar items** in `config/pwa.php` under `navigation.bar`: set an array of items or a closure that returns items. Each item: `label`, `icon` (Heroicon name when Filament is present), `url`, optional `active` (bool), optional `action` (e.g. `'toggleMenu'` for the menu button).
-2. **Include the component** in your layout and pass the **menu** slot with your content (auth links, legal, etc.):
+**Styles are bundled** — include `@pwaStyles` once in your layout `<head>`. No Tailwind build is required for the bar, sheet, backdrop, or transitions. CSS is served from the package automatically (or from `public/css/` if you published assets).
 
 ```blade
-<x-pwa::nav :items="value(config('pwa.navigation.bar'))" :menu-title="__('Menu')">
-    <x-slot:menu>
-        @auth
-            <a href="{{ url('/me/profile') }}">...</a>
-        @else
-            <a href="{{ route('login') }}">{{ __('Log In') }}</a>
-        @endauth
-    </x-slot:menu>
-</x-pwa::nav>
+<head>
+    @pwaHead
+    @pwaStyles
+</head>
 ```
 
-Icons use Filament’s Heroicons when available; otherwise a simple fallback is shown. Set `navigation.active_color_class` (e.g. `text-primary-600 dark:text-primary-400`) to match your theme; default is amber. The nav adds padding to `main`, `.fi-main`, and `.fi-sidebar` for use on Filament dashboards. Default `navigation.bar` is `[]` (opt-in).
+When `LaravelPwaPlugin` is registered, Filament panels also receive `@pwaStyles` automatically (`navigation.register_filament_styles`).
 
-**Theming with Tailwind:** You can override the nav look with optional Tailwind class strings under `config/pwa.php` → `navigation`. Each key defaults to the current look; omit any key to keep the default.
+#### Requirements
 
-| Key | Purpose |
-|-----|---------|
-| `bar_class` | Bar container (bg, border, shadow) |
-| `bar_item_inactive_class` | Inactive tab icon + label |
-| `bar_item_hover_class` | Hover state for inactive items |
-| `active_color_class` | Active tab and open menu button |
-| `sheet_backdrop_class` | Backdrop overlay |
-| `sheet_panel_class` | Sheet panel (bg, radius, shadow) |
-| `sheet_header_border_class` | Header bottom border |
-| `sheet_title_class` | Menu title text |
-| `sheet_close_class` | Close button |
+The nav uses **Alpine.js** for the menu sheet. Load Alpine before the component mounts:
 
-Example: set `'active_color_class' => 'text-primary-600 dark:text-primary-400'` to match your app's primary color.
+| Surface | What you need |
+|---------|----------------|
+| **Public / guest layouts** | `@livewireScripts` and `@filamentScripts(withCore: true)` |
+| **Filament panels** | Filament/Livewire scripts — inject nav on `PanelsRenderHook::SCRIPTS_BEFORE` |
+
+#### Setup
+
+1. **Configure bar items** in `config/pwa.php` under `navigation.bar`.
+2. **Include the component** and pass the **menu** slot (before scripts on public pages):
+
+```blade
+<x-pwa::nav :items="$items" :menu-title="__('Menu')">
+    <x-slot:menu>...</x-slot:menu>
+</x-pwa::nav>
+
+@livewireScripts
+@filamentScripts(withCore: true)
+```
+
+Icons use Filament Heroicons when available; otherwise bundled SVG fallbacks are used.
+
+#### Theming
+
+The nav reads **app-owned `--pwa-*` CSS tokens** on `:root` and `.dark`. Define them in app CSS loaded **before** `@pwaStyles` (e.g. import `pwa-tokens.css` in `app.css`). The package does **not** set tokens on `:root` — only scoped zinc fallbacks on `.pwa-nav` when tokens are absent — so app tokens are never overwritten. Config `navigation.theme_tokens` is injected **after** `pwa-nav.css` for overrides. Dark mode follows the `.dark` class on `<html>` (Filament's theme picker) — not `prefers-color-scheme`.
+
+**Recommended:** define tokens once in your app CSS (import the same file in public CSS and Filament theme if both surfaces show the nav):
+
+```css
+/* resources/css/pwa-tokens.css */
+:root {
+    --pwa-surface: rgba(255, 255, 255, 0.9);
+    --pwa-surface-border: rgba(228, 228, 231, 0.5);
+    --pwa-text-muted: #71717a;
+    --pwa-text-hover: #3f3f46;
+    --pwa-text-active: #18181b;
+    --pwa-sheet-surface: #ffffff;
+    --pwa-sheet-title: #18181b;
+    --pwa-sheet-border: #e4e4e7;
+    --pwa-backdrop: rgba(24, 24, 27, 0.75);
+}
+
+.dark {
+    --pwa-surface: rgba(24, 24, 27, 0.9);
+    --pwa-surface-border: rgba(39, 39, 42, 0.5);
+    --pwa-text-muted: #a1a1aa;
+    --pwa-text-hover: #d4d4d8;
+    --pwa-text-active: #fafafa;
+    --pwa-sheet-surface: #18181b;
+    --pwa-sheet-title: #fafafa;
+    --pwa-sheet-border: #27272a;
+    --pwa-backdrop: rgba(9, 9, 11, 0.75);
+}
+```
+
+**Brand accent only** — override active/hover tokens:
+
+```css
+:root {
+    --pwa-text-active: #f59e0b;
+    --pwa-text-hover: #d97706;
+}
+```
+
+**Config escape hatch** (when you cannot edit CSS yet): `config/pwa.php` → `navigation.theme_tokens`:
+
+```php
+'theme_tokens' => [
+    'light' => ['text-active' => '#f59e0b'],
+    'dark' => ['text-active' => '#fbbf24'],
+],
+```
+
+Keys map to `--pwa-{key}` (e.g. `surface`, `text-muted`, `sheet-border`).
+
+Legacy Tailwind class overrides (`bar_class`, `sheet_panel_class`, `active_color_class`, …) remain supported but are deprecated — prefer tokens or a published Blade override you maintain yourself.
+
+#### Migration (navigation theming)
+
+`navigation.colors` was removed. There is no backwards compatibility shim.
+
+| Before | After |
+|--------|-------|
+| `'colors' => ['active' => '#2563eb']` | `'--pwa-text-active: #2563eb'` in app CSS **or** `'theme_tokens' => ['light' => ['text-active' => '#2563eb']]` |
+| Hardcoded amber/blue in package CSS | Package zinc fallbacks; app sets `--pwa-*` tokens |
+| Published `vendor/laravel-pwa/components/pwa-nav.blade.php` with Tailwind | Delete override; use `<x-pwa::nav>` + tokens (Tier A) |
+| `active_color_class => 'text-amber-500'` | `--pwa-text-active` token |
+
+**Integration tiers**
+
+| Tier | Setup |
+|------|--------|
+| **A — Standard** | `<x-pwa::nav>`, `@pwaStyles`, define `--pwa-*` in app CSS, empty `theme_tokens` |
+| **B — Branded accent** | Tier A + override `--pwa-text-active` / `--pwa-text-hover` only |
+| **C — Fully custom** | Published Blade override — you own all styling; package provides icons/helpers only |
+
+**After upgrading**
+
+1. Remove `navigation.colors` from `config/pwa.php`.
+2. Add `resources/css/pwa-tokens.css` (or equivalent) and import it wherever the nav appears.
+3. Hard refresh or unregister the service worker — asset URLs now include `?v={mtime}` but bump `CACHE_NAME` in `public/sw.js` if you cache CSS aggressively.
+
+#### Filament render hook
+
+Register on `PanelsRenderHook::SCRIPTS_BEFORE` (not `BODY_END`).
+
+### 5b. PWA navigation troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| Menu sheet always visible / button dead | Load Alpine; use `SCRIPTS_BEFORE` on Filament |
+| Bar/sheet unstyled | Add `@pwaStyles` to `<head>` |
+| Nav colors wrong after upgrade | Define `--pwa-*` tokens in app CSS before `@pwaStyles`; remove old `navigation.colors`; hard refresh / bump SW cache |
+| App `--pwa-*` tokens ignored | Import tokens before `@pwaStyles`; package no longer sets `:root` fallbacks that override app CSS |
+| Nav dark in light mode (stale CSS) | Hard refresh; `@pwaStyles` URLs are cache-busted with `?v=` |
 
 ### 5a. Optional: PWA top nav (header)
 

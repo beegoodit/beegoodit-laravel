@@ -1,0 +1,222 @@
+[x-cloak] {
+    display: none !important;
+}
+
+/*
+ * App-owned surface tokens (--pwa-* on :root / .dark).
+ * Define these in your app CSS (before @pwaStyles), or via config/pwa.php → navigation.theme_tokens
+ * (injected after this file). Zinc values below are scoped fallbacks when tokens are not set —
+ * they must not be declared on :root, or they would overwrite app tokens loaded earlier.
+ */
+.pwa-nav {
+    --pwa-nav-padding-bottom: 4rem;
+    --pwa-nav-bar-height: 4rem;
+    --pwa-nav-bar-background: var(--pwa-surface, rgba(255, 255, 255, 0.9));
+    --pwa-nav-bar-border: var(--pwa-surface-border, rgba(228, 228, 231, 0.5));
+    --pwa-nav-item-color: var(--pwa-text-muted, #71717a);
+    --pwa-nav-item-hover-color: var(--pwa-text-hover, #3f3f46);
+    --pwa-nav-active-color: var(--pwa-text-active, #18181b);
+    --pwa-nav-sheet-background: var(--pwa-sheet-surface, #ffffff);
+    --pwa-nav-sheet-title-color: var(--pwa-sheet-title, #18181b);
+    --pwa-nav-sheet-header-border: var(--pwa-sheet-border, #e4e4e7);
+    --pwa-nav-close-color: var(--pwa-text-muted, #71717a);
+    --pwa-nav-close-hover-color: var(--pwa-text-hover, #3f3f46);
+    --pwa-nav-backdrop: var(--pwa-backdrop, rgba(24, 24, 27, 0.75));
+}
+
+.dark .pwa-nav {
+    --pwa-nav-bar-background: var(--pwa-surface, rgba(24, 24, 27, 0.9));
+    --pwa-nav-bar-border: var(--pwa-surface-border, rgba(39, 39, 42, 0.5));
+    --pwa-nav-item-color: var(--pwa-text-muted, #a1a1aa);
+    --pwa-nav-item-hover-color: var(--pwa-text-hover, #d4d4d8);
+    --pwa-nav-active-color: var(--pwa-text-active, #fafafa);
+    --pwa-nav-sheet-background: var(--pwa-sheet-surface, #18181b);
+    --pwa-nav-sheet-title-color: var(--pwa-sheet-title, #fafafa);
+    --pwa-nav-sheet-header-border: var(--pwa-sheet-border, #27272a);
+    --pwa-nav-close-color: var(--pwa-text-muted, #a1a1aa);
+    --pwa-nav-close-hover-color: var(--pwa-text-hover, #d4d4d8);
+    --pwa-nav-backdrop: var(--pwa-backdrop, rgba(9, 9, 11, 0.75));
+}
+
+.pwa-nav__bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--pwa-nav-bar-background);
+    border-top: 1px solid var(--pwa-nav-bar-border);
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+}
+
+.pwa-nav__bar-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: var(--pwa-nav-bar-height);
+    width: 100%;
+    max-width: 32rem;
+    margin: 0 auto;
+}
+
+.pwa-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0%;
+    height: 100%;
+    min-width: 0;
+    padding: 0 2px;
+    border: none;
+    background: transparent;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+}
+
+.pwa-nav__item:focus {
+    outline: none;
+}
+
+.pwa-nav__item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pwa-nav-item-color);
+    transition: color 0.2s ease;
+}
+
+.pwa-nav__item-label {
+    margin-top: 0.25rem;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    color: var(--pwa-nav-item-color);
+    transition: color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+    .pwa-nav__item-label {
+        font-size: 10px;
+    }
+}
+
+.pwa-nav__item:hover .pwa-nav__item-icon,
+.pwa-nav__item:hover .pwa-nav__item-label {
+    color: var(--pwa-nav-item-hover-color);
+}
+
+.pwa-nav__item--active .pwa-nav__item-icon,
+.pwa-nav__item--active .pwa-nav__item-label {
+    color: var(--pwa-nav-active-color);
+}
+
+.pwa-nav__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.pwa-nav__overlay {
+    position: relative;
+    z-index: 50;
+}
+
+.pwa-nav__backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--pwa-nav-backdrop);
+    transition: opacity 0.2s ease;
+}
+
+.pwa-nav__sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 51;
+    width: 100%;
+    overflow: hidden;
+    background: var(--pwa-nav-sheet-background);
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    margin-bottom: calc(var(--pwa-nav-padding-bottom) + env(safe-area-inset-bottom, 0px));
+    transition: transform 0.3s ease;
+}
+
+.pwa-nav__sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--pwa-nav-sheet-header-border);
+}
+
+.pwa-nav__sheet-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--pwa-nav-sheet-title-color);
+}
+
+.pwa-nav__sheet-close {
+    padding: 0.25rem;
+    border: none;
+    background: transparent;
+    color: var(--pwa-nav-close-color);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.pwa-nav__sheet-close:hover {
+    color: var(--pwa-nav-close-hover-color);
+}
+
+.pwa-nav__sheet-close-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+}
+
+.pwa-nav__sheet-body {
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+.pwa-nav__backdrop-enter-start,
+.pwa-nav__backdrop-leave-end {
+    opacity: 0;
+}
+
+.pwa-nav__backdrop-enter-end,
+.pwa-nav__backdrop-leave-start {
+    opacity: 1;
+}
+
+.pwa-nav__sheet-enter-start,
+.pwa-nav__sheet-leave-end {
+    transform: translateY(100%);
+}
+
+.pwa-nav__sheet-enter-end,
+.pwa-nav__sheet-leave-start {
+    transform: translateY(0);
+}
+
+.pwa-nav--with-padding main,
+.pwa-nav--with-padding .fi-main,
+.pwa-nav--with-padding .fi-sidebar {
+    padding-bottom: var(--pwa-nav-padding-bottom) !important;
+}

@@ -74,35 +74,49 @@ return [
     | PWA Navigation (optional bottom bar + menu sheet)
     |--------------------------------------------------------------------------
     |
+    | Include `@pwaStyles` in your layout <head> — ships bundled CSS for the
+    | bottom bar and menu sheet (no Tailwind build required).
+    |
     | Set 'bar' to an array of items or a closure that returns items. Each
     | item: label, icon (Heroicon name when Filament is present), url,
     | optional active (bool), optional action (e.g. 'toggleMenu' for menu button).
     | Use the <x-pwa::nav> component and pass the menu slot for sheet content.
     |
-    | Theming: Optional Tailwind class strings. Omit any key to use the default.
-    | - bar_class: Bar container (bg, border, shadow)
-    | - bar_item_inactive_class: Inactive tab icon + label
-    | - bar_item_hover_class: Hover state for inactive items
-    | - active_color_class: Active tab and open menu button
-    | - sheet_backdrop_class: Backdrop overlay
-    | - sheet_panel_class: Sheet panel (bg, radius, shadow)
-    | - sheet_header_border_class: Header bottom border
-    | - sheet_title_class: Menu title text
-    | - sheet_close_class: Close button
+    | Theming: define `--pwa-*` surface tokens in your app CSS (recommended), or set
+    | `theme_tokens` below when you cannot edit CSS yet. See README § Migration.
+    | Legacy Tailwind class strings remain supported for advanced custom setups.
     |
     */
     'navigation' => [
         'padding_bottom' => '4rem',
         'bar' => [],
-        'active_color_class' => 'text-amber-500',
-        'bar_class' => 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-800/50 shadow-[0_-1px_10px_rgba(0,0,0,0.05)]',
-        'bar_item_inactive_class' => 'text-gray-500 dark:text-gray-400',
-        'bar_item_hover_class' => 'group-hover:text-amber-400',
-        'sheet_backdrop_class' => 'bg-gray-500/75 dark:bg-gray-900/75',
-        'sheet_panel_class' => 'bg-white dark:bg-gray-900 rounded-t-2xl shadow-xl',
-        'sheet_header_border_class' => 'border-gray-200 dark:border-gray-800',
-        'sheet_title_class' => 'text-gray-900 dark:text-white',
-        'sheet_close_class' => 'text-gray-400 hover:text-gray-500 dark:hover:text-gray-300',
+        'theme_tokens' => [
+            'light' => [
+                // 'text-active' => '#18181b',
+                // 'text-muted' => '#71717a',
+                // 'text-hover' => '#3f3f46',
+                // 'surface' => 'rgba(255, 255, 255, 0.9)',
+                // 'surface-border' => 'rgba(228, 228, 231, 0.5)',
+                // 'sheet-surface' => '#ffffff',
+                // 'sheet-title' => '#18181b',
+                // 'sheet-border' => '#e4e4e7',
+                // 'backdrop' => 'rgba(24, 24, 27, 0.75)',
+            ],
+            'dark' => [
+                // 'text-active' => '#fafafa',
+                // 'surface' => 'rgba(24, 24, 27, 0.9)',
+            ],
+        ],
+        'active_color_class' => null,
+        'bar_class' => null,
+        'bar_item_inactive_class' => null,
+        'bar_item_hover_class' => null,
+        'sheet_backdrop_class' => null,
+        'sheet_panel_class' => null,
+        'sheet_header_border_class' => null,
+        'sheet_title_class' => null,
+        'sheet_close_class' => null,
+        'register_filament_styles' => true,
     ],
 
     /*

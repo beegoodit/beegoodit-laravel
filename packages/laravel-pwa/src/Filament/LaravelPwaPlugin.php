@@ -29,7 +29,12 @@ class LaravelPwaPlugin implements Plugin
 
     public function boot(Panel $panel): void
     {
-        //
+        if (config('pwa.navigation.register_filament_styles', true)) {
+            \Filament\Support\Facades\FilamentView::registerRenderHook(
+                \Filament\View\PanelsRenderHook::HEAD_END,
+                fn (): string => view('laravel-pwa::partials.pwa-styles')->render(),
+            );
+        }
     }
 
     public static function make(): static

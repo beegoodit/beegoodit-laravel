@@ -1,4 +1,4 @@
-const CACHE_NAME = 'app-v1';
+const CACHE_NAME = 'app-v2';
 const urlsToCache = [
   '/build/assets/app.css',
   '/build/assets/app.js',
