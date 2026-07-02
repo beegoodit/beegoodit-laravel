@@ -111,12 +111,13 @@ return [
     'Enable 2FA' => 'Habilitar 2FA',
 
     // Navigation
-    'Back to Portal' => 'Volver al Portal',
+    'Back to Team Dashboard' => 'Volver al panel del equipo',
     'Settings' => 'Configuración',
     'User Settings' => 'Configuración de Usuario',
 
     // Appearance Toggle component
     'appearance' => [
+        'options' => 'Opciones de tema',
         'light' => 'Claro',
         'dark' => 'Oscuro',
         'system' => 'Sistema',
@@ -128,13 +129,6 @@ return [
     'Change Password' => 'Cambiar Contraseña',
     'Manage your theme and language' => 'Administra tu tema e idioma',
     'Manage Appearance' => 'Administrar Apariencia',
-
-    // Appearance Toggle component
-    'appearance' => [
-        'light' => 'Claro',
-        'dark' => 'Oscuro',
-        'system' => 'Sistema',
-    ],
 
     // Notifications Page
     'Notifications' => 'Notificaciones',

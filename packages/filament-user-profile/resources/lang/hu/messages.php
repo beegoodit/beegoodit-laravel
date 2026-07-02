@@ -102,10 +102,11 @@ return [
     'Confirm' => 'Megerősítés',
     'Disable 2FA' => '2FA letiltása',
     'Enable 2FA' => '2FA engedélyezése',
-    'Back to Portal' => 'Vissza a portálra',
+    'Back to Team Dashboard' => 'Vissza a csapat irányítópultra',
     'Settings' => 'Beállítások',
     'User Settings' => 'Felhasználói beállítások',
     'appearance' => [
+        'options' => 'Téma beállítások',
         'light' => 'Világos',
         'dark' => 'Sötét',
         'system' => 'Rendszer',

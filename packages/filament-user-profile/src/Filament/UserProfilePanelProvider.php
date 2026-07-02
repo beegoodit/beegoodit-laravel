@@ -79,7 +79,7 @@ class UserProfilePanelProvider extends PanelProvider
             ->pages($this->getPages())
             ->navigationItems([
                 NavigationItem::make()
-                    ->label(fn () => __('filament-user-profile::messages.Back to Portal'))
+                    ->label(fn () => __('filament-user-profile::messages.Back to Team Dashboard'))
                     ->icon('heroicon-o-arrow-left')
                     ->url(fn (): string => $this->getPortalUrl())
                     ->sort(-1), // Show at the top

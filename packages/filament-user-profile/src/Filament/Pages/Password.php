@@ -50,7 +50,7 @@ class Password extends Page implements HasForms
 
     // Routes are registered by the UserProfilePanelProvider
 
-    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string
+    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null, bool $shouldGuessMissingParameters = false, ?string $configuration = null): string
     {
         // Use the user-profile panel (no tenant)
         $panel ??= 'me';

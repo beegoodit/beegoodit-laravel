@@ -111,12 +111,13 @@ return [
     'Enable 2FA' => 'Enable 2FA',
 
     // Navigation
-    'Back to Portal' => 'Back to Portal',
+    'Back to Team Dashboard' => 'Back to Team Dashboard',
     'Settings' => 'Settings',
     'User Settings' => 'User Settings',
 
     // Appearance Toggle component
     'appearance' => [
+        'options' => 'Theme options',
         'light' => 'Light',
         'dark' => 'Dark',
         'system' => 'System',

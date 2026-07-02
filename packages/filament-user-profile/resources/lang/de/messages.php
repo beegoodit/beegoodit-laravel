@@ -111,7 +111,7 @@ return [
     'Enable 2FA' => '2FA aktivieren',
 
     // Navigation
-    'Back to Portal' => 'Zurück zum Portal',
+    'Back to Team Dashboard' => 'Zurück zum Team-Dashboard',
     'Settings' => 'Einstellungen',
     'User Settings' => 'Benutzereinstellungen',
 
@@ -124,6 +124,7 @@ return [
 
     // Appearance Toggle component
     'appearance' => [
+        'options' => 'Designoptionen',
         'light' => 'Hell',
         'dark' => 'Dunkel',
         'system' => 'System',

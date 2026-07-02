@@ -85,13 +85,15 @@ npm run dev
 - ✅ The theme CSS is included in Vite's `input` array
 - ✅ CSS assets have been rebuilt after changes
 
-### 2. Publish Timezone Data (Optional but Recommended)
+### 2. Publish Timezone Data (Required)
 
-For the interactive timezone map to work, publish the GeoJSON data:
+The Appearance page timezone picker loads region boundaries from a GeoJSON file in `public/data/`. **Composer does not copy this file for you** — you must publish it once per app (and commit it, or publish again in your deploy/build):
 
 ```bash
 php artisan vendor:publish --tag=filament-user-profile-timezone-data
 ```
+
+This copies `timezones-tiny.geojson` to `public/data/timezones-tiny.geojson`. Without it, the map shows base tiles only (no clickable timezone regions). Mobile layouts fall back to a select dropdown.
 
 ### 3. Publish Two-Factor Authentication Migration (Required for 2FA)
 
@@ -209,6 +211,48 @@ public function panel(Panel $panel): Panel
 
 This will ensure that all unauthenticated access to your panel redirects to the User Profile login page.
 
+## Public layout theme toggle
+
+Use `<x-filament-user-profile::appearance-toggle />` on non-Filament pages (marketing site, legal pages, etc.) so visitors can switch light, dark, or system theme. It uses the same contract as Filament panels:
+
+- `localStorage` key: **`theme`** (values: `light`, `dark`, `system`)
+- Dispatches **`theme-changed`** on the window (Filament's `dark-mode.js` listens and updates `html.dark`)
+- No server-side persistence — preference stays in the browser only
+
+### Requirements
+
+1. **Anti-flash script in `<head>`** — include before your CSS so the correct mode applies on first paint:
+
+```blade
+@include('filament-user-profile::partials.theme-head')
+```
+
+Optional default when nothing is stored yet: `@include('filament-user-profile::partials.theme-head', ['defaultThemeMode' => 'system'])`
+
+2. **Filament core scripts** — the toggle relies on Filament's Alpine store and dark-mode listener:
+
+```blade
+@filamentScripts(withCore: true)
+```
+
+3. **Tailwind `dark:` utilities** — style your layout for dark mode on `body`, headers, links, etc. Public CSS must use Filament's class-based dark variant (not OS `prefers-color-scheme` alone):
+
+```css
+@import 'tailwindcss';
+
+@variant dark (&:where(.dark, .dark *));
+```
+
+Add `@source` for package views to your public CSS (see [Setup §1 Option B](#option-b-not-using-filament-panels)).
+
+4. **`[x-cloak]`** — hide Alpine-controlled icons until initialized (the toggle uses `x-cloak`):
+
+```css
+[x-cloak] { display: none !important; }
+```
+
+Theme choice syncs automatically between public pages and Filament `/me` / `/portal` panels in the same browser.
+
 ## Features
 
 ### Phase 1 (Current)
@@ -271,17 +315,15 @@ protected static bool $shouldRegisterNavigation = false;
 
 ## Timezone Map Data
 
-The timezone picker includes an interactive map powered by Leaflet.js. The required GeoJSON file is included in the package and will be published automatically.
-
-### Publish Timezone Data
+The timezone picker includes an interactive map powered by Leaflet.js. The GeoJSON file ships in the package but **must be published** to your app's `public/data/` directory (see [Setup §2](#2-publish-timezone-data-required)).
 
 ```bash
 php artisan vendor:publish --tag=filament-user-profile-timezone-data
 ```
 
-This will copy the GeoJSON file to `public/data/timezones-tiny.geojson`.
+Verify: `GET /data/timezones-tiny.geojson` should return 200. Commit `public/data/timezones-tiny.geojson` if your deploy process does not run the publish tag.
 
-**Note**: The timezone picker will fall back to a simple select dropdown on mobile devices or if the GeoJSON file is not available.
+On viewports below the `md` breakpoint, the picker uses a select dropdown instead of the map.
 
 ## Troubleshooting
 

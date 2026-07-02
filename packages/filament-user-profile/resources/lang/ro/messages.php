@@ -102,10 +102,11 @@ return [
     'Confirm' => 'Confirmă',
     'Disable 2FA' => 'Dezactivează 2FA',
     'Enable 2FA' => 'Activează 2FA',
-    'Back to Portal' => 'Înapoi la Portal',
+    'Back to Team Dashboard' => 'Înapoi la tabloul de bord al echipei',
     'Settings' => 'Setări',
     'User Settings' => 'Setări utilizator',
     'appearance' => [
+        'options' => 'Opțiuni temă',
         'light' => 'Deschis',
         'dark' => 'Întunecat',
         'system' => 'Sistem',
