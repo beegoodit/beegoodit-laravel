@@ -3,6 +3,7 @@
 namespace BeegoodIT\FilamentTenancy\Filament\Pages;
 
 use BeegoodIT\FilamentTenancy\Filament\Schemas\BrandingSchema;
+use Filament\Pages\PageConfiguration;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use Filament\Panel;
 use Filament\Schemas\Schema;
@@ -16,7 +17,7 @@ class EditTeamProfile extends EditTenantProfile
      * inside the tenant name group; when called from the pages loop we skip
      * so we don't create a duplicate filament.{panel}.profile route.
      */
-    public static function registerRoutes(Panel $panel): void
+    public static function registerRoutes(Panel $panel, ?PageConfiguration $configuration = null): void
     {
         if (! static::isInTenantRouteGroup()) {
             return;

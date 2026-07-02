@@ -44,7 +44,7 @@ class ProfileCompletenessWidget extends BaseWidget
         $hasColors = ! empty($tenant->primary_color);
 
         return Stat::make(__('filament-tenancy::messages.Brand Colors'), $hasColors ? __('filament-tenancy::messages.Defined') : __('filament-tenancy::messages.Default'))
-            ->description($hasColors ? __('filament-tenancy::messages.Your brand identity is set.') : __('filament-tenancy::messages.Set brand colors to customize the team portal.'))
+            ->description($hasColors ? __('filament-tenancy::messages.Your brand identity is set.') : __('filament-tenancy::messages.Set brand colors to customize the team dashboard.'))
             ->descriptionIcon($hasColors ? 'heroicon-m-swatch' : 'heroicon-m-paint-brush')
             ->color($hasColors ? 'success' : 'warning');
     }

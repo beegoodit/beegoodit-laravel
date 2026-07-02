@@ -20,7 +20,7 @@ return [
     'Defined' => 'Definiert',
     'Default' => 'Standard',
     'Your brand identity is set.' => 'Ihre Markenidentität ist festgelegt.',
-    'Set brand colors to customize the team portal.' => 'Legen Sie Markenfarben fest, um das Team-Portal anzupassen.',
+    'Set brand colors to customize the team dashboard.' => 'Legen Sie Markenfarben fest, um das Team-Dashboard anzupassen.',
     'Custom URL' => 'Benutzerdefinierte URL',
     'Customized' => 'Angepasst',
     'Standard' => 'Standard',

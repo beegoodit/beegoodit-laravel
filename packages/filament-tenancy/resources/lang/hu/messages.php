@@ -20,7 +20,7 @@ return [
     'Defined' => 'Megadva',
     'Default' => 'Alapértelmezett',
     'Your brand identity is set.' => 'A brand identitása beállítva.',
-    'Set brand colors to customize the team portal.' => 'Állítsa be a brand színeket a csapat portál testreszabásához.',
+    'Set brand colors to customize the team dashboard.' => 'Állítsa be a brand színeket a csapat irányítópult testreszabásához.',
     'Custom URL' => 'Egyéni URL',
     'Customized' => 'Testreszabott',
     'Standard' => 'Standard',

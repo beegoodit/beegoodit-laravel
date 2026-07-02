@@ -20,7 +20,7 @@ return [
     'Defined' => 'Definit',
     'Default' => 'Implicit',
     'Your brand identity is set.' => 'Identitatea brandului este setată.',
-    'Set brand colors to customize the team portal.' => 'Setează culorile brandului pentru a personaliza portalul echipei.',
+    'Set brand colors to customize the team dashboard.' => 'Setează culorile brandului pentru a personaliza tabloul de bord al echipei.',
     'Custom URL' => 'URL personalizat',
     'Customized' => 'Personalizat',
     'Standard' => 'Standard',
