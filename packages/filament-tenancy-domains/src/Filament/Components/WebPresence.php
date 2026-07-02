@@ -10,7 +10,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 
 class WebPresence
 {
@@ -164,11 +163,6 @@ class WebPresence
 
         if ($custom) {
             $data['custom_domain'] = $custom->domain;
-
-            // Ensure token exists for existing records
-            if (! $custom->verification_token) {
-                $custom->update(['verification_token' => Str::random(32)]);
-            }
         }
 
         return $data;
@@ -203,7 +197,6 @@ class WebPresence
                     'domain' => $customDomain,
                     'is_active' => true,
                     'verified_at' => $record?->domain === $customDomain ? $record->verified_at : null,
-                    'verification_token' => $record?->verification_token ?? Str::random(32),
                 ]
             );
         } else {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Str;
 
 class Domain extends Model
 {
@@ -14,6 +15,10 @@ class Domain extends Model
     protected static function booted(): void
     {
         static::saving(function (Domain $domain): void {
+            if ($domain->type !== 'platform' && blank($domain->verification_token)) {
+                $domain->verification_token = Str::random(32);
+            }
+
             if ($domain->is_primary) {
                 // Ensure only one domain is primary for the same model
                 static::where('model_type', $domain->model_type)
