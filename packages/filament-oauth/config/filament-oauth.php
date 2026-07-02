@@ -64,7 +64,7 @@ return [
             'client_id' => env('MICROSOFT_CLIENT_ID'),
             'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
             'tenant_id' => env('MICROSOFT_TENANT_ID', 'common'),
-            'redirect' => env('APP_URL').'/me/oauth/callbaccrosoft',
+            'redirect' => env('APP_URL').'/me/oauth/callback/microsoft',
             'team_assignment' => env('OAUTH_MICROSOFT_TEAM_ASSIGNMENT', true),
         ],
         'discord' => [
