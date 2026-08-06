@@ -91,4 +91,15 @@ class ProfilePageTest extends TestCase
         $this->assertStringContainsString('strtolower', $content);
         $this->assertStringContainsString('$validated[\'email\']', $content);
     }
+
+    public function test_teams_section_is_hidden_without_teams_relation(): void
+    {
+        $profileFile = __DIR__.'/../../src/Filament/Pages/Profile.php';
+
+        $this->assertFileExists($profileFile);
+
+        $content = file_get_contents($profileFile);
+
+        $this->assertStringContainsString("method_exists(Auth::user(), 'teams')", $content);
+    }
 }

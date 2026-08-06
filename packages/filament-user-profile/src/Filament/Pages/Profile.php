@@ -200,10 +200,11 @@ class Profile extends Page implements HasForms
 
                 Section::make(__('filament-user-profile::messages.Teams'))
                     ->description(__('filament-user-profile::messages.Your team memberships'))
+                    ->visible(fn (): bool => method_exists(Auth::user(), 'teams'))
                     ->schema([
                         View::make('filament-user-profile::components.teams-list')
                             ->viewData([
-                                'teams' => Auth::user()->teams,
+                                'teams' => Auth::user()->teams ?? collect(),
                             ]),
                     ]),
             ]);

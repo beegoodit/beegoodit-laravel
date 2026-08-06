@@ -1,6 +1,10 @@
 @props([
-    'teams',
+    'teams' => null,
 ])
+
+@php
+    $teams = collect($teams ?? []);
+@endphp
 
 <div class="space-y-4">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
