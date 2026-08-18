@@ -66,6 +66,32 @@ Before committing, always run:
 composer format
 ```
 
+### Database table naming
+
+Package-owned tables use the Composer package name as a prefix so they never collide with host-app tables or other packages.
+
+**Pattern:** replace `/` and `-` in the Composer name with `_`, then append `_{entity}`:
+
+```text
+{vendor}_{package_with_underscores}_{entity}
+```
+
+| Composer package | Entity | Table name |
+|---|---|---|
+| `beegoodit/filament-pm` | `tasks` | `beegoodit_filament_pm_tasks` |
+| `beegoodit/filament-opening-times` | `schedules` | `beegoodit_filament_opening_times_schedules` |
+| `beegoodit/eveant` | `events` | `beegoodit_eveant_events` |
+
+Rules:
+
+- **Entity** is the resource name only (`tasks`, `feeds`, `policies`). Do not restate package words (`partners`, not `partners_partners`).
+- Strip legacy short prefixes when renaming (`pm_tasks` → entity `tasks`; `opening_times_schedules` → entity `schedules`).
+- Prefer a config key for the table name (or a shared prefix) so host apps can override if needed.
+- Keep names practical for Postgres (identifiers max 63 bytes; indexes and FK names add length — aim under ~45 characters when you can).
+- **Host applications** keep their own domain tables unprefixed (e.g. Octake `work_items`). This rule applies to BeeGood packages only.
+
+Reference implementations already following this pattern: `beegoodit/eveant`, `beegoodit/menu`.
+
 ### Testing
 
 - All packages use PHPUnit with Orchestra Testbench
