@@ -1,0 +1,46 @@
+{
+    "name": "beegoodit/eloquent-rich-crud",
+    "description": "Guard Eloquent create/delete and route aggregate writes through provision() / deprovision()",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "provision",
+        "deprovision",
+        "beegoodit"
+    ],
+    "authors": [
+        {
+            "name": "BeegoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\EloquentRichCrud\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\EloquentRichCrud\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

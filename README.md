@@ -5,6 +5,7 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 ## Packages
 
 - **[beegoodit/eloquent-userstamps](packages/eloquent-userstamps)** - Track who created/updated records
+- **[beegoodit/eloquent-rich-crud](packages/eloquent-rich-crud)** - Guard Eloquent create/delete; route aggregates through `provision()` / `deprovision()`
 - **[beegoodit/laravel-file-storage](packages/laravel-file-storage)** - Unified S3/local file storage with automatic URL generation
 - **[beegoodit/laravel-cookie-consent](packages/laravel-cookie-consent)** - GDPR-compliant cookie consent banner
 - **[beegoodit/filament-i18n](packages/filament-i18n)** - User locale, timezone, and time format preferences
