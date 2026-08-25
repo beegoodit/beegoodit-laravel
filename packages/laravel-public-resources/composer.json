@@ -1,0 +1,53 @@
+{
+    "name": "beegoodit/laravel-public-resources",
+    "description": "Public resource URL primitives: Crockford public_id, {slug}-{publicId} keys, mount+type path helpers",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "public-id",
+        "routing",
+        "beegoodit"
+    ],
+    "authors": [
+        {
+            "name": "BeegoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\LaravelPublicResources\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\LaravelPublicResources\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeegoodIT\\LaravelPublicResources\\LaravelPublicResourcesServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

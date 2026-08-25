@@ -7,6 +7,7 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 - **[beegoodit/eloquent-userstamps](packages/eloquent-userstamps)** - Track who created/updated records
 - **[beegoodit/eloquent-rich-crud](packages/eloquent-rich-crud)** - Guard Eloquent create/delete; route aggregates through `provision()` / `deprovision()`
 - **[beegoodit/laravel-file-storage](packages/laravel-file-storage)** - Unified S3/local file storage with automatic URL generation
+- **[beegoodit/laravel-public-resources](packages/laravel-public-resources)** - Public resource URLs: `public_id`, `{slug}-{publicId}`, locale+mount+type path helpers
 - **[beegoodit/laravel-cookie-consent](packages/laravel-cookie-consent)** - GDPR-compliant cookie consent banner
 - **[beegoodit/filament-i18n](packages/filament-i18n)** - User locale, timezone, and time format preferences
 - **[beegoodit/filament-user-avatar](packages/filament-user-avatar)** - User avatar upload and display
@@ -27,6 +28,7 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 - **[Building an app with all packages](BUILDING-AN-APP.md)** – Step-by-step guide to get a new Laravel 12 / Filament 4 app up and running with every BeeGoodIT package and [PATTERNS.md](PATTERNS.md). Prerequisites: PHP 8.4+, Laravel 12+, Filament 4+.
 - **Main features and default paths** when using all packages: see [Main features of the full app](BUILDING-AN-APP.md#main-features-of-the-full-app) in BUILDING-AN-APP.md.
 - **Recommended route and panel layout** (portal, team, admin, landing): see [PATTERNS.md – Default routes and panels](PATTERNS.md#default-routes-and-panels) and [BUILDING-AN-APP.md](BUILDING-AN-APP.md).
+- **Public resource URLs** (locale + mount + type + `{slug}-{publicId}`): see [laravel-public-resources](packages/laravel-public-resources/README.md) and [PATTERNS.md – Public resource URLs](PATTERNS.md#public-resource-urls).
 
 ## Installation in Apps
 

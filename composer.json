@@ -47,7 +47,8 @@
             "BeegoodIT\\FilamentEntryLinks\\": "packages/filament-entry-links/src/",
             "BeegoodIT\\FilamentEntryLinks\\Database\\Factories\\": "packages/filament-entry-links/database/factories/",
             "BeegoodIT\\FilamentOpeningTimes\\": "packages/filament-opening-times/src/",
-            "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/"
+            "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/",
+            "BeegoodIT\\LaravelPublicResources\\": "packages/laravel-public-resources/src/"
         }
     },
     "autoload-dev": {
@@ -59,6 +60,7 @@
             "BeegoodIT\\LaravelFileStorage\\Tests\\": "packages/laravel-file-storage/tests/",
             "BeegoodIT\\LaravelCookieConsent\\Tests\\": "packages/laravel-cookie-consent/tests/",
             "BeegoodIT\\LaravelFeedback\\Tests\\": "packages/laravel-feedback/tests/",
+            "BeegoodIT\\LaravelPublicResources\\Tests\\": "packages/laravel-public-resources/tests/",
             "BeegoodIT\\FilamentI18n\\Tests\\": "packages/filament-i18n/tests/",
             "BeegoodIT\\FilamentUserAvatar\\Tests\\": "packages/filament-user-avatar/tests/",
             "BeegoodIT\\FilamentOAuth\\Tests\\": "packages/filament-oauth/tests/",

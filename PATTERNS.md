@@ -216,4 +216,22 @@ Route::get('/', function () {
 });
 ```
 
+---
+
+## Public resource URLs
+
+Org standard for **public** member/collection URLs on BeeGoodIT Laravel platforms. Full constitution and API: [`beegoodit/laravel-public-resources`](packages/laravel-public-resources/README.md).
+
+```text
+/{locale}/{mount}/{type}
+/{locale}/{mount}/{type}/{slug}-{publicId}
+```
+
+- **Mount** and **type** are localized (apps own maps). **publicId** is stable (8-char Crockford).
+- No primary-resource `path: ""` on the mount.
+- Admin stays Filament (`/admin/...`). Do not reshape Filament paths to this grammar.
+- Install: `composer require beegoodit/laravel-public-resources`
+
+**When to use**: Any public Eloquent resource that needs shareable, rename-safe URLs (events, categories, menu items, …).
+
 
