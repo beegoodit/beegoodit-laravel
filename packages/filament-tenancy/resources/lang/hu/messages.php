@@ -29,6 +29,16 @@ return [
     'Inactive' => 'Inaktív',
     'Custom domain is configured.' => 'Az egyéni domain be van állítva.',
     'Connect a custom domain for a professional look.' => 'Kapcsoljon egyéni domaint professzionális megjelenésért.',
+    'Public description' => 'Nyilvános leírás',
+    'About your team' => 'A csapatról',
+    'Description' => 'Leírás',
+    'Written' => 'Kitöltve',
+    'Public description is ready.' => 'A nyilvános leírás kész.',
+    'Add a short public description for your team page and search results.' => 'Adj rövid nyilvános leírást a csapatoldalhoz és a keresőkhöz.',
+    'Team' => 'Csapat',
+    'Who your team is on public pages.' => 'Így jelenik meg a csapat a nyilvános oldalakon.',
+    'Short intro for your public team page. Search engines use a plain-text snippet.' => 'Rövid bemutatkozás a nyilvános csapatoldalhoz. A keresők egyszerű szöveges kivonatot használnak.',
+    'Shown on your public team page. Keep it concise for search snippets.' => 'Megjelenik a nyilvános csapatoldalon. Legyen rövid — kb. 150 karakteres egyszerű szöveg ideális a keresőkhöz.',
     'models' => [
         'team' => [
             'attributes' => [

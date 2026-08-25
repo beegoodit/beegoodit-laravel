@@ -29,6 +29,16 @@ return [
     'Inactive' => 'Inactive',
     'Custom domain is configured.' => 'Custom domain is configured.',
     'Connect a custom domain for a professional look.' => 'Connect a custom domain for a professional look.',
+    'Public description' => 'Public description',
+    'About your team' => 'About your team',
+    'Description' => 'Description',
+    'Written' => 'Written',
+    'Public description is ready.' => 'Public description is ready.',
+    'Add a short public description for your team page and search results.' => 'Add a short public description for your team page and search results.',
+    'Team' => 'Team',
+    'Who your team is on public pages.' => 'Who your team is on public pages.',
+    'Short intro for your public team page. Search engines use a plain-text snippet.' => 'Short intro for your public team page. Search engines use a plain-text snippet.',
+    'Shown on your public team page. Keep it concise for search snippets.' => 'Shown on your public team page. Keep it concise for search snippets (~150 characters of plain text work best for Google).',
     'models' => [
         'team' => [
             'attributes' => [

@@ -25,6 +25,7 @@ class ProfileCompletenessWidget extends BaseWidget
             $this->getLogoStat($tenant),
             $this->getBrandingStat($tenant),
             $this->getSlugStat($tenant),
+            ...$this->getOptionalDescriptionStat($tenant),
             ...$this->getOptionalDomainStat($tenant),
         ];
     }
@@ -58,6 +59,39 @@ class ProfileCompletenessWidget extends BaseWidget
             ->description($tenant->slug ?? '')
             ->descriptionIcon('heroicon-m-link')
             ->color('success');
+    }
+
+    /**
+     * @return array<int, Stat>
+     */
+    private function getOptionalDescriptionStat(Model $tenant): array
+    {
+        if (! method_exists($tenant, 'getTranslations')) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $translations */
+        $translations = $tenant->getTranslations('description');
+
+        $hasDescription = collect($translations)->contains(
+            fn (mixed $html): bool => filled(trim(strip_tags((string) $html)))
+        );
+
+        return [
+            Stat::make(
+                __('filament-tenancy::messages.Description'),
+                $hasDescription
+                    ? __('filament-tenancy::messages.Written')
+                    : __('filament-tenancy::messages.Missing')
+            )
+                ->description(
+                    $hasDescription
+                        ? __('filament-tenancy::messages.Public description is ready.')
+                        : __('filament-tenancy::messages.Add a short public description for your team page and search results.')
+                )
+                ->descriptionIcon($hasDescription ? 'heroicon-m-check-circle' : 'heroicon-m-document-text')
+                ->color($hasDescription ? 'success' : 'warning'),
+        ];
     }
 
     /**

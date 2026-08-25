@@ -138,8 +138,8 @@ class EditTeamProfile extends EditTenantProfile
 ```
 
 This includes:
-- `name` field (required, max 255 characters)
-- `slug` field (required, max 255 characters, unique)
+- Team section: `name`, `slug`
+- Description section: public description (`RichEditor` per `FilamentI18n` locale; tabs when multiple locales)
 - Branding section with logo, primary_color, and secondary_color
 
 #### Option 2: Using Only the Branding Section

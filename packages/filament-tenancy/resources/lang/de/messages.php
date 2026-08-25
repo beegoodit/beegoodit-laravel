@@ -29,6 +29,16 @@ return [
     'Inactive' => 'Inaktiv',
     'Custom domain is configured.' => 'Eine benutzerdefinierte Domain ist konfiguriert.',
     'Connect a custom domain for a professional look.' => 'Verbinden Sie eine benutzerdefinierte Domain für ein professionelles Erscheinungsbild.',
+    'Public description' => 'Öffentliche Beschreibung',
+    'About your team' => 'Über Ihr Team',
+    'Description' => 'Beschreibung',
+    'Written' => 'Vorhanden',
+    'Public description is ready.' => 'Die öffentliche Beschreibung ist hinterlegt.',
+    'Add a short public description for your team page and search results.' => 'Fügen Sie eine kurze öffentliche Beschreibung für Ihre Teamseite und Suchergebnisse hinzu.',
+    'Team' => 'Team',
+    'Who your team is on public pages.' => 'So erscheint Ihr Team auf öffentlichen Seiten.',
+    'Short intro for your public team page. Search engines use a plain-text snippet.' => 'Kurze Einführung für Ihre öffentliche Teamseite. Suchmaschinen nutzen einen Klartext-Ausschnitt.',
+    'Shown on your public team page. Keep it concise for search snippets.' => 'Wird auf Ihrer öffentlichen Teamseite angezeigt. Kurz halten — etwa 150 Zeichen Klartext eignen sich am besten für Suchergebnisse.',
     'models' => [
         'team' => [
             'attributes' => [

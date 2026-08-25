@@ -29,6 +29,16 @@ return [
     'Inactive' => 'Inactiv',
     'Custom domain is configured.' => 'Domeniul personalizat este configurat.',
     'Connect a custom domain for a professional look.' => 'Conectează un domeniu personalizat pentru un aspect profesional.',
+    'Public description' => 'Descriere publică',
+    'About your team' => 'Despre echipa ta',
+    'Description' => 'Descriere',
+    'Written' => 'Completată',
+    'Public description is ready.' => 'Descrierea publică este gata.',
+    'Add a short public description for your team page and search results.' => 'Adaugă o scurtă descriere publică pentru pagina echipei și rezultatele din căutare.',
+    'Team' => 'Echipă',
+    'Who your team is on public pages.' => 'Cum apare echipa pe paginile publice.',
+    'Short intro for your public team page. Search engines use a plain-text snippet.' => 'Scurtă prezentare pentru pagina publică a echipei. Motoarele de căutare folosesc un fragment text simplu.',
+    'Shown on your public team page. Keep it concise for search snippets.' => 'Apare pe pagina publică a echipei. Fii concis — ~150 caractere text simplu funcționează cel mai bine în căutări.',
     'models' => [
         'team' => [
             'attributes' => [
