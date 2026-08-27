@@ -24,7 +24,7 @@ class BrandingSchemaDescriptionPhpUnitTest extends TestCase
         $stub = file_get_contents(__DIR__.'/../../database/migrations/add_team_description.php.stub');
 
         $this->assertNotFalse($stub);
-        $this->assertStringContainsString("json('description')", $stub);
+        $this->assertStringContainsString("jsonb('description')", $stub);
         $this->assertStringContainsString('nullable()', $stub);
     }
 
