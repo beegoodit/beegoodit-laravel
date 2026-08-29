@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 
 class ReleaseOnHoldMessagesCommand extends Command
 {
-    protected $signature = 'pwa:release-on-hold';
+    protected $signature = 'pwa:notifications:release-on-hold';
 
     protected $description = 'Bulk release all messages currently on hold';
 

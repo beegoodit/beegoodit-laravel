@@ -63,7 +63,25 @@ The system has a global "Delivery Gate" controlled by the `pwa_deliver_notificat
 
 **Control Options:**
 - **Filament**: Use the **Notification Settings** page in the Admin panel.
-- **Artisan**: `php artisan pwa:toggle-system off|on`
+- **Artisan**: `php artisan pwa:notifications:pause` / `php artisan pwa:notifications:resume`
+
+### Artisan (notifications)
+
+| Command | Purpose |
+|---------|---------|
+| `pwa:vapid-keys` | Generate VAPID keys (setup; not under `notifications:`) |
+| `pwa:notifications:send` | Test/manual push to one user or `--all` subscribers |
+| `pwa:notifications:pause` | Stop delivery (`pwa_deliver_notifications = false`) |
+| `pwa:notifications:resume` | Resume delivery |
+| `pwa:notifications:release-on-hold` | Re-queue on-hold messages |
+| `pwa:notifications:clear` | Delete messages by status. **Requires** `--pending`, `--on-hold`, `--failed`, and/or `--all` (not `sent`) |
+
+`clear` does **not** run `queue:clear` and does not delete host `App\Notifications\*` jobs. With the worker stopped, a mixed local backlog is:
+
+```bash
+php artisan queue:clear
+php artisan pwa:notifications:clear --pending
+```
 
 ### 2. Manual Management
 Admins have full control over recorded messages and broadcasts:

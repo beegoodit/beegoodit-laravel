@@ -3,7 +3,12 @@
 namespace BeegoodIT\LaravelPwa;
 
 use BeegoodIT\LaravelPwa\Channels\WebPushChannel;
+use BeegoodIT\LaravelPwa\Console\ClearNotificationsCommand;
 use BeegoodIT\LaravelPwa\Console\GenerateVapidKeysCommand;
+use BeegoodIT\LaravelPwa\Console\PauseDeliverySystemCommand;
+use BeegoodIT\LaravelPwa\Console\ReleaseOnHoldMessagesCommand;
+use BeegoodIT\LaravelPwa\Console\ResumeDeliverySystemCommand;
+use BeegoodIT\LaravelPwa\Console\SendPushNotificationCommand;
 use BeegoodIT\LaravelPwa\Services\PushNotificationService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Notifications\ChannelManager;
@@ -85,9 +90,11 @@ class LaravelPwaServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 GenerateVapidKeysCommand::class,
-                \BeegoodIT\LaravelPwa\Console\SendPushNotificationCommand::class,
-                \BeegoodIT\LaravelPwa\Console\ReleaseOnHoldMessagesCommand::class,
-                \BeegoodIT\LaravelPwa\Console\ToggleDeliverySystemCommand::class,
+                SendPushNotificationCommand::class,
+                ReleaseOnHoldMessagesCommand::class,
+                PauseDeliverySystemCommand::class,
+                ResumeDeliverySystemCommand::class,
+                ClearNotificationsCommand::class,
             ]);
         }
 

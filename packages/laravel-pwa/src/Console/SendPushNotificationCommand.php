@@ -13,7 +13,7 @@ class SendPushNotificationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'pwa:send 
+    protected $signature = 'pwa:notifications:send
                             {user? : The ID of the user to notify}
                             {--title= : The title of the notification}
                             {--body= : The body of the notification}
