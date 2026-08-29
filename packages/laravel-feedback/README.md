@@ -136,7 +136,7 @@ Livewire component for Filament panel feedback submission using Filament Actions
 
 ## Translations
 
-The package includes translations for English, German, and Spanish. All translation keys are namespaced under `feedback::feedback.*`.
+The package includes translations for English, German, Spanish, Romanian, Hungarian, and Croatian. All translation keys are namespaced under `feedback::feedback.*`.
 
 ### Available Translation Keys
 

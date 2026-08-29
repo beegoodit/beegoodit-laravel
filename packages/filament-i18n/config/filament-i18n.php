@@ -47,5 +47,6 @@ return [
         'tr' => ['native' => 'Türkçe', 'flag' => '🇹🇷', 'rtl' => false],
         'ro' => ['native' => 'Română', 'flag' => '🇷🇴', 'rtl' => false],
         'hu' => ['native' => 'Magyar', 'flag' => '🇭🇺', 'rtl' => false],
+        'hr' => ['native' => 'Hrvatski', 'flag' => '🇭🇷', 'rtl' => false],
     ],
 ];

@@ -112,7 +112,7 @@ If the columns are missing, a warning will be logged and the page will be hidden
 
 ### 4. Translations (Optional)
 
-The package includes translations for English and German. Translations are automatically loaded and available without any setup.
+The package includes translations for English, German, Spanish, Romanian, Hungarian, and Croatian. Translations are automatically loaded and available without any setup.
 
 If you want to customize translations, you can publish them:
 

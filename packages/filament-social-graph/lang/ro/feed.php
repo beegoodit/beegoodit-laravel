@@ -9,6 +9,8 @@ return [
     'uploading_files' => 'Se încarcă fișierele…',
     'no_items' => 'Niciun element în feed încă.',
     'load_more' => 'Încarcă mai mult',
+    'show_title' => 'Postare din feed',
+    'back_to_feed' => 'Înapoi la feed',
     'open_post' => 'Deschide postarea',
     'edit_title' => 'Editează elementul feed',
     'edit' => 'Editează',

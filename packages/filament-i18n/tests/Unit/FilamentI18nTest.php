@@ -143,4 +143,13 @@ class FilamentI18nTest extends TestCase
 
         $this->assertEquals(['en', 'de'], FilamentI18n::availableLocales());
     }
+
+    public function test_hr_locale_metadata_is_registered(): void
+    {
+        $helper = new I18nHelper;
+
+        $this->assertSame('Hrvatski', $helper->nativeName('hr'));
+        $this->assertSame('🇭🇷', $helper->flag('hr'));
+        $this->assertFalse($helper->isRtl('hr'));
+    }
 }
