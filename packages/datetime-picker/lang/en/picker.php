@@ -1,0 +1,35 @@
+<?php
+
+return [
+    'previous' => 'Previous period',
+    'next' => 'Next period',
+    'previous_year' => 'Previous year',
+    'next_year' => 'Next year',
+    'quarter' => 'Q:quarter',
+    'quarter_period' => 'Q:quarter :year',
+    'months_short' => [
+        1 => 'JAN',
+        2 => 'FEB',
+        3 => 'MAR',
+        4 => 'APR',
+        5 => 'MAY',
+        6 => 'JUN',
+        7 => 'JUL',
+        8 => 'AUG',
+        9 => 'SEP',
+        10 => 'OCT',
+        11 => 'NOV',
+        12 => 'DEC',
+    ],
+    'weekdays_short' => [
+        1 => 'Mo',
+        2 => 'Tu',
+        3 => 'We',
+        4 => 'Th',
+        5 => 'Fr',
+        6 => 'Sa',
+        7 => 'Su',
+    ],
+    'today' => 'Today',
+    'reset' => 'Reset',
+];
