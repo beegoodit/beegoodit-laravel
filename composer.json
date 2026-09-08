@@ -48,12 +48,14 @@
             "BeegoodIT\\FilamentEntryLinks\\Database\\Factories\\": "packages/filament-entry-links/database/factories/",
             "BeegoodIT\\FilamentOpeningTimes\\": "packages/filament-opening-times/src/",
             "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/",
-            "BeegoodIT\\LaravelPublicResources\\": "packages/laravel-public-resources/src/"
+            "BeegoodIT\\LaravelPublicResources\\": "packages/laravel-public-resources/src/",
+            "BeegoodIT\\Pdf\\": "packages/laravel-pdf-renderer/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
+            "BeegoodIT\\Pdf\\Tests\\": "packages/laravel-pdf-renderer/tests/",
             "BeegoodIT\\EloquentReadonlyAttributes\\Tests\\": "packages/eloquent-readonly-attributes/tests/",
             "BeegoodIT\\EloquentRichCrud\\Tests\\": "packages/eloquent-rich-crud/tests/",
             "BeegoodIT\\EloquentUserstamps\\Tests\\": "packages/eloquent-userstamps/tests/",
