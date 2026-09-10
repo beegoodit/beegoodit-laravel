@@ -13,6 +13,7 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 - **[beegoodit/filament-user-avatar](packages/filament-user-avatar)** - User avatar upload and display
 - **[beegoodit/filament-oauth](packages/filament-oauth)** - OAuth2 authentication with team auto-assignment
 - **[beegoodit/filament-tenancy](packages/filament-tenancy)** - Multi-tenancy support with team branding and management
+- **[beegoodit/filament-group-settings](packages/filament-group-settings)** - Team policy settings pages by Filament navigation group
 - **[beegoodit/filament-user-profile](packages/filament-user-profile)** - User profile settings pages
 - **[beegoodit/laravel-pwa](packages/laravel-pwa)** - Progressive Web App support
 - **[beegoodit/filament-tenancy-roles](packages/filament-tenancy-roles)** - Role-based authorization for Filament multi-tenancy

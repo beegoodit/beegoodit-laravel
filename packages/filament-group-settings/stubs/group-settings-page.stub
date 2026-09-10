@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use BeegoodIT\FilamentGroupSettings\Pages\GroupSettingsPage;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
+
+class {{ class }} extends GroupSettingsPage
+{
+    public static function getGroupKey(): string
+    {
+        return '{{ groupKey }}';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        {{ navigationGroup }}
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->topicTabs([
+                    Tab::make('Topic')
+                        ->schema([
+                            Section::make()
+                                ->schema([
+                                    //
+                                ]),
+                        ]),
+                ]),
+            ]);
+    }
+}

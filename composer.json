@@ -47,6 +47,7 @@
             "BeegoodIT\\FilamentEntryLinks\\": "packages/filament-entry-links/src/",
             "BeegoodIT\\FilamentEntryLinks\\Database\\Factories\\": "packages/filament-entry-links/database/factories/",
             "BeegoodIT\\FilamentOpeningTimes\\": "packages/filament-opening-times/src/",
+            "BeegoodIT\\FilamentGroupSettings\\": "packages/filament-group-settings/src/",
             "BeegoodIT\\FilamentTimeline\\": "packages/filament-timeline/src/",
             "BeegoodIT\\LaravelPublicResources\\": "packages/laravel-public-resources/src/",
             "BeegoodIT\\Pdf\\": "packages/laravel-pdf-renderer/src/"
@@ -77,6 +78,7 @@
             "BeegoodIT\\FilamentPartners\\Tests\\": "packages/filament-partners/tests/",
             "BeegoodIT\\FilamentEntryLinks\\Tests\\": "packages/filament-entry-links/tests/",
             "BeegoodIT\\FilamentOpeningTimes\\Tests\\": "packages/filament-opening-times/tests/",
+            "BeegoodIT\\FilamentGroupSettings\\Tests\\": "packages/filament-group-settings/tests/",
             "BeegoodIT\\FilamentTimeline\\Tests\\": "packages/filament-timeline/tests/"
         }
     },
