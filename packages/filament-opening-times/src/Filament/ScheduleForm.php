@@ -160,11 +160,13 @@ final class ScheduleForm
                         ->schema([
                             TimePicker::make('opens_at')
                                 ->label(__('filament-opening-times::opening_schedule.opens_at_label'))
+                                ->timezone(config('app.timezone'))
                                 ->seconds(false)
                                 ->required()
                                 ->live(onBlur: true),
                             TimePicker::make('closes_at')
                                 ->label(__('filament-opening-times::opening_schedule.closes_at_label'))
+                                ->timezone(config('app.timezone'))
                                 ->seconds(false)
                                 ->required()
                                 ->live(onBlur: true)
