@@ -7,7 +7,7 @@ This package provides a built-in notification channel and a set of UI components
 
 #### 1. Push Subscription Logic
 The package automatically handles subscription storage and removal via the `PushSubscriptionController`.
-By default, subscriptions are linked to the authenticated user.
+By default, store/destroy routes use `web` + `auth` (`pwa.push.middleware`). Open-tracking (`GET api/pwa/notifications/{message}/open`) stays session-only — message ids are UUIDs. Subscriptions are linked to the authenticated user.
 
 #### 2. Early Push Prompt (Soft Prompt)
 Modern PWA standards recommend a **"Two-Step Opt-in"** process. Instead of showing the browser's native (and uncustomizable) permission prompt on page load, use a **Soft Prompt** (Teaser) to explain the value of notifications.

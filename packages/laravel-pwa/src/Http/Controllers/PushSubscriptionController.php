@@ -15,6 +15,8 @@ class PushSubscriptionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        abort_unless(Auth::check(), 403);
+
         \Log::debug('PushSubscriptionController@store', [
             'endpoint' => $request->input('endpoint'),
             'user_id' => Auth::id(),
@@ -51,6 +53,8 @@ class PushSubscriptionController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
+        abort_unless(Auth::check(), 403);
+
         $request->validate([
             'endpoint' => ['required', 'string'],
         ]);
@@ -58,7 +62,7 @@ class PushSubscriptionController extends Controller
         $model = config('pwa.subscription_model', PushSubscription::class);
 
         $deleted = $model::where('endpoint', $request->input('endpoint'))
-            ->when(Auth::check(), fn ($q) => $q->where('user_id', Auth::id()))
+            ->where('user_id', Auth::id())
             ->delete();
 
         return response()->json([

@@ -25,11 +25,12 @@ return [
         | Subscription Middleware
         |--------------------------------------------------------------------------
         |
-        | Default middleware for the push subscription routes. Use 'web' to
-        | support sessions/auth, or 'api' for stateless tokens.
+        | Default middleware for push *subscription* store/destroy routes.
+        | Open-tracking (`pwa.notifications.open`) stays `web` only — message
+        | ids are UUIDs. Override this list if you use Sanctum (`auth:sanctum`).
         |
         */
-        'middleware' => ['web'],
+        'middleware' => ['web', 'auth'],
     ],
 
     /*

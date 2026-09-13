@@ -125,7 +125,7 @@ class LaravelPwaServiceProvider extends ServiceProvider
     {
         Route::group([
             'prefix' => 'api',
-            'middleware' => config('pwa.push.middleware', ['web']),
+            'middleware' => config('pwa.push.middleware', ['web', 'auth']),
         ], function (): void {
             Route::post('/push-subscriptions', [
                 \BeegoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
@@ -136,7 +136,12 @@ class LaravelPwaServiceProvider extends ServiceProvider
                 \BeegoodIT\LaravelPwa\Http\Controllers\PushSubscriptionController::class,
                 'destroy',
             ])->name('push-subscriptions.destroy');
+        });
 
+        Route::group([
+            'prefix' => 'api',
+            'middleware' => ['web'],
+        ], function (): void {
             Route::get('/pwa/notifications/{message}/open', [
                 \BeegoodIT\LaravelPwa\Http\Controllers\NotificationController::class,
                 'trackOpen',
