@@ -1,7 +1,6 @@
 <div>
     @php
-        $locale = app()->getLocale();
-        $policyUrl = config("cookie-consent.policy_url_{$locale}", config('cookie-consent.policy_url_en'));
+        $policyUrl = $policyUrl ?? null;
     @endphp
 
     {{-- Main Banner Backdrop --}}
@@ -41,10 +40,12 @@
 
                 <p id="cookie-banner-desc" class="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
                     {{ __('cookie-consent::messages.alert_text') }}
-                    <a href="{{ $policyUrl }}"
-                        class="underline hover:text-zinc-900 dark:hover:text-white font-medium transition">
-                        {{ __('cookie-consent::messages.learn_more') }}
-                    </a>
+                    @if ($policyUrl)
+                        <a href="{{ $policyUrl }}"
+                            class="underline hover:text-zinc-900 dark:hover:text-white font-medium transition">
+                            {{ __('cookie-consent::messages.learn_more') }}
+                        </a>
+                    @endif
                 </p>
             </div>
 
@@ -87,20 +88,10 @@
             <div
                 class="relative w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
 
-                {{-- Close Button --}}
-                <button wire:click="closeSettings"
-                    class="absolute top-4 right-4 z-10 rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-300 transition-all"
-                    type="button" aria-label="{{ __('cookie-consent::messages.settings_close') }}">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
                 {{-- Modal Header (Sticky on scroll) --}}
                 <div
                     class="sticky top-0 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 p-4 sm:p-6 rounded-t-xl z-20">
-                    <div class="flex items-center gap-3 mb-3 pr-10">
+                    <div class="flex items-center gap-3 mb-3">
                         <svg class="w-8 h-8 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2z" />
@@ -109,12 +100,24 @@
                             <circle cx="9" cy="15" r="1.5" />
                             <circle cx="16" cy="15" r="1.5" />
                         </svg>
-                        <h2 id="cookie-settings-title" class="text-2xl font-bold text-zinc-900 dark:text-white">
+                        <h2 id="cookie-settings-title" class="flex-1 text-2xl font-bold text-zinc-900 dark:text-white">
                             {{ __('cookie-consent::messages.settings_title') }}
                         </h2>
+                        <button wire:click="closeSettings"
+                            class="flex-shrink-0 rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-300 transition-all"
+                            type="button" aria-label="{{ __('cookie-consent::messages.settings_close') }}">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                     <p id="cookie-settings-desc" class="text-sm text-zinc-600 dark:text-zinc-400">
-                        {!! str_replace(':policyUrl', $policyUrl, __('cookie-consent::messages.settings_text')) !!}
+                        @if ($policyUrl)
+                            {!! str_replace(':policyUrl', e($policyUrl), __('cookie-consent::messages.settings_text')) !!}
+                        @else
+                            {{ __('cookie-consent::messages.settings_text_no_policy') }}
+                        @endif
                     </p>
                 </div>
 
@@ -147,12 +150,12 @@
                             </label>
                         </div>
 
-                        {{-- Functional Cookies (Always On) --}}
+                        {{-- Functional Cookies --}}
                         <div
-                            class="rounded-xl border-2 border-zinc-200 bg-zinc-50 p-4 sm:p-5 dark:border-zinc-700 dark:bg-zinc-800">
-                            <label class="flex items-start gap-4 cursor-not-allowed">
-                                <input type="checkbox" wire:model="functional" disabled checked
-                                    class="mt-0.5 h-5 w-5 rounded border-zinc-300 text-amber-500 focus:ring-amber-500 dark:border-zinc-600 dark:bg-zinc-700 cursor-not-allowed">
+                            class="rounded-xl border-2 border-zinc-200 bg-white p-4 sm:p-5 hover:border-amber-300 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-amber-600 transition-colors">
+                            <label class="flex items-start gap-4 cursor-pointer">
+                                <input type="checkbox" wire:model="functional"
+                                    class="mt-0.5 h-5 w-5 rounded border-zinc-300 text-amber-500 focus:ring-amber-500 dark:border-zinc-600 dark:bg-zinc-800 cursor-pointer">
                                 <div class="flex-1">
                                     <span class="block text-base font-semibold text-zinc-900 dark:text-white mb-1">
                                         {{ __('cookie-consent::messages.setting_functional') }}

@@ -22,10 +22,18 @@ return [
     'position' => 'bottom',
 
     /*
-     * Cookie policy URLs (per locale)
+     * Blade view for the Livewire component.
+     * Zinc utilities (Octake): cookie-consent::livewire.cookie-consent
+     * daisyUI (TallCMS): cookie-consent::livewire.cookie-consent-daisy
+     * Set this in published config (not .env). TallCMS glue hardcodes daisy.
      */
-    'policy_url_en' => env('COOKIE_POLICY_URL_EN', '/cookie-policy'),
-    'policy_url_de' => env('COOKIE_POLICY_URL_DE', '/cookie-policy'),
+    'view' => 'cookie-consent::livewire.cookie-consent',
+
+    /*
+     * Cookie policy URLs (per locale). Empty string hides the “learn more” link.
+     */
+    'policy_url_en' => env('COOKIE_POLICY_URL_EN', ''),
+    'policy_url_de' => env('COOKIE_POLICY_URL_DE', ''),
 
     /*
      * GTM event name triggered when consent changes
@@ -33,9 +41,17 @@ return [
     'gtm_event' => 'cookie_refresh',
 
     /*
-     * Paths to ignore (banner won't show)
+     * Paths to ignore (banner won't show). Laravel Request::is() patterns.
      */
-    'ignored_paths' => [],
+    'ignored_paths' => [
+        'admin',
+        'admin/*',
+        'livewire/*',
+        'install',
+        'install/*',
+        'installer',
+        'installer/*',
+    ],
 
     /*
      * Secure cookie setting (HTTPS only)

@@ -36,8 +36,9 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
-        "format": "pint"
+        "test": "phpunit --configuration phpunit.xml",
+        "format": "pint",
+        "sync-banner": "bash scripts/sync-banner.sh"
     },
     "config": {
         "sort-packages": true

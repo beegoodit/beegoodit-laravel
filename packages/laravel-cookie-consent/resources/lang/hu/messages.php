@@ -9,6 +9,7 @@ return [
     'learn_more' => 'Tudjon meg többet',
     'settings_title' => 'Süti beállítások',
     'settings_text' => 'Sütiket használunk a felhasználói élmény javítása érdekében. Kiválaszthatja, mely sütiket fogadja el. További információ: <a href=":policyUrl" class="underline hover:text-zinc-900 dark:hover:text-white">Süti irányelvek</a>.',
+    'settings_text_no_policy' => 'Sütiket használunk a felhasználói élmény javítása érdekében. Kiválaszthatja, mely sütiket fogadja el.',
     'settings_accept_all' => 'Összes süti elfogadása',
     'settings_save' => 'Kiválasztás mentése',
     'settings_close' => 'Bezárás',

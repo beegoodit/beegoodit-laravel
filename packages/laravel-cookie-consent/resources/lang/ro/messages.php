@@ -9,6 +9,7 @@ return [
     'learn_more' => 'Află mai mult',
     'settings_title' => 'Preferințe cookie',
     'settings_text' => 'Folosim cookie-uri pentru a îmbunătăți experiența pe site. Poți alege ce cookie-uri să accepți. Citește <a href=":policyUrl" class="underline hover:text-zinc-900 dark:hover:text-white">Politica noastră de cookie-uri</a> pentru mai multe informații.',
+    'settings_text_no_policy' => 'Folosim cookie-uri pentru a îmbunătăți experiența pe site. Poți alege ce cookie-uri să accepți.',
     'settings_accept_all' => 'Acceptă toate cookie-urile',
     'settings_save' => 'Salvează selecția',
     'settings_close' => 'Închide',

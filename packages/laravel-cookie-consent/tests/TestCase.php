@@ -18,9 +18,24 @@ abstract class TestCase extends Orchestra
 
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('cookie-consent.enabled', true);
+        $app['config']->set('cache.default', 'array');
+        $app['config']->set('session.driver', 'array');
         $app['config']->set('cookie-consent.cookie_name', '__cookie_consent');
         $app['config']->set('cookie-consent.cookie_lifetime', 365);
         $app['config']->set('cookie-consent.position', 'bottom');
+        $app['config']->set('cookie-consent.policy_url_en', '');
+        $app['config']->set('cookie-consent.policy_url_de', '');
+        $app['config']->set('cookie-consent.ignored_paths', [
+            'admin',
+            'admin/*',
+            'livewire/*',
+        ]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        \BeegoodIT\LaravelCookieConsent\Consent::policyUrlUsing(null);
     }
 }

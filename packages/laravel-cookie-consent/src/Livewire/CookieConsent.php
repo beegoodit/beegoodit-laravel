@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BeegoodIT\LaravelCookieConsent\Livewire;
 
+use BeegoodIT\LaravelCookieConsent\Consent;
 use Livewire\Component;
 
 class CookieConsent extends Component
@@ -10,12 +13,11 @@ class CookieConsent extends Component
 
     public bool $showSettings = false;
 
-    public bool $consentGiven = false; // Track if consent was just given in this session
+    public bool $consentGiven = false;
 
-    // Cookie categories
     public bool $essential = true;
 
-    public bool $functional = true;
+    public bool $functional = false;
 
     public bool $analytics = false;
 
@@ -23,16 +25,15 @@ class CookieConsent extends Component
 
     public function mount(): void
     {
-        // Check if user has already consented
-        if ($this->hasConsented()) {
+        if ($this->isIgnoredPath() || $this->hasConsented()) {
             $this->show = false;
-            $this->consentGiven = true;
+            $this->consentGiven = $this->hasConsented();
         }
     }
 
     public function acceptAll(): void
     {
-        $this->setConsent('all');
+        $this->setConsent(Consent::VALUE_ALL);
         $this->show = false;
         $this->showSettings = false;
         $this->consentGiven = true;
@@ -40,7 +41,7 @@ class CookieConsent extends Component
 
     public function acceptEssential(): void
     {
-        $this->setConsent('essential');
+        $this->setConsent(Consent::VALUE_ESSENTIAL);
         $this->show = false;
         $this->showSettings = false;
         $this->consentGiven = true;
@@ -58,8 +59,7 @@ class CookieConsent extends Component
 
     public function saveSettings(): void
     {
-        $value = $this->buildConsentValue();
-        $this->setConsent($value);
+        $this->setConsent($this->buildConsentValue());
         $this->show = false;
         $this->showSettings = false;
         $this->consentGiven = true;
@@ -68,44 +68,64 @@ class CookieConsent extends Component
     protected function buildConsentValue(): string
     {
         if ($this->analytics && $this->marketing) {
-            return 'all';
-        } elseif ($this->analytics) {
-            return 'analytics';
-        } elseif ($this->marketing) {
-            return 'marketing';
+            return Consent::VALUE_ALL;
         }
 
-        return 'essential';
+        if ($this->analytics) {
+            return Consent::VALUE_ANALYTICS;
+        }
+
+        if ($this->marketing) {
+            return Consent::VALUE_MARKETING;
+        }
+
+        return Consent::VALUE_ESSENTIAL;
     }
 
     protected function hasConsented(): bool
     {
-        $name = config('cookie-consent.cookie_name', config('cookie-consent.cookie_key'));
+        return Consent::available();
+    }
 
-        return request()->cookie($name) !== null;
+    protected function isIgnoredPath(): bool
+    {
+        $patterns = config('cookie-consent.ignored_paths', []);
+
+        if (! is_array($patterns) || $patterns === []) {
+            return false;
+        }
+
+        return request()->is(...array_values($patterns));
     }
 
     protected function setConsent(string $value): void
     {
-        $name = config('cookie-consent.cookie_name', config('cookie-consent.cookie_key'));
         $lifetime = config('cookie-consent.cookie_lifetime', config('cookie-consent.cookie_expiration_days', 365));
+        $minutes = is_numeric($lifetime) ? (int) $lifetime * 24 * 60 : 365 * 24 * 60;
 
         cookie()->queue(
-            $name,
+            Consent::cookieName(),
             $value,
-            $lifetime * 24 * 60 // Convert days to minutes
+            $minutes
         );
     }
 
     public function render()
     {
-        // Don't render anything if consent already given or disabled
         if (config('cookie-consent.enabled', true) === false || $this->consentGiven) {
             return <<<'HTML'
             <div></div>
             HTML;
         }
 
-        return view('cookie-consent::livewire.cookie-consent');
+        $view = config('cookie-consent.view', 'cookie-consent::livewire.cookie-consent');
+
+        if (! is_string($view) || $view === '') {
+            $view = 'cookie-consent::livewire.cookie-consent';
+        }
+
+        return view($view, [
+            'policyUrl' => Consent::policyUrl(),
+        ]);
     }
 }

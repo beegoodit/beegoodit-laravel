@@ -12,6 +12,7 @@ return [
     // Settings modal
     'settings_title' => 'Cookie-Einstellungen',
     'settings_text' => 'Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Sie können wählen, welche Cookies Sie akzeptieren möchten. Lesen Sie unsere <a href=":policyUrl" class="underline hover:text-zinc-900 dark:hover:text-white">Cookie-Richtlinie</a> für weitere Informationen.',
+    'settings_text_no_policy' => 'Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Sie können wählen, welche Cookies Sie akzeptieren möchten.',
     'settings_accept_all' => 'Alle Cookies akzeptieren',
     'settings_save' => 'Auswahl speichern',
     'settings_close' => 'Schließen',

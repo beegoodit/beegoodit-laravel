@@ -16,18 +16,17 @@ composer require beegoodit/laravel-cookie-consent
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- ... -->
     @livewireStyles
 </head>
 <body>
     @livewire('cookie-consent')
-    
-    <!-- Your content -->
-    
+
     @livewireScripts
 </body>
 </html>
 ```
+
+TallCMS hosts should **not** Composer-require this package. The marketplace plugin copies the banner at pack time (`scripts/sync-banner.sh`).
 
 ### 2. Publish Config (Optional)
 
@@ -35,88 +34,71 @@ composer require beegoodit/laravel-cookie-consent
 php artisan vendor:publish --tag=cookie-consent-config
 ```
 
-### 3. Customize (Optional)
+### 3. Views
 
-```bash
-php artisan vendor:publish --tag=cookie-consent-views
+Two Blade views ship in the package:
+
+| View | When to use |
+|------|-------------|
+| `cookie-consent::livewire.cookie-consent` | Default. Tailwind **zinc** utilities (Octake). Add the view path to Tailwind content so classes are not purged. |
+| `cookie-consent::livewire.cookie-consent-daisy` | **daisyUI** component classes (`btn`, `card`, `bg-base-100`). Use on TallCMS themes. Do not use `modal`/`modal-box` — theme CSS often does not emit those. |
+
+Default is zinc. Daisy hosts set `view` in published `config/cookie-consent.php` (or in a service provider). TallCMS glue already forces daisy.
+
+## Consent helper
+
+Cookie name: `__cookie_consent`. Values: `essential` | `analytics` | `marketing` | `all`.
+
+```php
+use BeegoodIT\LaravelCookieConsent\Consent;
+
+Consent::available();              // visitor has chosen
+Consent::allows('analytics');     // GA / Umami / Plausible
+Consent::allows('marketing');
+Consent::allows('functional');    // true only for `all` in v1
+Consent::allows('essential');     // always true
+
+Consent::policyUrlUsing(fn (): ?string => '/datenschutz');
 ```
 
-### 4. Styling (Tailwind CSS)
+**Matrix (v1):** essential is always allowed. Analytics is true for `analytics` and `all`. Marketing is true for `marketing` and `all`. Functional is true **only** for `all`. Until a cookie exists, only essential is allowed.
 
-The banner is styled with Tailwind CSS utility classes only; no separate CSS file is shipped. Your app must include the package view path in Tailwind’s content/source so those classes are not purged.
+Policy URL: empty config / resolver returning `''` hides the “learn more” link. Defaults are empty (do not assume `/cookie-policy`).
 
-- **Tailwind v4:** In your main CSS file (e.g. `resources/css/app.css`), add:
-
-  ```css
-  @source '../../vendor/beegoodit/laravel-cookie-consent/resources/views/**/*.blade.php';
-  ```
-
-- **Tailwind v3:** In `tailwind.config.js`, add the path to the `content` array:
-
-  ```js
-  content: [
-      // ... your paths
-      './vendor/beegoodit/laravel-cookie-consent/resources/views/**/*.blade.php',
-  ],
-  ```
-
-If your app does not use Tailwind, publish the views (`php artisan vendor:publish --tag=cookie-consent-views`) and replace the utility classes with your own CSS.
+Ignored paths (banner skipped): `admin`, `admin/*`, `livewire/*`, `install`, `installer` (override `ignored_paths` in config).
 
 ## Configuration
 
 ```php
-// config/cookie-consent.php
 return [
     'enabled' => env('COOKIE_CONSENT_ENABLED', true),
-    'cookie_lifetime' => 365, // days
-    'position' => 'bottom', // or 'top'
-    'analytics_enabled' => env('ANALYTICS_ENABLED', false),
+    'cookie_name' => '__cookie_consent',
+    'cookie_lifetime' => 365,
+    'view' => 'cookie-consent::livewire.cookie-consent',
+    'policy_url_en' => env('COOKIE_POLICY_URL_EN', ''),
+    'policy_url_de' => env('COOKIE_POLICY_URL_DE', ''),
+    'ignored_paths' => ['admin', 'admin/*', 'livewire/*', 'install', 'install/*', 'installer', 'installer/*'],
 ];
 ```
 
-## Features
+Settings toggles: essential locked on; functional, analytics, and marketing **default off**.
 
-- ✅ GDPR-compliant consent banner
-- ✅ Customizable styling (Tailwind CSS)
-- ✅ Accept/Decline options
-- ✅ Cookie preference storage
-- ✅ Top or bottom positioning
-- ✅ Alpine.js transitions
-- ✅ Livewire component
+## Pack into TallCMS plugin
 
-## Checking Consent
-
-```php
-$hasConsented = request()->cookie('cookie_consent') === 'accepted';
-
-if ($hasConsented) {
-    // Load analytics
-}
+```bash
+./scripts/sync-banner.sh \
+  /path/to/laravel-cookie-consent \
+  /path/to/tallcms-cookie-consent-plugin
 ```
 
-## Translation
-
-Create translation files:
-
-```php
-// lang/en/cookie-consent.php
-return [
-    'messages' => [
-        'title' => 'We use cookies',
-        'description' => '...',
-        'accept' => 'Accept',
-        'decline' => 'Decline',
-    ],
-];
-```
+Copies PHP/views/`en`+`de` lang into ZIP-legal plugin paths. Does **not** copy this service provider, `hr`/`hu`/`ro`, tests, or `vendor/`.
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11.0+ or 12.0+
-- Livewire 3.0+
+- Laravel 11–13
+- Livewire 3 or 4
 
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
-

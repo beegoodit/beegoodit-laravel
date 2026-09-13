@@ -10,6 +10,7 @@ return [
 
     'settings_title' => 'Postavke kolačića',
     'settings_text' => 'Koristimo kolačiće kako bismo poboljšali vaše iskustvo na stranici. Možete odabrati koje kolačiće prihvaćate. Pročitajte našu <a href=":policyUrl" class="underline hover:text-zinc-900 dark:hover:text-white">Politiku kolačića</a> za više informacija.',
+    'settings_text_no_policy' => 'Koristimo kolačiće kako bismo poboljšali vaše iskustvo na stranici. Možete odabrati koje kolačiće prihvaćate.',
     'settings_accept_all' => 'Prihvati sve kolačiće',
     'settings_save' => 'Spremi odabir',
     'settings_close' => 'Zatvori',
