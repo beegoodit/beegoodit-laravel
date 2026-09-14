@@ -1,0 +1,51 @@
+{
+    "name": "beegoodit/filament-legal-entity",
+    "description": "Legal entity (Rechtsträger) records with country profiles and Filament integration",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "filament",
+        "legal",
+        "gdpr",
+        "beegoodit"
+    ],
+    "authors": [
+        {
+            "name": "BeegoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^4.0 || ^5.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\FilamentLegalEntity\\": "src/",
+            "BeegoodIT\\FilamentLegalEntity\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\FilamentLegalEntity\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeegoodIT\\FilamentLegalEntity\\FilamentLegalEntityServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
