@@ -73,11 +73,13 @@ class GroupSettingsPluginTest extends TestCase
     }
 
     #[Test]
-    public function pages_must_define_a_navigation_group(): void
+    public function boot_requires_a_navigation_group(): void
     {
+        $plugin = GroupSettingsPlugin::make()->pages([DummyUngroupedSettings::class]);
+
         $this->expectException(InvalidArgumentException::class);
 
-        GroupSettingsPlugin::make()->pages([DummyUngroupedSettings::class]);
+        $plugin->boot(Mockery::mock(Panel::class));
     }
 
     #[Test]

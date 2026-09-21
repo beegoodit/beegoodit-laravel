@@ -73,7 +73,7 @@ class BillingSettings extends GroupSettingsPage
 }
 ```
 
-The form binds to `Filament::getTenant()` and saves **form state** onto that model. Fill only hydrates **form field** attributes, not the whole tenant row. Default nav: **Settings** / **Einstellungen**, cog icon, sort 99. Page heading is that same label; breadcrumbs are **navigation group › Settings** (Filament chevrons, not a joined title). Use `topicTabs()` so the tab bar sits **above** the form card (`contained(false)`). `getNavigationGroup()` is required (`->pages()` rejects a blank group). Do not pre-create empty tabs.
+The form binds to `Filament::getTenant()` and saves **form state** onto that model. Fill only hydrates **form field** attributes, not the whole tenant row. Default nav: **Settings** / **Einstellungen**, cog icon, sort 99. Page heading is that same label; breadcrumbs are **navigation group › Settings** (Filament chevrons, not a joined title). Use `topicTabs()` so the tab bar sits **above** the form card (`contained(false)`). `pages()` validates `getGroupKey()` only (never calls translated `getNavigationGroup()` — that would empty-cache host package langs when Filament registers before the package provider). Plugin `boot()` checks that `getNavigationGroup()` is overridden. Do not pre-create empty tabs.
 
 ## Landing
 

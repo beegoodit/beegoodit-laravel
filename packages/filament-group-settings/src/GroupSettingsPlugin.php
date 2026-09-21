@@ -7,9 +7,10 @@ namespace BeegoodIT\FilamentGroupSettings;
 use BeegoodIT\FilamentGroupSettings\Pages\GroupSettingsPage;
 use BeegoodIT\FilamentGroupSettings\Pages\SettingsLanding;
 use Filament\Contracts\Plugin;
+use Filament\Pages\Page;
 use Filament\Panel;
 use InvalidArgumentException;
-use UnitEnum;
+use ReflectionMethod;
 
 class GroupSettingsPlugin implements Plugin
 {
@@ -50,15 +51,12 @@ class GroupSettingsPlugin implements Plugin
                 );
             }
 
-            $group = $page::getNavigationGroup();
-
-            if ($group instanceof UnitEnum) {
-                continue;
-            }
-
-            if (! is_string($group) || $group === '') {
+            // Do not call getNavigationGroup() here — it often runs __() and can
+            // empty-cache package translations when TallCMS boots Filament plugins
+            // before the page package's service provider has loadTranslationsFrom().
+            if ($page::getGroupKey() === '') {
                 throw new InvalidArgumentException(
-                    sprintf('%s must define getNavigationGroup() (string or UnitEnum).', $page),
+                    sprintf('%s must define a non-empty getGroupKey().', $page),
                 );
             }
         }
@@ -122,6 +120,14 @@ class GroupSettingsPlugin implements Plugin
 
     public function boot(Panel $panel): void
     {
-        //
+        foreach ($this->pages as $page) {
+            $method = new ReflectionMethod($page, 'getNavigationGroup');
+
+            if ($method->getDeclaringClass()->getName() === Page::class) {
+                throw new InvalidArgumentException(
+                    sprintf('%s must define getNavigationGroup() (string or UnitEnum).', $page),
+                );
+            }
+        }
     }
 }
