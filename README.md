@@ -17,6 +17,7 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 - **[beegoodit/filament-user-profile](packages/filament-user-profile)** - User profile settings pages
 - **[beegoodit/laravel-pwa](packages/laravel-pwa)** - Progressive Web App support
 - **[beegoodit/filament-tenancy-roles](packages/filament-tenancy-roles)** - Role-based authorization for Filament multi-tenancy
+- **[beegoodit/filament-tenancy-plugins](packages/filament-tenancy-plugins)** - Tenant plugin entitlements: code catalog and morph assignments
 - **[beegoodit/filament-tenancy-domains](packages/filament-tenancy-domains)** - Polymorphic domain and subdomain management for Filament applications
 - **[beegoodit/filament-connect](packages/filament-connect)** - Multi-tenant API credential management for Filament
 - **[beegoodit/filament-social-links](packages/filament-social-links)** - Polymorphic social media link management for Filament
