@@ -1,0 +1,21 @@
+/**
+ * Split button layout + join divider.
+ *
+ * Target .fi-split-button (added by SplitButtonGroup). Filament's native
+ * btn-group join shadow only applies to direct .fi-btn siblings — our chevron
+ * lives inside .fi-dropdown, so we paint the join ourselves.
+ *
+ * Button fill/text colors come from Filament Action ->color() utilities.
+ * The join uses light/dark contrast against the fill (not --text tokens —
+ * Filament 5 solid buttons use utility classes, not --text/--bg vars).
+ */
+.fi-btn-group > .fi-btn:not(:last-child) {
+    border-start-end-radius: 0 !important;
+    border-end-end-radius: 0 !important;
+}
+
+.fi-btn-group > .fi-dropdown > .fi-dropdown-trigger > .fi-btn {
+    border-start-start-radius: 0 !important;
+    border-end-start-radius: 0 !important;
+    border-left: 1px solid var(--primary-500);
+}
