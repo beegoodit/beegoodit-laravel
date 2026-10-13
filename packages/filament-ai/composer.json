@@ -1,0 +1,57 @@
+{
+    "name": "beegoodit/filament-ai",
+    "description": "TallCMS-agnostic Filament AI shell: capability registry, BYOK settings, chat (greenfield)",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "filament",
+        "ai",
+        "assistant",
+        "beegoodit"
+    ],
+    "authors": [
+        {
+            "name": "BeegoodIT",
+            "email": "dev@beegoodit.de"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^4.0 || ^5.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "laravel/ai": "^0.7|^1.0"
+    },
+    "require-dev": {
+        "laravel/mcp": "^1.0",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeegoodIT\\FilamentAi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeegoodIT\\FilamentAi\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeegoodIT\\FilamentAi\\FilamentAiServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

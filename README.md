@@ -9,6 +9,7 @@ A monorepo containing reusable Laravel packages for BeeGoodIT applications.
 - **[beegoodit/laravel-file-storage](packages/laravel-file-storage)** - Unified S3/local file storage with automatic URL generation
 - **[beegoodit/laravel-public-resources](packages/laravel-public-resources)** - Public resource URLs: `public_id`, `{slug}-{publicId}`, locale+mount+type path helpers
 - **[beegoodit/laravel-cookie-consent](packages/laravel-cookie-consent)** - GDPR-compliant cookie consent banner
+- **[beegoodit/filament-ai](packages/filament-ai)** - Filament AI shell (capability registry, workspace scoping; chat/settings in later slices)
 - **[beegoodit/filament-i18n](packages/filament-i18n)** - User locale, timezone, and time format preferences
 - **[beegoodit/filament-user-avatar](packages/filament-user-avatar)** - User avatar upload and display
 - **[beegoodit/filament-oauth](packages/filament-oauth)** - OAuth2 authentication with team auto-assignment
