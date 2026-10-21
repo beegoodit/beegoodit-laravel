@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace BeegoodIT\FilamentAi\Filament\Pages;
 
+use BeegoodIT\FilamentAi\Capabilities\CapabilityDefinition;
 use BeegoodIT\FilamentAi\Capabilities\CapabilityRegistry;
 use BeegoodIT\FilamentAi\Filament\Concerns\ManagesMcpTokens;
-use BeegoodIT\FilamentAi\Models\Setting;
 use BeegoodIT\FilamentAi\Services\AccessService;
+use BeegoodIT\FilamentAi\Services\ConnectionTester;
 use BeegoodIT\FilamentAi\Services\PersistSettings;
+use BeegoodIT\FilamentAi\Support\FilamentAi;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -18,9 +21,15 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Html;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
 use Illuminate\Contracts\Support\Htmlable;
 use Laravel\Ai\Enums\Lab;
 
@@ -63,7 +72,7 @@ class Settings extends Page implements HasForms
 
     public function mount(): void
     {
-        $settings = Setting::forCurrentWorkspace() ?? new Setting([
+        $settings = FilamentAi::settingsModel()::forCurrentTenant() ?? new (FilamentAi::settingsModel())([
             'provider' => config('filament-ai.default_provider', Lab::OpenAI->value),
             'model' => config('filament-ai.default_model'),
             'enabled' => false,
@@ -90,16 +99,45 @@ class Settings extends Page implements HasForms
         $providerSections = [];
 
         foreach ($registry->providers() as $provider) {
-            $toggles = [];
+            /** @var array<string, list<CapabilityDefinition>> $grouped */
+            $grouped = [];
+
             foreach ($provider->capabilities() as $capability) {
-                $toggles[] = Toggle::make("capabilities.{$provider->id()}.{$capability->key}")
-                    ->label($capability->label)
-                    ->helperText($capability->help);
+                $groupKey = $capability->group ?? '';
+                $grouped[$groupKey][] = $capability;
+            }
+
+            $sectionSchema = [];
+            $useGroups = count($grouped) > 1 || (count($grouped) === 1 && array_key_first($grouped) !== '');
+            $isFirstGroup = true;
+
+            foreach ($grouped as $groupLabel => $capabilities) {
+                if ($useGroups && ! $isFirstGroup) {
+                    $sectionSchema[] = Html::make(
+                        '<hr class="border-gray-200 dark:border-white/10 col-span-full w-full">'
+                    )->columnSpanFull();
+                }
+
+                if ($useGroups && $groupLabel !== '') {
+                    $sectionSchema[] = Text::make($groupLabel)
+                        ->weight(FontWeight::SemiBold)
+                        ->size(TextSize::Small)
+                        ->color('gray')
+                        ->columnSpanFull();
+                }
+
+                foreach ($capabilities as $capability) {
+                    $sectionSchema[] = Toggle::make("capabilities.{$provider->id()}.{$capability->key}")
+                        ->label($capability->label)
+                        ->helperText($capability->help);
+                }
+
+                $isFirstGroup = false;
             }
 
             $providerSections[] = Section::make($provider->label())
                 ->description($provider->description())
-                ->schema($toggles)
+                ->schema($sectionSchema)
                 ->columns(2);
         }
 
@@ -132,6 +170,12 @@ class Settings extends Page implements HasForms
                                     ->placeholder('gpt-4o-mini'),
                                 Toggle::make('enabled')
                                     ->label(__('filament-ai::ai.pages.settings.enabled')),
+                                Actions::make([
+                                    Action::make('testConnection')
+                                        ->label(__('filament-ai::ai.pages.settings.test_connection'))
+                                        ->color('gray')
+                                        ->action(fn (): mixed => $this->testConnection()),
+                                ])->alignment(Alignment::End),
                             ]),
                         Tabs\Tab::make(__('filament-ai::ai.pages.settings.tabs.context'))
                             ->icon('heroicon-o-document-text')
@@ -159,6 +203,36 @@ class Settings extends Page implements HasForms
                     ->columnSpanFull(),
             ])
             ->statePath('data');
+    }
+
+    public function testConnection(): void
+    {
+        $data = $this->form->getState();
+
+        $apiKey = filled($data['api_key'] ?? null)
+            ? (string) $data['api_key']
+            : (FilamentAi::settingsModel()::forCurrentTenant()?->api_key);
+
+        $result = app(ConnectionTester::class)->test(
+            provider: isset($data['provider']) ? (string) $data['provider'] : null,
+            apiKey: $apiKey,
+            model: isset($data['model']) ? (string) $data['model'] : null,
+        );
+
+        $notification = Notification::make()
+            ->title($result->title);
+
+        if (filled($result->body)) {
+            $notification->body($result->body);
+        }
+
+        if ($result->successful) {
+            $notification->success()->send();
+
+            return;
+        }
+
+        $notification->danger()->send();
     }
 
     public function save(): void

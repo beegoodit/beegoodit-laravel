@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BeegoodIT\FilamentAi\Tools\Concerns;
+namespace BeegoodIT\FilamentAi\Concerns;
 
 use BeegoodIT\FilamentAi\Models\Setting;
 use BeegoodIT\FilamentAi\Services\ToolContext;
@@ -26,24 +26,24 @@ trait InteractsWithTools
 
     protected function settings(): ?Setting
     {
-        return Setting::forCurrentWorkspace();
+        return FilamentAi::settingsModel()::forCurrentTenant();
     }
 
     /**
-     * Scope a query to the current workspace column (TallCMS soft-deps call this scopeSite).
+     * Scope a query to the current tenant column (TallCMS soft-deps call this scopeSite).
      */
     protected function scopeSite(Builder $query, ?string $column = null): Builder
     {
-        return $this->scopeWorkspace($query, $column);
+        return $this->scopeTenant($query, $column);
     }
 
-    protected function scopeWorkspace(Builder $query, ?string $column = null): Builder
+    protected function scopeTenant(Builder $query, ?string $column = null): Builder
     {
-        $column ??= FilamentAi::workspaceColumn();
-        $workspaceId = $this->context()->workspaceId;
+        $column ??= FilamentAi::tenantColumn();
+        $tenantId = $this->context()->tenantId;
 
-        if ($workspaceId !== null) {
-            return $query->where($column, $workspaceId);
+        if ($tenantId !== null) {
+            return $query->where($column, $tenantId);
         }
 
         return $query->whereNull($column);

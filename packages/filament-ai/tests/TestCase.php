@@ -39,9 +39,9 @@ abstract class TestCase extends Orchestra
         $app['config']->set('app.locale', 'en');
         $app['config']->set('logging.default', 'errorlog');
         $app['config']->set('auth.providers.users.model', User::class);
-        $app['config']->set('filament-ai.workspace_key_type', 'int');
-        $app['config']->set('filament-ai.workspace_column', 'workspace_id');
-        $app['config']->set('filament-ai.settings_table', 'beegoodit_filament_ai_settings');
+        $app['config']->set('filament-ai.tenant_key_type', 'int');
+        $app['config']->set('filament-ai.user_key_type', 'int');
+        $app['config']->set('filament-ai.tenant_column', 'tenant_id');
         $app['config']->set('filament-ai.permissions.manage_settings', null);
         $app['config']->set('filament-ai.permissions.use_assistant', null);
         $app['config']->set('filament-ai.chat.streaming', false);
@@ -52,6 +52,8 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
+
+        \BeegoodIT\FilamentAi\Support\FilamentAi::useSettingsModel(\BeegoodIT\FilamentAi\Models\Setting::class);
 
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
@@ -67,13 +69,20 @@ abstract class TestCase extends Orchestra
         $settingsMigration = require __DIR__.'/../database/migrations/2026_10_12_000001_create_filament_ai_settings_table.php';
         $settingsMigration->up();
 
-        $conversationsMigration = require __DIR__.'/../database/migrations/2026_10_12_000002_add_workspace_and_mode_to_agent_conversations_table.php';
+        $conversationsMigration = require __DIR__.'/../database/migrations/2026_10_12_000002_add_mode_to_agent_conversations_table.php';
         $conversationsMigration->up();
 
-        $mcpEnabledMigration = require __DIR__.'/../database/migrations/2026_10_13_000003_add_mcp_enabled_to_filament_ai_settings_table.php';
-        $mcpEnabledMigration->up();
+        // Host apps add the tenant column; tests simulate a multi-tenant host.
+        $conversationsTable = (string) config('ai.conversations.tables.conversations', 'agent_conversations');
+        $tenantColumn = (string) config('filament-ai.tenant_column', 'tenant_id');
 
-        $mcpTokensMigration = require __DIR__.'/../database/migrations/2026_10_13_000004_create_filament_ai_mcp_tokens_table.php';
+        if (Schema::hasTable($conversationsTable) && ! Schema::hasColumn($conversationsTable, $tenantColumn)) {
+            Schema::table($conversationsTable, function (Blueprint $blueprint) use ($tenantColumn): void {
+                $blueprint->unsignedBigInteger($tenantColumn)->nullable()->index();
+            });
+        }
+
+        $mcpTokensMigration = require __DIR__.'/../database/migrations/2026_10_13_000003_create_filament_ai_mcp_tokens_table.php';
         $mcpTokensMigration->up();
     }
 

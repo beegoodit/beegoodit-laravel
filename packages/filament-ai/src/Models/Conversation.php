@@ -40,14 +40,14 @@ class Conversation extends AgentConversation
         return ChatMode::tryFromConfig(is_string($mode) ? $mode : null);
     }
 
-    public function workspaceKey(): int|string|null
+    public function tenantKey(): int|string|null
     {
-        return $this->getAttribute(FilamentAi::workspaceColumn());
+        return $this->getAttribute(FilamentAi::tenantColumn());
     }
 
-    public function setWorkspaceKey(int|string|null $value): static
+    public function setTenantKey(int|string|null $value): static
     {
-        $this->setAttribute(FilamentAi::workspaceColumn(), $value);
+        $this->setAttribute(FilamentAi::tenantColumn(), $value);
 
         return $this;
     }

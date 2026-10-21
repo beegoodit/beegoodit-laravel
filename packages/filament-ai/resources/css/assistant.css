@@ -1,0 +1,386 @@
+/* Lock Filament's main column to the viewport so only the chat messages scroll. */
+.fi-main-ctn:has(.filament-ai-assistant-layout) {
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - var(--topbar-height, 4rem));
+    max-height: calc(100dvh - var(--topbar-height, 4rem));
+    min-height: 0;
+    overflow: hidden;
+}
+
+.fi-main-ctn:has(.filament-ai-assistant-layout) > .fi-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.fi-main:has(.filament-ai-assistant-layout) > * {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.fi-page:has(.filament-ai-assistant-layout),
+.fi-page:has(.filament-ai-assistant-layout) .fi-page-header-main-ctn,
+.fi-page:has(.filament-ai-assistant-layout) .fi-page-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+    height: auto;
+}
+
+.fi-page:has(.filament-ai-assistant-layout) .fi-page-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+    gap: 0;
+}
+
+.filament-ai-assistant-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.filament-ai-assistant-layout--with-sidebar {
+    align-items: stretch;
+}
+
+@media (min-width: 768px) {
+    .filament-ai-assistant-layout--with-sidebar {
+        flex-direction: row;
+    }
+}
+
+.filament-ai-assistant-chat {
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.filament-ai-assistant-chat > .fi-section,
+.filament-ai-assistant-chat > .fi-section > .fi-section-content-ctn,
+.filament-ai-assistant-chat > .fi-section .fi-section-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.filament-ai-assistant-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.filament-ai-assistant-composer {
+    flex-shrink: 0;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+/* Model trigger + panel: full model ids on one line. */
+.filament-ai-assistant-composer .filament-ai-composer-model {
+    width: 18rem;
+    min-width: 18rem;
+}
+
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-ctn,
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-btn {
+    width: 100%;
+    min-width: 18rem;
+}
+
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-option,
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-option-label,
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-dropdown-list-item-label {
+    white-space: nowrap;
+}
+
+.filament-ai-assistant-sidebar {
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 0;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .filament-ai-assistant-sidebar {
+        width: 18rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .filament-ai-assistant-sidebar {
+        width: 20rem;
+    }
+}
+
+.filament-ai-assistant-sidebar > .fi-section,
+.filament-ai-assistant-sidebar > .fi-section > .fi-section-content-ctn,
+.filament-ai-assistant-sidebar > .fi-section .fi-section-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.filament-ai-assistant-sidebar .fi-section-content {
+    overflow-y: auto;
+}
+
+.filament-ai-file-upload-browse {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.filament-ai-file-upload-browse-icon {
+    display: block;
+    width: 1.875rem;
+    height: 1.875rem;
+}
+
+.filament-ai-composer-input-row {
+    align-items: stretch !important;
+    gap: 0.75rem;
+}
+
+.filament-ai-composer-attachments {
+    width: 5.5rem;
+    max-width: 5.5rem;
+    flex: 0 0 5.5rem !important;
+    align-self: stretch !important;
+}
+
+@media (min-width: 768px) {
+    .filament-ai-composer-attachments {
+        width: 6.5rem;
+        max-width: 6.5rem;
+        flex: 0 0 6.5rem !important;
+    }
+}
+
+/* Hide native file-input FOUC until FilePond mounts; show a centered spinner. */
+.filament-ai-composer-attachments .fi-fo-file-upload:not(:has(.filepond--root)) {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 5.5rem;
+}
+
+.filament-ai-composer-attachments .fi-fo-file-upload:not(:has(.filepond--root))::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1.25rem;
+    height: 1.25rem;
+    pointer-events: none;
+    border: 2px solid rgb(156 163 175 / 0.35);
+    border-top-color: var(--primary-500, #3b82f6);
+    border-radius: 9999px;
+    animation: filament-ai-attachments-spin 0.7s linear infinite;
+}
+
+.filament-ai-composer-attachments .fi-fo-file-upload:not(:has(.filepond--root)) .fi-fo-file-upload-input-ctn,
+.filament-ai-composer-attachments .fi-fo-file-upload:not(:has(.filepond--root)) input[type='file'] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes filament-ai-attachments-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.filament-ai-composer-attachments .filepond--root {
+    position: relative;
+    margin-bottom: 0;
+}
+
+/* FilePond defaults to height:0 + transform centering; override so the icon stays centered in our taller root. */
+.filament-ai-composer-attachments .filepond--drop-label {
+    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+}
+
+.filament-ai-composer-attachments .filepond--drop-label label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+}
+
+.filament-ai-composer-attachments .filament-ai-file-upload-browse {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filament-ai-assistant-markdown {
+    overflow-x: auto;
+}
+
+.filament-ai-assistant-markdown > :first-child {
+    margin-top: 0;
+}
+
+.filament-ai-assistant-markdown > :last-child {
+    margin-bottom: 0;
+}
+
+.filament-ai-assistant-markdown p,
+.filament-ai-assistant-markdown ul,
+.filament-ai-assistant-markdown ol,
+.filament-ai-assistant-markdown pre,
+.filament-ai-assistant-markdown blockquote,
+.filament-ai-assistant-markdown table {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+}
+
+.filament-ai-assistant-markdown h1,
+.filament-ai-assistant-markdown h2,
+.filament-ai-assistant-markdown h3,
+.filament-ai-assistant-markdown h4 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.filament-ai-assistant-markdown h1 {
+    font-size: 1.25em;
+}
+
+.filament-ai-assistant-markdown h2 {
+    font-size: 1.125em;
+}
+
+.filament-ai-assistant-markdown h3,
+.filament-ai-assistant-markdown h4 {
+    font-size: 1em;
+}
+
+.filament-ai-assistant-markdown ul,
+.filament-ai-assistant-markdown ol {
+    padding-inline-start: 1.25em;
+}
+
+.filament-ai-assistant-markdown ul {
+    list-style: disc;
+}
+
+.filament-ai-assistant-markdown ol {
+    list-style: decimal;
+}
+
+.filament-ai-assistant-markdown li + li {
+    margin-top: 0.25em;
+}
+
+.filament-ai-assistant-markdown a {
+    color: var(--primary-600, #2563eb);
+    text-decoration: underline;
+}
+
+.filament-ai-assistant-markdown code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.875em;
+    padding: 0.1em 0.35em;
+    border-radius: 0.25rem;
+    background: rgba(128, 128, 128, 0.15);
+}
+
+.filament-ai-assistant-markdown pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: rgba(128, 128, 128, 0.12);
+}
+
+.filament-ai-assistant-markdown pre code {
+    padding: 0;
+    background: transparent;
+    font-size: 0.8125em;
+}
+
+.filament-ai-assistant-markdown blockquote {
+    padding-inline-start: 0.75em;
+    border-inline-start: 3px solid rgba(128, 128, 128, 0.35);
+    opacity: 0.95;
+}
+
+.filament-ai-assistant-markdown table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875em;
+}
+
+.filament-ai-assistant-markdown th,
+.filament-ai-assistant-markdown td {
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    padding: 0.4em 0.6em;
+    text-align: start;
+    vertical-align: top;
+}
+
+.filament-ai-assistant-markdown th {
+    font-weight: 600;
+    background: rgba(128, 128, 128, 0.1);
+}
+
+.filament-ai-assistant-markdown tr:nth-child(even) td {
+    background: rgba(128, 128, 128, 0.04);
+}
+
+.dark .filament-ai-assistant-markdown a {
+    color: var(--primary-400, #60a5fa);
+}

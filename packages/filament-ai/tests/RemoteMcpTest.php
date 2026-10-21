@@ -49,7 +49,7 @@ final class RemoteMcpTest extends TestCase
     private function enableMcp(): Setting
     {
         return Setting::query()->create([
-            'workspace_id' => null,
+            'tenant_id' => null,
             'provider' => Lab::OpenAI,
             'api_key' => 'sk-test',
             'model' => 'gpt-4o-mini',
@@ -68,8 +68,8 @@ final class RemoteMcpTest extends TestCase
 
         return McpToken::issue(
             label: 'test',
-            workspaceId: null,
-            createdByUserId: (int) $user->id,
+            tenantId: null,
+            createdByUserId: $user->id,
             scope: $scope,
             activeFrom: now()->utc()->subDay(),
             activeTo: now()->utc()->addYear(),
@@ -114,7 +114,7 @@ final class RemoteMcpTest extends TestCase
     public function mcp_disabled_returns_forbidden(): void
     {
         Setting::query()->create([
-            'workspace_id' => null,
+            'tenant_id' => null,
             'provider' => Lab::OpenAI,
             'api_key' => 'sk-test',
             'model' => 'gpt-4o-mini',

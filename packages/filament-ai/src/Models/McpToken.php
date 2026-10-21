@@ -26,7 +26,6 @@ class McpToken extends Model
     protected function casts(): array
     {
         return [
-            'created_by_user_id' => 'integer',
             'active_from' => 'datetime',
             'active_to' => 'datetime',
             'revoked_at' => 'datetime',
@@ -45,7 +44,7 @@ class McpToken extends Model
     public function getFillable(): array
     {
         return [
-            FilamentAi::workspaceColumn(),
+            FilamentAi::tenantColumn(),
             'created_by_user_id',
             'label',
             'token_hash',
@@ -62,20 +61,20 @@ class McpToken extends Model
      */
     public static function issue(
         string $label,
-        int|string|null $workspaceId = null,
-        ?int $createdByUserId = null,
+        int|string|null $tenantId = null,
+        int|string|null $createdByUserId = null,
         string $scope = self::SCOPE_READ,
         ?\DateTimeInterface $activeFrom = null,
         ?\DateTimeInterface $activeTo = null,
         int|string|null $siteId = null,
     ): array {
-        $workspaceId ??= $siteId;
+        $tenantId ??= $siteId;
         $prefix = (string) config('filament-ai.mcp.token_prefix', 'fa_mcp_');
         $plain = $prefix.Str::random(48);
-        $column = FilamentAi::workspaceColumn();
+        $column = FilamentAi::tenantColumn();
 
         $token = static::query()->create([
-            $column => $workspaceId,
+            $column => $tenantId,
             'created_by_user_id' => $createdByUserId,
             'label' => $label,
             'token_hash' => hash('sha256', $plain),
@@ -100,9 +99,9 @@ class McpToken extends Model
             ->first();
     }
 
-    public function workspaceKey(): int|string|null
+    public function tenantKey(): int|string|null
     {
-        return $this->getAttribute(FilamentAi::workspaceColumn());
+        return $this->getAttribute(FilamentAi::tenantColumn());
     }
 
     public function isCurrentlyValid(): bool
@@ -174,24 +173,24 @@ class McpToken extends Model
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
-    public function scopeForWorkspace(Builder $query, int|string|null $workspaceId): Builder
+    public function scopeForTenant(Builder $query, int|string|null $tenantId): Builder
     {
-        $column = FilamentAi::workspaceColumn();
+        $column = FilamentAi::tenantColumn();
 
         return $query
-            ->when($workspaceId !== null, fn (Builder $q) => $q->where($column, $workspaceId))
-            ->when($workspaceId === null, fn (Builder $q) => $q->whereNull($column));
+            ->when($tenantId !== null, fn (Builder $q) => $q->where($column, $tenantId))
+            ->when($tenantId === null, fn (Builder $q) => $q->whereNull($column));
     }
 
     /**
-     * TallCMS / soft-dep alias of {@see scopeForWorkspace()}.
+     * TallCMS / soft-dep alias of {@see scopeForTenant()}.
      *
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
     public function scopeForSite(Builder $query, int|string|null $siteId): Builder
     {
-        return $this->scopeForWorkspace($query, $siteId);
+        return $this->scopeForTenant($query, $siteId);
     }
 
     /**

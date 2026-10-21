@@ -11,6 +11,7 @@ use BeegoodIT\FilamentAi\Filament\Pages\Overview;
 use BeegoodIT\FilamentAi\Filament\Pages\Settings;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Filament\Support\Assets\Css;
 
 class FilamentAiPlugin implements Plugin
 {
@@ -21,6 +22,13 @@ class FilamentAiPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
+        $panel->assets([
+            Css::make(
+                'filament-ai-assistant',
+                dirname(__DIR__, 2).'/resources/css/assistant.css',
+            ),
+        ], 'filament-ai');
+
         $panel->pages([
             Overview::class,
             Assistant::class,

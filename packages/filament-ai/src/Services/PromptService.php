@@ -27,10 +27,10 @@ class PromptService
         ?Setting $settings = null,
         ?ChatMode $mode = null,
     ): ShellAgent {
-        $settings ??= Setting::forCurrentWorkspace();
+        $settings ??= FilamentAi::settingsModel()::forCurrentTenant();
 
         if ($settings === null || ! $settings->hasConfiguredKey()) {
-            throw new \RuntimeException('AI assistant is not configured for this workspace.');
+            throw new \RuntimeException('AI assistant is not configured for this tenant.');
         }
 
         $context = ToolContext::fromRequest($conversationId, $mode);
@@ -64,9 +64,10 @@ class PromptService
         ?string $conversationId = null,
         array $attachments = [],
         ?ChatMode $mode = null,
+        ?string $model = null,
     ): AgentResponse {
         $this->guardPrompt($user);
-        $settings = Setting::forCurrentWorkspace();
+        $settings = FilamentAi::settingsModel()::forCurrentTenant();
         $agent = $this->makeAgent($user, $conversationId, $settings, $mode);
 
         return $this->withProviderKey($settings, fn () => $this->prepareAgent($agent, $user, $conversationId)
@@ -74,7 +75,7 @@ class PromptService
                 $message,
                 $attachments,
                 provider: $this->resolveProvider($settings),
-                model: $settings?->model,
+                model: $this->resolveModel($settings, $model),
                 timeout: (int) config('filament-ai.timeout', 120),
             ));
     }
@@ -88,9 +89,10 @@ class PromptService
         ?string $conversationId = null,
         array $attachments = [],
         ?ChatMode $mode = null,
+        ?string $model = null,
     ): StreamableAgentResponse {
         $this->guardPrompt($user);
-        $settings = Setting::forCurrentWorkspace();
+        $settings = FilamentAi::settingsModel()::forCurrentTenant();
         $agent = $this->makeAgent($user, $conversationId, $settings, $mode);
 
         return $this->withProviderKey($settings, fn () => $this->prepareAgent($agent, $user, $conversationId)
@@ -98,9 +100,22 @@ class PromptService
                 $message,
                 $attachments,
                 provider: $this->resolveProvider($settings),
-                model: $settings?->model,
+                model: $this->resolveModel($settings, $model),
                 timeout: (int) config('filament-ai.timeout', 120),
             ));
+    }
+
+    protected function resolveModel(?Setting $settings, ?string $model): ?string
+    {
+        $resolved = filled($model) ? trim($model) : null;
+
+        if ($resolved !== null && $resolved !== '') {
+            return $resolved;
+        }
+
+        $fromSettings = $settings?->model;
+
+        return filled($fromSettings) ? (string) $fromSettings : null;
     }
 
     protected function guardPrompt(Authenticatable $user): void
@@ -109,14 +124,14 @@ class PromptService
             abort(403, 'You are not allowed to use the AI assistant.');
         }
 
-        $workspaceId = FilamentAi::workspaceId();
+        $tenantId = FilamentAi::tenantId();
         $userId = $user->getAuthIdentifier();
 
-        if ($this->rateLimiter->tooManyAttempts($workspaceId, $userId)) {
-            abort(429, 'Daily AI prompt limit reached for this workspace.');
+        if ($this->rateLimiter->tooManyAttempts($tenantId, $userId)) {
+            abort(429, 'Daily AI prompt limit reached for this tenant.');
         }
 
-        $this->rateLimiter->hit($workspaceId, $userId);
+        $this->rateLimiter->hit($tenantId, $userId);
     }
 
     protected function resolveProvider(?Setting $settings): Lab|string

@@ -56,7 +56,7 @@ class ChatModeAndToolsTest extends TestCase
     }
 
     #[Test]
-    public function tools_for_is_empty_with_empty_registry(): void
+    public function tools_for_is_empty_when_only_default_off_shell_capabilities_exist(): void
     {
         $settings = new Setting([
             'enabled' => true,

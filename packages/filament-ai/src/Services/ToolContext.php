@@ -11,15 +11,15 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Request-scoped context for AI tools (workspace + actor + mode).
+ * Request-scoped context for AI tools (tenant + actor + mode).
  *
- * Soft-deps may read `siteId` (alias of workspaceId) after TallCMS pack-sync.
+ * Soft-deps may read `siteId` (alias of tenantId) after TallCMS pack-sync.
  */
 class ToolContext
 {
-    public int|string|null $workspaceId = null;
+    public int|string|null $tenantId = null;
 
-    /** @var int|string|null Soft-dep alias of workspaceId */
+    /** @var int|string|null Soft-dep alias of tenantId */
     public int|string|null $siteId = null;
 
     public ?Authenticatable $user = null;
@@ -29,13 +29,13 @@ class ToolContext
     public ChatMode $mode = ChatMode::Ask;
 
     public function __construct(
-        int|string|null $workspaceId = null,
+        int|string|null $tenantId = null,
         ?Authenticatable $user = null,
         ?string $conversationId = null,
         ChatMode $mode = ChatMode::Ask,
     ) {
-        $this->workspaceId = $workspaceId;
-        $this->siteId = $workspaceId;
+        $this->tenantId = $tenantId;
+        $this->siteId = $tenantId;
         $this->user = $user;
         $this->conversationId = $conversationId;
         $this->mode = $mode;
@@ -44,17 +44,17 @@ class ToolContext
     public static function fromRequest(?string $conversationId = null, ?ChatMode $mode = null): self
     {
         return new self(
-            workspaceId: self::resolveWorkspaceId($conversationId),
+            tenantId: self::resolveTenantId($conversationId),
             user: auth()->user(),
             conversationId: $conversationId,
             mode: $mode ?? self::resolveMode($conversationId),
         );
     }
 
-    public function bind(int|string|null $workspaceId = null, ?Authenticatable $user = null, ?string $conversationId = null, ?ChatMode $mode = null): void
+    public function bind(int|string|null $tenantId = null, ?Authenticatable $user = null, ?string $conversationId = null, ?ChatMode $mode = null): void
     {
-        $resolved = $workspaceId ?? FilamentAi::workspaceId();
-        $this->workspaceId = $resolved;
+        $resolved = $tenantId ?? FilamentAi::tenantId();
+        $this->tenantId = $resolved;
         $this->siteId = $resolved;
         $this->user = $user ?? auth()->user();
         $this->conversationId = $conversationId;
@@ -65,16 +65,16 @@ class ToolContext
 
     public function clear(): void
     {
-        $this->workspaceId = null;
+        $this->tenantId = null;
         $this->siteId = null;
         $this->user = null;
         $this->conversationId = null;
         $this->mode = ChatMode::Ask;
     }
 
-    public function workspaceId(): int|string|null
+    public function tenantId(): int|string|null
     {
-        return $this->workspaceId;
+        return $this->tenantId;
     }
 
     public function user(): ?Authenticatable
@@ -92,11 +92,11 @@ class ToolContext
         $this->conversationId = $conversationId;
     }
 
-    public static function resolveWorkspaceId(?string $conversationId): int|string|null
+    public static function resolveTenantId(?string $conversationId): int|string|null
     {
-        $column = FilamentAi::workspaceColumn();
+        $column = FilamentAi::tenantColumn();
 
-        if ($conversationId !== null && $conversationId !== '' && self::conversationWorkspaceColumnAvailable($column)) {
+        if ($conversationId !== null && $conversationId !== '' && self::conversationTenantColumnAvailable($column)) {
             $conversation = Conversation::query()->find($conversationId);
 
             if ($conversation !== null) {
@@ -108,7 +108,7 @@ class ToolContext
             }
         }
 
-        return FilamentAi::workspaceId();
+        return FilamentAi::tenantId();
     }
 
     public static function resolveMode(?string $conversationId): ChatMode
@@ -124,7 +124,7 @@ class ToolContext
         return ChatMode::Agent;
     }
 
-    protected static function conversationWorkspaceColumnAvailable(string $column): bool
+    protected static function conversationTenantColumnAvailable(string $column): bool
     {
         $table = config('ai.conversations.tables.conversations', 'agent_conversations');
 

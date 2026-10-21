@@ -4,16 +4,55 @@ declare(strict_types=1);
 
 namespace BeegoodIT\FilamentAi\Support;
 
+use BeegoodIT\FilamentAi\Models\Setting;
+use Illuminate\Database\Eloquent\Builder;
+
 final class FilamentAi
 {
+    /** @var class-string<Setting>|null */
+    private static ?string $settingsModel = null;
+
     /**
-     * Current workspace id from config `filament-ai.workspace_resolver`.
+     * Hosts (e.g. TallCMS) may swap the settings Eloquent model.
+     *
+     * @param  class-string<Setting>|null  $class  null resets to {@see Setting}
+     */
+    public static function useSettingsModel(?string $class): void
+    {
+        self::$settingsModel = $class;
+    }
+
+    /**
+     * @return class-string<Setting>
+     */
+    public static function settingsModel(): string
+    {
+        return self::$settingsModel ?? Setting::class;
+    }
+
+    /**
+     * @return Builder<Setting>
+     */
+    public static function settings(): Builder
+    {
+        $class = self::settingsModel();
+
+        return $class::query();
+    }
+
+    public static function settingsTable(): string
+    {
+        return (new (self::settingsModel()))->getTable();
+    }
+
+    /**
+     * Current tenant id from config `filament-ai.tenant_resolver`.
      *
      * null / empty config → no scope. Class-string of an invokable, or a callable.
      */
-    public static function workspaceId(): int|string|null
+    public static function tenantId(): int|string|null
     {
-        $resolver = config('filament-ai.workspace_resolver');
+        $resolver = config('filament-ai.tenant_resolver');
 
         if ($resolver === null || $resolver === false || $resolver === '') {
             return null;
@@ -38,16 +77,23 @@ final class FilamentAi
         return null;
     }
 
-    public static function workspaceColumn(): string
+    public static function tenantColumn(): string
     {
-        $column = config('filament-ai.workspace_column', 'workspace_id');
+        $column = config('filament-ai.tenant_column', 'tenant_id');
 
-        return is_string($column) && $column !== '' ? $column : 'workspace_id';
+        return is_string($column) && $column !== '' ? $column : 'tenant_id';
     }
 
-    public static function workspaceKeyType(): string
+    public static function tenantKeyType(): string
     {
-        $type = config('filament-ai.workspace_key_type', 'int');
+        $type = config('filament-ai.tenant_key_type', 'int');
+
+        return $type === 'uuid' ? 'uuid' : 'int';
+    }
+
+    public static function userKeyType(): string
+    {
+        $type = config('filament-ai.user_key_type', 'int');
 
         return $type === 'uuid' ? 'uuid' : 'int';
     }

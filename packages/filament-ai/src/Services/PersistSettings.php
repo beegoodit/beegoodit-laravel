@@ -26,20 +26,20 @@ class PersistSettings
      *     custom_instructions?: string|null
      * }  $data
      */
-    public function save(array $data, int|string|null $workspaceId = null): Setting
+    public function save(array $data, int|string|null $tenantId = null): Setting
     {
-        $workspaceId ??= FilamentAi::workspaceId();
-        $column = FilamentAi::workspaceColumn();
+        $tenantId ??= FilamentAi::tenantId();
+        $column = FilamentAi::tenantColumn();
 
-        $settings = Setting::query()
+        $settings = FilamentAi::settings()
             ->when(
-                $workspaceId === null,
+                $tenantId === null,
                 fn ($query) => $query->whereNull($column),
-                fn ($query) => $query->where($column, $workspaceId),
+                fn ($query) => $query->where($column, $tenantId),
             )
-            ->first() ?? new Setting;
+            ->first() ?? new (FilamentAi::settingsModel());
 
-        $settings->setWorkspaceKey($workspaceId);
+        $settings->setTenantKey($tenantId);
         $settings->enabled = (bool) ($data['enabled'] ?? false);
 
         if (array_key_exists('mcp_enabled', $data)) {

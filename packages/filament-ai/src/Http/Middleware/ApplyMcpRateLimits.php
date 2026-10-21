@@ -22,16 +22,16 @@ class ApplyMcpRateLimits
         $token = $request->attributes->get('filament_ai_mcp_token');
 
         $perToken = (int) config('filament-ai.mcp.rate_limit.per_token_per_minute', 120);
-        $perWorkspace = (int) config('filament-ai.mcp.rate_limit.per_workspace_per_minute', 600);
+        $perTenant = (int) config('filament-ai.mcp.rate_limit.per_tenant_per_minute', 600);
         $perCall = (int) config('filament-ai.mcp.rate_limit.tools_call_per_minute', 60);
 
         $tokenKey = $token !== null ? 'token:'.$token->id : 'ip:'.$request->ip();
-        $workspaceKey = $token !== null
-            ? 'workspace:'.($token->workspaceKey() ?? 'none')
-            : 'workspace:unknown';
+        $tenantKey = $token !== null
+            ? 'tenant:'.($token->tenantKey() ?? 'none')
+            : 'tenant:unknown';
 
         if ($this->tooManyAttempts('filament-ai-mcp', $tokenKey, $perToken)
-            || $this->tooManyAttempts('filament-ai-mcp-workspace', $workspaceKey, $perWorkspace)) {
+            || $this->tooManyAttempts('filament-ai-mcp-tenant', $tenantKey, $perTenant)) {
             return $this->tooManyResponse();
         }
 
@@ -41,7 +41,7 @@ class ApplyMcpRateLimits
         }
 
         $this->limiter->hit('filament-ai-mcp:'.$tokenKey, 60);
-        $this->limiter->hit('filament-ai-mcp-workspace:'.$workspaceKey, 60);
+        $this->limiter->hit('filament-ai-mcp-tenant:'.$tenantKey, 60);
 
         if ($this->isToolsCall($request)) {
             $this->limiter->hit('filament-ai-mcp-call:'.$tokenKey, 60);

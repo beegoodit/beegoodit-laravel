@@ -20,35 +20,15 @@ class Assistant extends Page implements HasForms
         InteractsWithChat::form insteadof InteractsWithForms;
     }
 
-    protected static ?int $navigationSort = 10;
+    protected static bool $shouldRegisterNavigation = false;
 
     protected string $view = 'filament-ai::pages.assistant';
 
     protected Width|string|null $maxContentWidth = Width::Full;
 
-    public static function getNavigationIcon(): string|\BackedEnum|null
-    {
-        return config('filament-ai.navigation_icon', 'heroicon-o-sparkles');
-    }
-
-    public static function getNavigationGroup(): string|\UnitEnum|null
-    {
-        return __('filament-ai::ai.navigation.group');
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return __('filament-ai::ai.navigation.assistant');
-    }
-
     public static function canAccess(): bool
     {
         return app(AccessService::class)->canUseAssistant();
-    }
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return static::canAccess();
     }
 
     public function mount(AccessService $access, ConversationHistoryService $history): void
@@ -70,12 +50,12 @@ class Assistant extends Page implements HasForms
 
     public function getTitle(): string|Htmlable
     {
-        return __('filament-ai::ai.pages.assistant.title');
+        return $this->chatHeading();
     }
 
     public function getHeading(): string|Htmlable
     {
-        return __('filament-ai::ai.pages.assistant.heading');
+        return $this->chatHeading();
     }
 
     protected function shouldRedirectToChatAfterMessage(): bool

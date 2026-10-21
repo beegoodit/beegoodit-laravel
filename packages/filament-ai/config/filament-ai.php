@@ -4,37 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Navigation
-    |--------------------------------------------------------------------------
-    */
-
-    'navigation_icon' => 'heroicon-o-sparkles',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Settings table
-    |--------------------------------------------------------------------------
-    |
-    | TallCMS pack-sync (004) may remap to tallcms_ai_settings.
-    |
-    */
-
-    'settings_table' => 'beegoodit_filament_ai_settings',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Enabled column
-    |--------------------------------------------------------------------------
-    |
-    | Package attribute is always `$settings->enabled`. Hosts may map it to a
-    | different DB column (TallCMS: is_enabled).
-    |
-    */
-
-    'enabled_column' => 'enabled',
-
-    /*
-    |--------------------------------------------------------------------------
     | Defaults
     |--------------------------------------------------------------------------
     */
@@ -55,6 +24,23 @@ return [
 
     'chat' => [
         'streaming' => true,
+        /*
+         * Models offered in the composer select. Values are both option value
+         * and label unless you use ['id' => 'Label'] pairs.
+         */
+        'models' => [
+            'gpt-4o-mini',
+            'gpt-4o',
+            'gpt-4.1-mini',
+            'gpt-4.1',
+            'gpt-5-mini',
+            'gpt-5',
+            'claude-haiku-4-5',
+            'claude-sonnet-4-5',
+            'claude-opus-4-5',
+            'gemini-2.5-flash',
+            'gemini-2.5-pro',
+        ],
     ],
 
     /*
@@ -97,41 +83,59 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Workspace key type
+    | Tenant key type
     |--------------------------------------------------------------------------
     |
-    | Column type for workspace-scoped tables (settings, conversations, …).
-    | Set before the first migrate.
+    | Column type for package-owned tenant-scoped tables (settings, MCP tokens).
+    | Set before the first migrate of those tables. Conversations are different:
+    | the host adds the tenant column on agent_conversations if needed.
     |
     | int  (default) — unsignedBigInteger — TallCMS Site ids, stock Filament teams
     | uuid           — uuid column — BeeGood filament-tenancy teams, etc.
     |
     */
 
-    'workspace_key_type' => 'int',
+    'tenant_key_type' => 'int',
 
     /*
     |--------------------------------------------------------------------------
-    | Workspace column
+    | User key type
     |--------------------------------------------------------------------------
     |
-    | Attribute / column name for workspace scope. TallCMS pack-sync uses site_id.
+    | Column type for created_by_user_id on MCP tokens. Set before the first
+    | migrate of that table (or run the alter migration after changing).
+    |
+    | int  (default) — unsignedBigInteger — stock Laravel users
+    | uuid           — uuid column — BeeGood HasUuids users, etc.
     |
     */
 
-    'workspace_column' => 'workspace_id',
+    'user_key_type' => 'int',
 
     /*
     |--------------------------------------------------------------------------
-    | Workspace resolver
+    | Tenant column
+    |--------------------------------------------------------------------------
+    |
+    | Attribute / column name for tenant scope (settings, MCP tokens, and
+    | conversations when the host has added that column). TallCMS pack-sync
+    | uses site_id.
+    |
+    */
+
+    'tenant_column' => 'tenant_id',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tenant resolver
     |--------------------------------------------------------------------------
     |
     | Invokable class-string or callable returning int|string|null.
-    | null → no scope (single-tenant).
+    | null → no scope (not multi-tenant).
     |
     */
 
-    'workspace_resolver' => null,
+    'tenant_resolver' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -139,7 +143,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When laravel/mcp is missing the app still boots; Settings warns and the
-    | endpoint is not registered. Token carries workspace scope.
+    | endpoint is not registered. Token carries tenant scope.
     |
     */
 
@@ -151,7 +155,7 @@ return [
         'token_prefix' => 'fa_mcp_',
         'rate_limit' => [
             'per_token_per_minute' => 120,
-            'per_workspace_per_minute' => 600,
+            'per_tenant_per_minute' => 600,
             'tools_call_per_minute' => 60,
         ],
         /*

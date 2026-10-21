@@ -8,18 +8,18 @@ use BeegoodIT\FilamentAi\Models\Conversation;
 use BeegoodIT\FilamentAi\Services\ChatAttachmentMapper;
 use BeegoodIT\FilamentAi\Services\ConversationAttachmentCleanup;
 use BeegoodIT\FilamentAi\Services\ConversationHistoryService;
-use BeegoodIT\FilamentAi\Services\ConversationWorkspaceService;
+use BeegoodIT\FilamentAi\Services\ConversationTenantService;
 use BeegoodIT\FilamentAi\Support\ChatMode;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
 
-class ConversationWorkspaceTest extends TestCase
+class ConversationTenantTest extends TestCase
 {
     #[Test]
-    public function it_scopes_conversations_to_workspace_from_stub_resolver(): void
+    public function it_scopes_conversations_to_tenant_from_stub_resolver(): void
     {
         config([
-            'filament-ai.workspace_resolver' => fn (): int => 42,
+            'filament-ai.tenant_resolver' => fn (): int => 42,
         ]);
 
         $user = $this->actingAsUser();
@@ -30,7 +30,7 @@ class ConversationWorkspaceTest extends TestCase
             'participant_id' => Conversation::participantKey($user),
             'title' => 'Hello',
             'mode' => ChatMode::Ask->value,
-            'workspace_id' => 42,
+            'tenant_id' => 42,
         ]);
 
         $other = Conversation::query()->create([
@@ -39,7 +39,7 @@ class ConversationWorkspaceTest extends TestCase
             'participant_id' => Conversation::participantKey($user),
             'title' => 'Other',
             'mode' => ChatMode::Ask->value,
-            'workspace_id' => 99,
+            'tenant_id' => 99,
         ]);
 
         // ShellAgent message so history filters include the conversation.
@@ -80,10 +80,10 @@ class ConversationWorkspaceTest extends TestCase
     }
 
     #[Test]
-    public function workspace_service_stamps_mode_and_workspace(): void
+    public function tenant_service_stamps_mode_and_tenant(): void
     {
         config([
-            'filament-ai.workspace_resolver' => fn (): int => 7,
+            'filament-ai.tenant_resolver' => fn (): int => 7,
         ]);
 
         $user = $this->actingAsUser();
@@ -95,13 +95,13 @@ class ConversationWorkspaceTest extends TestCase
             'title' => 'Stamp',
         ]);
 
-        $service = app(ConversationWorkspaceService::class);
-        $service->ensureWorkspaceScope($conversation->id, $user);
+        $service = app(ConversationTenantService::class);
+        $service->ensureTenantScope($conversation->id, $user);
         $service->ensureMode($conversation->id, $user, ChatMode::Agent);
 
         $conversation->refresh();
 
-        $this->assertSame(7, $conversation->workspaceKey());
+        $this->assertSame(7, $conversation->tenantKey());
         $this->assertSame(ChatMode::Agent, $conversation->chatMode());
     }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BeegoodIT\FilamentAi\Http\Middleware;
 
 use BeegoodIT\FilamentAi\Models\McpToken;
-use BeegoodIT\FilamentAi\Models\Setting;
 use BeegoodIT\FilamentAi\Services\ToolContext;
 use BeegoodIT\FilamentAi\Support\ChatMode;
 use BeegoodIT\FilamentAi\Support\FilamentAi;
@@ -21,7 +20,7 @@ class AuthenticateMcpToken
     public function handle(Request $request, Closure $next): Response
     {
         $tokensTable = (string) config('filament-ai.mcp.tokens_table', 'beegoodit_filament_ai_mcp_tokens');
-        $settingsTable = (string) config('filament-ai.settings_table', 'beegoodit_filament_ai_settings');
+        $settingsTable = FilamentAi::settingsTable();
 
         if (! Schema::hasTable($tokensTable) || ! Schema::hasTable($settingsTable)) {
             return response()->json(['message' => 'MCP is not available.'], 503);
@@ -45,16 +44,16 @@ class AuthenticateMcpToken
             return response()->json(['message' => 'MCP token has no valid creator user.'], 401);
         }
 
-        $column = FilamentAi::workspaceColumn();
-        $workspaceId = $token->workspaceKey();
+        $column = FilamentAi::tenantColumn();
+        $tenantId = $token->tenantKey();
 
-        $settings = Setting::query()
-            ->when($workspaceId !== null, fn ($q) => $q->where($column, $workspaceId))
-            ->when($workspaceId === null, fn ($q) => $q->whereNull($column))
+        $settings = FilamentAi::settings()
+            ->when($tenantId !== null, fn ($q) => $q->where($column, $tenantId))
+            ->when($tenantId === null, fn ($q) => $q->whereNull($column))
             ->first();
 
         if ($settings === null || ! $settings->enabled || ! $settings->mcp_enabled) {
-            return response()->json(['message' => 'Remote MCP is disabled for this workspace.'], 403);
+            return response()->json(['message' => 'Remote MCP is disabled for this tenant.'], 403);
         }
 
         Auth::setUser($user);
@@ -62,12 +61,12 @@ class AuthenticateMcpToken
         $mode = $token->allowsWrite() ? ChatMode::Agent : ChatMode::Ask;
 
         config([
-            'filament-ai.workspace_resolver' => static fn (): int|string|null => $workspaceId,
+            'filament-ai.tenant_resolver' => static fn (): int|string|null => $tenantId,
         ]);
 
         app()->instance('filament_ai.mcp.settings', $settings);
         app()->instance(ToolContext::class, new ToolContext(
-            workspaceId: $workspaceId,
+            tenantId: $tenantId,
             user: $user,
             conversationId: null,
             mode: $mode,

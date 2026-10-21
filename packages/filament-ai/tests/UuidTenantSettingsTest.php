@@ -8,7 +8,7 @@ use BeegoodIT\FilamentAi\Services\PersistSettings;
 use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 
-class UuidWorkspaceSettingsTest extends TestCase
+class UuidTenantSettingsTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -17,9 +17,8 @@ class UuidWorkspaceSettingsTest extends TestCase
         Schema::dropIfExists('beegoodit_filament_ai_settings');
 
         config([
-            'filament-ai.workspace_key_type' => 'uuid',
-            'filament-ai.workspace_column' => 'workspace_id',
-            'filament-ai.settings_table' => 'beegoodit_filament_ai_settings',
+            'filament-ai.tenant_key_type' => 'uuid',
+            'filament-ai.tenant_column' => 'tenant_id',
         ]);
 
         $migration = require __DIR__.'/../database/migrations/2026_10_12_000001_create_filament_ai_settings_table.php';
@@ -27,13 +26,13 @@ class UuidWorkspaceSettingsTest extends TestCase
     }
 
     #[Test]
-    public function it_stores_uuid_workspace_keys(): void
+    public function it_stores_uuid_tenant_keys(): void
     {
         $uuid = '550e8400-e29b-41d4-a716-446655440000';
 
         config([
-            'filament-ai.workspace_resolver' => fn (): string => $uuid,
-            'filament-ai.workspace_key_type' => 'uuid',
+            'filament-ai.tenant_resolver' => fn (): string => $uuid,
+            'filament-ai.tenant_key_type' => 'uuid',
         ]);
 
         $settings = app(PersistSettings::class)->save([
@@ -43,7 +42,7 @@ class UuidWorkspaceSettingsTest extends TestCase
             'api_key' => 'sk-uuid',
         ]);
 
-        $this->assertSame($uuid, $settings->workspaceKey());
-        $this->assertSame($uuid, $settings->fresh()->workspaceKey());
+        $this->assertSame($uuid, $settings->tenantKey());
+        $this->assertSame($uuid, $settings->fresh()->tenantKey());
     }
 }

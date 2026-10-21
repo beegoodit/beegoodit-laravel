@@ -47,10 +47,10 @@ INSTRUCTIONS;
             $parts[] = $fragment;
         }
 
-        $workspaceContext = $this->settings->customInstructionsFragment();
+        $tenantContext = $this->settings->customInstructionsFragment();
 
-        if ($workspaceContext !== null) {
-            $parts[] = $workspaceContext;
+        if ($tenantContext !== null) {
+            $parts[] = $tenantContext;
         }
 
         return implode("\n\n", $parts);

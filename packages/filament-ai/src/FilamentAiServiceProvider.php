@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BeegoodIT\FilamentAi;
 
 use BeegoodIT\FilamentAi\Capabilities\CapabilityRegistry;
+use BeegoodIT\FilamentAi\Capabilities\FilamentAiCapabilityProvider;
 use BeegoodIT\FilamentAi\Http\Middleware\ApplyMcpRateLimits;
 use BeegoodIT\FilamentAi\Http\Middleware\AuthenticateMcpToken;
 use BeegoodIT\FilamentAi\Mcp\FilamentAiMcpServer;
@@ -29,6 +30,9 @@ class FilamentAiServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-ai');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-ai');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        $this->app->make(CapabilityRegistry::class)
+            ->register(new FilamentAiCapabilityProvider);
 
         $this->registerMcpServer();
 

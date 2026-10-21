@@ -26,7 +26,7 @@ trait ManagesMcpTokens
         }
 
         return McpToken::query()
-            ->forWorkspace(FilamentAi::workspaceId())
+            ->forTenant(FilamentAi::tenantId())
             ->latest('id')
             ->with('createdBy')
             ->get();
@@ -91,10 +91,12 @@ JSON;
             return;
         }
 
+        $authId = $user->getAuthIdentifier();
+
         $issued = McpToken::issue(
             label: $label,
-            workspaceId: FilamentAi::workspaceId(),
-            createdByUserId: (int) $user->getAuthIdentifier(),
+            tenantId: FilamentAi::tenantId(),
+            createdByUserId: is_int($authId) || is_string($authId) ? $authId : null,
             scope: $scope,
         );
 
@@ -114,7 +116,7 @@ JSON;
         }
 
         $token = McpToken::query()
-            ->forWorkspace(FilamentAi::workspaceId())
+            ->forTenant(FilamentAi::tenantId())
             ->whereKey($tokenId)
             ->first();
 

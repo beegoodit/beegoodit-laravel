@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 class ConversationHistoryService
 {
     public function __construct(
-        private ConversationWorkspaceService $workspaceService,
+        private ConversationTenantService $tenantService,
     ) {}
 
     public function findAccessible(string $conversationId): ?Conversation
@@ -31,7 +31,7 @@ class ConversationHistoryService
             ->whereHas('messages', fn (Builder $query): Builder => $query->where('agent', ShellAgent::class))
             ->first();
 
-        if ($conversation === null || ! $this->workspaceService->userCanAccess($conversation)) {
+        if ($conversation === null || ! $this->tenantService->userCanAccess($conversation)) {
             return null;
         }
 
@@ -43,27 +43,43 @@ class ConversationHistoryService
      */
     public function listForCurrentUser(int $limit = 50): Collection
     {
-        $user = auth()->user();
+        $query = $this->queryForCurrentUser();
 
-        if ($user === null) {
+        if ($query === null) {
             return collect();
         }
 
-        $column = FilamentAi::workspaceColumn();
-        $workspaceId = FilamentAi::workspaceId();
+        return $query
+            ->latest('updated_at')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function countForCurrentUser(): int
+    {
+        return $this->queryForCurrentUser()?->count() ?? 0;
+    }
+
+    public function queryForCurrentUser(): ?Builder
+    {
+        $user = auth()->user();
+
+        if ($user === null) {
+            return null;
+        }
+
+        $column = FilamentAi::tenantColumn();
+        $tenantId = FilamentAi::tenantId();
 
         return Conversation::query()
             ->where('participant_type', Conversation::participantType($user))
             ->where('participant_id', Conversation::participantKey($user))
             ->whereHas('messages', fn (Builder $query): Builder => $query->where('agent', ShellAgent::class))
             ->when(
-                $workspaceId === null,
+                $tenantId === null,
                 fn (Builder $query) => $query->whereNull($column),
-                fn (Builder $query) => $query->where($column, $workspaceId),
-            )
-            ->latest('updated_at')
-            ->limit($limit)
-            ->get();
+                fn (Builder $query) => $query->where($column, $tenantId),
+            );
     }
 
     /**

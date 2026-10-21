@@ -10,27 +10,27 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $table = (string) config('filament-ai.settings_table', 'beegoodit_filament_ai_settings');
+        $table = (string) config('ai.conversations.tables.conversations', 'agent_conversations');
 
-        if (! Schema::hasTable($table) || Schema::hasColumn($table, 'mcp_enabled')) {
+        if (! Schema::hasTable($table) || Schema::hasColumn($table, 'mode')) {
             return;
         }
 
         Schema::table($table, function (Blueprint $blueprint): void {
-            $blueprint->boolean('mcp_enabled')->default(false)->after('enabled');
+            $blueprint->string('mode', 16)->default('ask')->after('title');
         });
     }
 
     public function down(): void
     {
-        $table = (string) config('filament-ai.settings_table', 'beegoodit_filament_ai_settings');
+        $table = (string) config('ai.conversations.tables.conversations', 'agent_conversations');
 
-        if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'mcp_enabled')) {
+        if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'mode')) {
             return;
         }
 
         Schema::table($table, function (Blueprint $blueprint): void {
-            $blueprint->dropColumn('mcp_enabled');
+            $blueprint->dropColumn('mode');
         });
     }
 };

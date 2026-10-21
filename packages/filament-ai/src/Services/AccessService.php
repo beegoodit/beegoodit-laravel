@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BeegoodIT\FilamentAi\Services;
 
 use BeegoodIT\FilamentAi\Models\Setting;
+use BeegoodIT\FilamentAi\Support\FilamentAi;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,20 +13,18 @@ class AccessService
 {
     public function settings(): ?Setting
     {
-        return Setting::forCurrentWorkspace();
+        return FilamentAi::settingsModel()::forCurrentTenant();
     }
 
     public function hasValidByok(): bool
     {
         $settings = $this->settings();
 
-        if ($settings === null || ! $settings->enabled) {
-            return false;
-        }
-
-        return filled($settings->api_key)
-            && $settings->provider !== null
-            && filled($settings->model);
+        // Match TallCMS host BYOK: enabled + configured key. Model may be null
+        // (UI placeholder / provider default); provider is optional for the gate.
+        return $settings !== null
+            && $settings->enabled
+            && $settings->hasConfiguredKey();
     }
 
     public function canUseAssistant(?Authenticatable $user = null): bool

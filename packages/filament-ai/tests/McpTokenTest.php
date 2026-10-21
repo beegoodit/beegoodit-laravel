@@ -16,13 +16,14 @@ final class McpTokenTest extends TestCase
 
         $issued = McpToken::issue(
             label: 'cursor',
-            workspaceId: 7,
-            createdByUserId: (int) $user->id,
+            tenantId: 7,
+            createdByUserId: $user->id,
             scope: McpToken::SCOPE_READ,
         );
 
         $this->assertStringStartsWith('fa_mcp_', $issued['plain']);
-        $this->assertSame(7, $issued['token']->workspaceKey());
+        $this->assertSame(7, $issued['token']->tenantKey());
+        $this->assertSame($user->id, $issued['token']->created_by_user_id);
         $this->assertTrue($issued['token']->isCurrentlyValid());
         $this->assertFalse($issued['token']->allowsWrite());
 
@@ -38,8 +39,8 @@ final class McpTokenTest extends TestCase
 
         $issued = McpToken::issue(
             label: 'tmp',
-            workspaceId: null,
-            createdByUserId: (int) $user->id,
+            tenantId: null,
+            createdByUserId: $user->id,
             scope: McpToken::SCOPE_WRITE,
         );
 

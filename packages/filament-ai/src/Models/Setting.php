@@ -24,6 +24,8 @@ use Laravel\Ai\Enums\Lab;
  */
 class Setting extends Model
 {
+    public const TABLE = 'beegoodit_filament_ai_settings';
+
     /**
      * @return array<string, string>
      */
@@ -49,7 +51,7 @@ class Setting extends Model
 
     public function getTable(): string
     {
-        return (string) config('filament-ai.settings_table', 'beegoodit_filament_ai_settings');
+        return self::TABLE;
     }
 
     /**
@@ -58,7 +60,7 @@ class Setting extends Model
     public function getFillable(): array
     {
         return [
-            FilamentAi::workspaceColumn(),
+            FilamentAi::tenantColumn(),
             $this->enabledColumn(),
             'mcp_enabled',
             'provider',
@@ -70,7 +72,7 @@ class Setting extends Model
     }
 
     /**
-     * Hosts may store the flag as `is_enabled` (TallCMS) while API stays `enabled`.
+     * Public API is always `$settings->enabled`. Hosts may override {@see enabledColumn()}.
      */
     protected function enabled(): Attribute
     {
@@ -90,35 +92,36 @@ class Setting extends Model
         );
     }
 
+    /**
+     * DB column for the enabled flag. Override in host subclasses (e.g. TallCMS `is_enabled`).
+     */
     protected function enabledColumn(): string
     {
-        $column = config('filament-ai.enabled_column', 'enabled');
-
-        return is_string($column) && $column !== '' ? $column : 'enabled';
+        return 'enabled';
     }
 
-    public static function forCurrentWorkspace(): ?self
+    public static function forCurrentTenant(): ?static
     {
-        $column = FilamentAi::workspaceColumn();
-        $workspaceId = FilamentAi::workspaceId();
+        $column = FilamentAi::tenantColumn();
+        $tenantId = FilamentAi::tenantId();
 
         return static::query()
             ->when(
-                $workspaceId === null,
+                $tenantId === null,
                 fn ($query) => $query->whereNull($column),
-                fn ($query) => $query->where($column, $workspaceId),
+                fn ($query) => $query->where($column, $tenantId),
             )
             ->first();
     }
 
-    public function workspaceKey(): int|string|null
+    public function tenantKey(): int|string|null
     {
-        return $this->getAttribute(FilamentAi::workspaceColumn());
+        return $this->getAttribute(FilamentAi::tenantColumn());
     }
 
-    public function setWorkspaceKey(int|string|null $value): static
+    public function setTenantKey(int|string|null $value): static
     {
-        $this->setAttribute(FilamentAi::workspaceColumn(), $value);
+        $this->setAttribute(FilamentAi::tenantColumn(), $value);
 
         return $this;
     }
@@ -170,7 +173,7 @@ class Setting extends Model
         }
 
         return <<<FRAGMENT
-Workspace context (always apply — configured in AI Settings, not chat memory):
+Tenant context (always apply — configured in AI Settings, not chat memory):
 {$instructions}
 FRAGMENT;
     }

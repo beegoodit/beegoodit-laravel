@@ -18,10 +18,10 @@ use PHPUnit\Framework\Attributes\Test;
 class PersistSettingsTest extends TestCase
 {
     #[Test]
-    public function it_persists_byok_settings_for_a_stub_workspace_resolver(): void
+    public function it_persists_byok_settings_for_a_stub_tenant_resolver(): void
     {
         config([
-            'filament-ai.workspace_resolver' => fn (): int => 42,
+            'filament-ai.tenant_resolver' => fn (): int => 42,
         ]);
 
         $registry = $this->app->make(CapabilityRegistry::class);
@@ -43,7 +43,7 @@ class PersistSettingsTest extends TestCase
             'custom_instructions' => 'Be concise.',
         ]);
 
-        $this->assertSame(42, $settings->workspaceKey());
+        $this->assertSame(42, $settings->tenantKey());
         $this->assertTrue($settings->enabled);
         $this->assertSame(Lab::OpenAI, $settings->provider);
         $this->assertSame('gpt-4o-mini', $settings->model);
@@ -52,7 +52,7 @@ class PersistSettingsTest extends TestCase
         $this->assertFalse($settings->resolvedCapabilities()['cms']['publish']);
         $this->assertFalse($settings->can('cms', 'publish'));
 
-        $raw = DB::table('beegoodit_filament_ai_settings')->where('workspace_id', 42)->first();
+        $raw = DB::table('beegoodit_filament_ai_settings')->where('tenant_id', 42)->first();
         $this->assertNotNull($raw);
         $this->assertNotSame('sk-test-secret', $raw->api_key);
         $this->assertStringNotContainsString('sk-test-secret', (string) $raw->api_key);
@@ -62,7 +62,7 @@ class PersistSettingsTest extends TestCase
     public function it_keeps_existing_api_key_when_blank_on_save(): void
     {
         config([
-            'filament-ai.workspace_resolver' => fn (): int => 7,
+            'filament-ai.tenant_resolver' => fn (): int => 7,
         ]);
 
         app(PersistSettings::class)->save([
@@ -86,7 +86,7 @@ class PersistSettingsTest extends TestCase
     public function access_service_requires_valid_byok(): void
     {
         config([
-            'filament-ai.workspace_resolver' => fn (): int => 1,
+            'filament-ai.tenant_resolver' => fn (): int => 1,
         ]);
 
         $access = app(AccessService::class);
@@ -95,7 +95,7 @@ class PersistSettingsTest extends TestCase
         app(PersistSettings::class)->save([
             'enabled' => true,
             'provider' => 'openai',
-            'model' => 'gpt-4o-mini',
+            'model' => null,
             'api_key' => 'sk-ok',
         ]);
 
@@ -107,22 +107,22 @@ class PersistSettingsTest extends TestCase
     }
 
     #[Test]
-    public function tool_context_binds_workspace_from_resolver(): void
+    public function tool_context_binds_tenant_from_resolver(): void
     {
         config([
-            'filament-ai.workspace_resolver' => fn (): int => 99,
+            'filament-ai.tenant_resolver' => fn (): int => 99,
         ]);
 
         $user = $this->actingAsUser();
         $context = app(ToolContext::class);
         $context->bind();
 
-        $this->assertSame(99, $context->workspaceId());
+        $this->assertSame(99, $context->tenantId());
         $this->assertSame($user->id, $context->user()?->getAuthIdentifier());
     }
 
     #[Test]
-    public function for_current_workspace_uses_null_scope_without_resolver(): void
+    public function for_current_tenant_uses_null_scope_without_resolver(): void
     {
         app(PersistSettings::class)->save([
             'enabled' => true,
@@ -131,10 +131,10 @@ class PersistSettingsTest extends TestCase
             'api_key' => 'sk-single',
         ]);
 
-        $settings = Setting::forCurrentWorkspace();
+        $settings = Setting::forCurrentTenant();
 
         $this->assertNotNull($settings);
-        $this->assertNull($settings->workspaceKey());
+        $this->assertNull($settings->tenantKey());
         $this->assertSame('sk-single', $settings->api_key);
     }
 }

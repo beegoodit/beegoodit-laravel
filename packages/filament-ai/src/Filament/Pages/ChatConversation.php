@@ -26,7 +26,7 @@ class ChatConversation extends Page implements HasForms
 
     protected Width|string|null $maxContentWidth = Width::Full;
 
-    public function mount(string $conversation, AccessService $access, ConversationHistoryService $history): void
+    public function mount(AccessService $access, ConversationHistoryService $history, string $conversation): void
     {
         $this->conversationId = $conversation;
         $this->initializeAiChat($access, $history);
@@ -44,11 +44,11 @@ class ChatConversation extends Page implements HasForms
 
     public function getTitle(): string|Htmlable
     {
-        return __('filament-ai::ai.pages.assistant.title');
+        return $this->chatHeading();
     }
 
     public function getHeading(): string|Htmlable
     {
-        return __('filament-ai::ai.pages.assistant.heading');
+        return $this->chatHeading();
     }
 }

@@ -9,19 +9,19 @@ use BeegoodIT\FilamentAi\Support\ChatMode;
 use BeegoodIT\FilamentAi\Support\FilamentAi;
 use Illuminate\Support\Facades\Schema;
 
-class ConversationWorkspaceService
+class ConversationTenantService
 {
-    public function ensureWorkspaceScope(string $conversationId, object $participant): void
+    public function ensureTenantScope(string $conversationId, object $participant): void
     {
-        $column = FilamentAi::workspaceColumn();
+        $column = FilamentAi::tenantColumn();
 
         if (! $this->columnAvailable($column)) {
             return;
         }
 
-        $workspaceId = FilamentAi::workspaceId();
+        $tenantId = FilamentAi::tenantId();
 
-        if ($workspaceId === null) {
+        if ($tenantId === null) {
             return;
         }
 
@@ -30,7 +30,7 @@ class ConversationWorkspaceService
             ->where('participant_type', Conversation::participantType($participant))
             ->where('participant_id', Conversation::participantKey($participant))
             ->whereNull($column)
-            ->update([$column => $workspaceId]);
+            ->update([$column => $tenantId]);
     }
 
     public function ensureMode(string $conversationId, object $participant, ChatMode $mode): void
@@ -46,9 +46,9 @@ class ConversationWorkspaceService
             ->update(['mode' => $mode->value]);
     }
 
-    public function workspaceMatchesCurrent(?string $conversationId): bool
+    public function tenantMatchesCurrent(?string $conversationId): bool
     {
-        $column = FilamentAi::workspaceColumn();
+        $column = FilamentAi::tenantColumn();
 
         if ($conversationId === null || $conversationId === '' || ! $this->columnAvailable($column)) {
             return true;
@@ -56,17 +56,17 @@ class ConversationWorkspaceService
 
         $conversation = Conversation::query()->find($conversationId);
 
-        if ($conversation === null || $conversation->workspaceKey() === null) {
+        if ($conversation === null || $conversation->tenantKey() === null) {
             return true;
         }
 
-        $current = FilamentAi::workspaceId();
+        $current = FilamentAi::tenantId();
 
         if ($current === null) {
             return true;
         }
 
-        return (string) $conversation->workspaceKey() === (string) $current;
+        return (string) $conversation->tenantKey() === (string) $current;
     }
 
     public function userCanAccess(Conversation $conversation): bool
@@ -84,7 +84,7 @@ class ConversationWorkspaceService
             return false;
         }
 
-        return $this->workspaceMatchesCurrent($conversation->id);
+        return $this->tenantMatchesCurrent($conversation->id);
     }
 
     protected function columnAvailable(string $column): bool

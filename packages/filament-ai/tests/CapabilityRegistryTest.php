@@ -16,7 +16,7 @@ class CapabilityRegistryTest extends TestCase
     #[Test]
     public function it_builds_nested_defaults(): void
     {
-        $registry = $this->app->make(CapabilityRegistry::class);
+        $registry = new CapabilityRegistry;
         $registry->register($this->cmsProvider());
         $registry->register($this->menuProvider());
 
@@ -34,7 +34,7 @@ class CapabilityRegistryTest extends TestCase
     #[Test]
     public function it_merges_stored_capabilities_over_defaults(): void
     {
-        $registry = $this->app->make(CapabilityRegistry::class);
+        $registry = new CapabilityRegistry;
         $registry->register($this->cmsProvider());
 
         $merged = $registry->merge([
@@ -55,7 +55,7 @@ class CapabilityRegistryTest extends TestCase
     #[Test]
     public function it_nests_flat_maps_when_a_single_provider_is_registered(): void
     {
-        $registry = $this->app->make(CapabilityRegistry::class);
+        $registry = new CapabilityRegistry;
         $registry->register($this->cmsProvider());
 
         $merged = $registry->merge([
@@ -70,7 +70,7 @@ class CapabilityRegistryTest extends TestCase
     #[Test]
     public function can_reads_nested_resolved_map(): void
     {
-        $registry = $this->app->make(CapabilityRegistry::class);
+        $registry = new CapabilityRegistry;
         $resolved = [
             'cms' => ['publish' => true],
         ];

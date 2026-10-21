@@ -8,6 +8,7 @@ use BeegoodIT\FilamentAi\Capabilities\CapabilityRegistry;
 use BeegoodIT\FilamentAi\Models\McpToken;
 use BeegoodIT\FilamentAi\Models\Setting;
 use BeegoodIT\FilamentAi\Support\ChatMode;
+use BeegoodIT\FilamentAi\Support\FilamentAi;
 use Laravel\Ai\Contracts\Tool as AiTool;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
@@ -16,7 +17,7 @@ use Laravel\Mcp\Server\Attributes\Version;
 
 #[Name('Filament AI')]
 #[Version('1.0.0')]
-#[Instructions('Workspace tools bound to your MCP token. Read tokens expose Ask-equivalent tools only. Write tokens expose Agent-equivalent tools gated by AI Settings capabilities.')]
+#[Instructions('Tenant tools bound to your MCP token. Read tokens expose Ask-equivalent tools only. Write tokens expose Agent-equivalent tools gated by AI Settings capabilities.')]
 class FilamentAiMcpServer extends Server
 {
     protected string $name = 'Filament AI';
@@ -41,7 +42,7 @@ class FilamentAiMcpServer extends Server
         /** @var Setting|null $settings */
         $settings = app()->bound('filament_ai.mcp.settings')
             ? app('filament_ai.mcp.settings')
-            : Setting::forCurrentWorkspace();
+            : FilamentAi::settingsModel()::forCurrentTenant();
 
         if (! $settings instanceof Setting) {
             return [];

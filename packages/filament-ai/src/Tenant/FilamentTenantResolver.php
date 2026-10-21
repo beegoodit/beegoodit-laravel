@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace BeegoodIT\FilamentAi\Workspace;
+namespace BeegoodIT\FilamentAi\Tenant;
 
 use Filament\Facades\Filament;
 
 /**
- * Resolve workspace id from the current Filament panel tenant.
+ * Resolve tenant id from the current Filament panel tenant.
  */
-final class FilamentTenantWorkspaceResolver
+final class FilamentTenantResolver
 {
     public function __invoke(): int|string|null
     {

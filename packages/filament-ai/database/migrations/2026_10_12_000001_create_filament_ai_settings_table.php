@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use BeegoodIT\FilamentAi\Models\Setting;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,9 +11,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $table = (string) config('filament-ai.settings_table', 'beegoodit_filament_ai_settings');
-        $column = (string) config('filament-ai.workspace_column', 'workspace_id');
-        $type = (string) config('filament-ai.workspace_key_type', 'int');
+        $table = Setting::TABLE;
+        $column = (string) config('filament-ai.tenant_column', 'tenant_id');
+        $type = (string) config('filament-ai.tenant_key_type', 'int');
 
         Schema::create($table, function (Blueprint $blueprint) use ($column, $type): void {
             $blueprint->id();
@@ -36,6 +37,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists((string) config('filament-ai.settings_table', 'beegoodit_filament_ai_settings'));
+        Schema::dropIfExists(Setting::TABLE);
     }
 };

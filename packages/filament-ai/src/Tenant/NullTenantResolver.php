@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace BeegoodIT\FilamentAi\Workspace;
+namespace BeegoodIT\FilamentAi\Tenant;
 
 /**
  * Explicit no-scope resolver (always null).
  */
-final class NullWorkspaceResolver
+final class NullTenantResolver
 {
     public function __invoke(): int|string|null
     {
