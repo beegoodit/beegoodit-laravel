@@ -531,9 +531,10 @@ class Profile extends Page implements HasForms
             'expires_at' => now()->addMinutes(10),
         ]);
 
-        // Redirect to OAuth provider for re-authentication
-        // Use the portal panel's OAuth redirect route (FilamentSocialite route naming)
-        $this->redirect(route('socialite.filament.portal.oauth.redirect', ['provider' => $provider]));
+        // Redirect to OAuth provider for re-authentication (tenant panel Socialite routes).
+        $tenantPanelId = (string) config('filament-user-profile.tenant_panel_id', 'portal');
+
+        $this->redirect(route('socialite.filament.'.$tenantPanelId.'.oauth.redirect', ['provider' => $provider]));
     }
 
     /**

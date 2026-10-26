@@ -37,7 +37,11 @@
         </form>
 
         <div class="text-center">
-            <x-filament::link :href="route('filament.portal.auth.logout')" color="gray" size="sm">
+            <x-filament::link
+                :href="route('filament.'.config('filament-user-profile.tenant_panel_id', 'portal').'.auth.logout')"
+                color="gray"
+                size="sm"
+            >
                 {{ __('filament-user-profile::messages.Log out') }}
             </x-filament::link>
         </div>

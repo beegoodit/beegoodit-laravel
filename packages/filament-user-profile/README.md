@@ -8,6 +8,25 @@ User profile settings pages for Filament applications. Provides ready-to-use pag
 composer require beegoodit/filament-user-profile
 ```
 
+## Configuration
+
+Publishable keys in `config/filament-user-profile.php` (defaults keep older hosts on panel id `portal`):
+
+| Key | Default | Purpose |
+|-----|---------|---------|
+| `tenant_panel_id` | `portal` | Filament id of the tenant panel (`getPanel`, “Back to …” nav, Socialite / logout route prefixes) |
+| `tenant_panel_vite_theme` | `resources/css/filament/portal/theme.css` | Shared Vite theme for `/me` (match `resources/css/filament/{tenant_panel_id}/theme.css`) |
+
+Example (Octake):
+
+```php
+// AppServiceProvider::register()
+config([
+    'filament-user-profile.tenant_panel_id' => 'teams',
+    'filament-user-profile.tenant_panel_vite_theme' => 'resources/css/filament/teams/theme.css',
+]);
+```
+
 ## Setup
 
 ### 1. Configure Tailwind CSS (Required)

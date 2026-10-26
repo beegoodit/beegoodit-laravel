@@ -81,7 +81,7 @@ class UserProfilePanelProvider extends PanelProvider
                 NavigationItem::make()
                     ->label(fn () => __('filament-user-profile::messages.Back to Team Dashboard'))
                     ->icon('heroicon-o-arrow-left')
-                    ->url(fn (): string => $this->getPortalUrl())
+                    ->url(fn (): string => $this->getTenantPanelUrl())
                     ->sort(-1), // Show at the top
             ])
             ->middleware([
@@ -102,52 +102,52 @@ class UserProfilePanelProvider extends PanelProvider
                 ? [\BeegoodIT\FilamentLegal\Http\Middleware\EnsureLegalAcceptance::class]
                 : []
             ))
-            ->viteTheme('resources/css/filament/portal/theme.css');
+            ->viteTheme((string) config(
+                'filament-user-profile.tenant_panel_vite_theme',
+                'resources/css/filament/portal/theme.css',
+            ));
     }
 
     /**
-     * Get the URL to the portal panel dashboard.
-     * Handles both tenant and non-tenant portals.
+     * URL to the configured tenant panel dashboard.
+     * Handles both tenanted and non-tenanted panels.
      *
-     * Since the settings panel doesn't have tenancy, we need to get the tenant
-     * from the authenticated user's teams.
+     * Since /me has no tenancy, resolve the Filament tenant from the authenticated user when needed.
      */
-    protected function getPortalUrl(): string
+    protected function getTenantPanelUrl(): string
     {
-        $portalPanel = Filament::getPanel('portal');
+        $panelId = (string) config('filament-user-profile.tenant_panel_id', 'portal');
+        $panels = Filament::getPanels();
 
-        if (! $portalPanel) {
-            // Fallback if portal panel doesn't exist
-            return '/portal';
+        if (! array_key_exists($panelId, $panels)) {
+            return '/'.$panelId;
         }
 
-        // If portal doesn't have tenancy, just return the base URL
-        if (! $portalPanel->hasTenancy()) {
-            return $portalPanel->getUrl();
+        $tenantPanel = $panels[$panelId];
+
+        if (! $tenantPanel->hasTenancy()) {
+            return $tenantPanel->getUrl();
         }
 
-        // Try to get tenant from authenticated user's teams
         $user = Auth::user();
 
         if ($user) {
-            // Try to get the user's first team (or default team if method exists)
-            $team = null;
+            $tenant = null;
 
             if (method_exists($user, 'currentTeam')) {
-                $team = $user->currentTeam();
+                $tenant = $user->currentTeam();
             } elseif (method_exists($user, 'teams')) {
-                $team = $user->teams()->first();
+                $tenant = $user->teams()->first();
             } elseif (method_exists($user, 'team')) {
-                $team = $user->team;
+                $tenant = $user->team;
             }
 
-            if ($team) {
-                return $portalPanel->getUrl(tenant: $team);
+            if ($tenant) {
+                return $tenantPanel->getUrl(tenant: $tenant);
             }
         }
 
-        // Fallback: return base portal URL (will redirect to team selection if needed)
-        return $portalPanel->getUrl();
+        return $tenantPanel->getUrl();
     }
 
     /**
