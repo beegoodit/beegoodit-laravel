@@ -2,6 +2,7 @@
 
 namespace BeegoodIT\FilamentPartners\Models;
 
+use BeegoodIT\FilamentPartners\Database\Factories\PartnerFactory;
 use BeegoodIT\FilamentPartners\Enums\PartnerType;
 use BeegoodIT\FilamentPartners\Models\Concerns\HasActivePeriod;
 use BeegoodIT\FilamentPartners\Models\Concerns\HasUserStamps;
@@ -84,5 +85,10 @@ class Partner extends Model implements Sortable
         }
 
         return Storage::disk($disk)->url($this->logo);
+    }
+
+    protected static function newFactory(): PartnerFactory
+    {
+        return PartnerFactory::new();
     }
 }

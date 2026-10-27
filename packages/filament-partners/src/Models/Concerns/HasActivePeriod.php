@@ -2,7 +2,6 @@
 
 namespace BeegoodIT\FilamentPartners\Models\Concerns;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasActivePeriod

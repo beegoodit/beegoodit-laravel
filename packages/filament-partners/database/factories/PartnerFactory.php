@@ -5,6 +5,7 @@ namespace BeegoodIT\FilamentPartners\Database\Factories;
 use BeegoodIT\FilamentPartners\Enums\PartnerType;
 use BeegoodIT\FilamentPartners\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 class PartnerFactory extends Factory
 {
@@ -41,6 +42,30 @@ class PartnerFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'type' => PartnerType::Sponsor,
+        ]);
+    }
+
+    public function forPartnerable(Model $owner): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'partnerable_type' => $owner->getMorphClass(),
+            'partnerable_id' => $owner->getKey(),
+        ]);
+    }
+
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'active_from' => now()->subYear(),
+            'active_to' => now()->addYear(),
+        ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'active_from' => now()->subYears(2),
+            'active_to' => now()->subYear(),
         ]);
     }
 }
