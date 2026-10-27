@@ -70,7 +70,7 @@ class UserProfilePanelProvider extends PanelProvider
             }
         }
 
-        return $panel
+        $panel
             // No tenant() - this panel has no tenancy
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber,
@@ -106,6 +106,18 @@ class UserProfilePanelProvider extends PanelProvider
                 'filament-user-profile.tenant_panel_vite_theme',
                 'resources/css/filament/portal/theme.css',
             ));
+
+        $configure = config('filament-user-profile.configure_panel');
+
+        if (is_string($configure) && class_exists($configure)) {
+            $configure = app($configure);
+        }
+
+        if (is_callable($configure)) {
+            $panel = $configure($panel) ?? $panel;
+        }
+
+        return $panel;
     }
 
     /**

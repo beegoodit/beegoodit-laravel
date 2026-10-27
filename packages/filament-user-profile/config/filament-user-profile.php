@@ -54,4 +54,19 @@ return [
 
     'tenant_panel_vite_theme' => 'resources/css/filament/portal/theme.css',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Configure /me panel
+    |--------------------------------------------------------------------------
+    |
+    | Optional callable receiving the Filament Panel for /me after the package
+    | defaults are applied. Host apps can register extra pages, plugins, and
+    | resources (e.g. Facts / Connections on Octake).
+    |
+    | Signature: function (\Filament\Panel $panel): \Filament\Panel
+    |
+    */
+
+    'configure_panel' => null,
+
 ];
