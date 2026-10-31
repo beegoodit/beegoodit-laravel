@@ -17,6 +17,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Sign-in methods
+    |--------------------------------------------------------------------------
+    |
+    | Members of this list are offered on /me/login. The first member is the
+    | form people see; each later member is a link that swaps the form.
+    | Allowed values: "password", "email_code". Unknown values are ignored.
+    | An empty list falls back to password so a bad config cannot lock sign-in.
+    | email_code creates an account only when registration is true, and only
+    | after the code is accepted. The code mail uses the host mailer and is
+    | not queued. Code sign-up stores a null password, so users.password must
+    | be nullable (same requirement as Discord sign-in).
+    |
+    */
+
+    'sign_in_methods' => ['password'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Email verification
     |--------------------------------------------------------------------------
     |

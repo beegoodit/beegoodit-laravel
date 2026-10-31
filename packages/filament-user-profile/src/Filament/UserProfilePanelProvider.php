@@ -3,6 +3,8 @@
 namespace BeegoodIT\FilamentUserProfile\Filament;
 
 use BeegoodIT\FilamentOAuth\FilamentSocialitePluginHelper;
+use BeegoodIT\FilamentUserProfile\Enums\SignInMethod;
+use BeegoodIT\FilamentUserProfile\Filament\Auth\SignIn;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Appearance;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Dashboard;
 use BeegoodIT\FilamentUserProfile\Filament\Pages\Notifications;
@@ -36,6 +38,10 @@ class UserProfilePanelProvider extends PanelProvider
             ->id('me')
             ->path('me')
             ->login();
+
+        if (in_array(SignInMethod::EmailCode, SignInMethod::configured(), true)) {
+            $panel->login(SignIn::class);
+        }
 
         if (config('filament-user-profile.registration', false)) {
             $panel->registration();

@@ -14,6 +14,7 @@ Publishable keys in `config/filament-user-profile.php` (defaults keep older host
 
 | Key | Default | Purpose |
 |-----|---------|---------|
+| `sign_in_methods` | `['password']` | Offered sign-in forms, first item shown first. `email_code` needs the package migration. Registration off does not create users. The code mail uses the host mailer and is not queued. Code sign-up needs a nullable `users.password`, same as Discord. |
 | `tenant_panel_id` | `portal` | Filament id of the tenant panel (`getPanel`, “Back to …” nav, Socialite / logout route prefixes) |
 | `tenant_panel_vite_theme` | `resources/css/filament/portal/theme.css` | Shared Vite theme for `/me` (match `resources/css/filament/{tenant_panel_id}/theme.css`) |
 

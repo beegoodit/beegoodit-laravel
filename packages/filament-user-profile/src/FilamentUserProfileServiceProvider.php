@@ -23,6 +23,8 @@ class FilamentUserProfileServiceProvider extends ServiceProvider
         // Load translations
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-user-profile');
 
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
         // Register Blade components
         Blade::componentNamespace('BeegoodIT\\FilamentUserProfile\\View\\Components', 'filament-user-profile');
 
