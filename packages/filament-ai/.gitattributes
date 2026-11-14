@@ -1,0 +1,3 @@
+/scripts export-ignore
+/tests export-ignore
+.phpunit.result.cache export-ignore
