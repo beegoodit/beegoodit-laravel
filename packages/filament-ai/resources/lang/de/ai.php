@@ -127,6 +127,8 @@ return [
         'attachments_only_prompt' => 'Bitte die angehängten Dateien prüfen.',
         'send' => 'Senden',
         'stop' => 'Stopp',
+        'working' => 'Arbeitet',
+        'thinking' => 'Denkt nach…',
         'stop_title' => 'Generierung gestoppt',
         'stopped_notice' => '(Vom Benutzer gestoppt.)',
         'send_empty_title' => 'Nachricht eingeben oder Datei anhängen.',

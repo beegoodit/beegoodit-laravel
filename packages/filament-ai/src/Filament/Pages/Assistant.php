@@ -53,9 +53,9 @@ class Assistant extends Page implements HasForms
         return $this->chatHeading();
     }
 
-    public function getHeading(): string|Htmlable
+    public function getHeading(): string|Htmlable|null
     {
-        return $this->chatHeading();
+        return null;
     }
 
     protected function shouldRedirectToChatAfterMessage(): bool

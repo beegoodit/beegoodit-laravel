@@ -127,6 +127,8 @@ return [
         'attachments_only_prompt' => 'Please review the attached files.',
         'send' => 'Send',
         'stop' => 'Stop',
+        'working' => 'Working',
+        'thinking' => 'Thinking…',
         'stop_title' => 'Generation stopped',
         'stopped_notice' => '(Stopped by user.)',
         'send_empty_title' => 'Enter a message or attach a file.',

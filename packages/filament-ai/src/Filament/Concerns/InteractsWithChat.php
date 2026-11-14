@@ -132,7 +132,7 @@ trait InteractsWithChat
                     Textarea::make('prompt')
                         ->hiddenLabel()
                         ->placeholder(__('filament-ai::ai.chat.prompt_placeholder'))
-                        ->rows(3)
+                        ->rows(1)
                         ->autosize()
                         ->extraInputAttributes([
                             'x-on:keydown.ctrl.enter.prevent' => '$event.target.closest(\'form\').requestSubmit()',

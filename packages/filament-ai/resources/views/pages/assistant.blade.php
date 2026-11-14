@@ -46,10 +46,10 @@
                                         : __('filament-ai::ai.chat.assistant') }}
                                 </div>
                                 @if ($isUser)
-                                    <div class="filament-ai-assistant-message-body leading-relaxed">{{ $message['content'] ?? '' }}</div>
+                                    <div class="filament-ai-assistant-message-body leading-relaxed">{!! \BeegoodIT\FilamentAi\Support\ChatMarkdown::toUserHtml((string) ($message['content'] ?? '')) !!}</div>
                                 @else
                                     <div class="filament-ai-assistant-markdown leading-relaxed">
-                                        {!! \BeegoodIT\FilamentAi\Support\ChatMarkdown::toHtml((string) ($message['content'] ?? '')) !!}
+                                        {!! \BeegoodIT\FilamentAi\Support\ChatMarkdown::toAssistantHtml((string) ($message['content'] ?? '')) !!}
                                     </div>
                                 @endif
 
@@ -63,23 +63,89 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <div class="filament-ai-assistant-empty text-sm text-gray-500 dark:text-gray-400">
                             {{ __('filament-ai::ai.chat.empty') }}
-                        </p>
+                        </div>
                     @endforelse
 
-                    @if (filled($streamingReply))
-                        <div class="filament-ai-assistant-message-row flex w-full items-start justify-start">
-                            <div class="filament-ai-assistant-message filament-ai-assistant-message--assistant rounded-xl bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-gray-950/10 dark:bg-gray-800 dark:text-gray-100 dark:ring-white/10">
-                                <div class="filament-ai-assistant-message-label">
+                    <div
+                        wire:loading.flex
+                        wire:target="sendMessage"
+                        x-data="{
+                            startedAt: Date.now(),
+                            elapsed: '0:00',
+                            hasReply: false,
+                            timer: null,
+                            tick() {
+                                const seconds = Math.floor((Date.now() - this.startedAt) / 1000)
+                                const mins = Math.floor(seconds / 60)
+                                const secs = String(seconds % 60).padStart(2, '0')
+                                this.elapsed = `${mins}:${secs}`
+                            },
+                            syncReply() {
+                                this.hasReply = (this.$refs.replyStream?.textContent || '').trim().length > 0
+                            },
+                        }"
+                        x-init="
+                            syncReply()
+                            new MutationObserver(() => syncReply()).observe($el, {
+                                childList: true,
+                                subtree: true,
+                                characterData: true,
+                            })
+                            const syncVisibility = () => {
+                                const visible = getComputedStyle($el).display !== 'none'
+                                if (visible && ! timer) {
+                                    startedAt = Date.now()
+                                    tick()
+                                    timer = setInterval(() => tick(), 1000)
+                                }
+                                if (! visible && timer) {
+                                    clearInterval(timer)
+                                    timer = null
+                                    hasReply = false
+                                }
+                            }
+                            syncVisibility()
+                            new MutationObserver(syncVisibility).observe($el, {
+                                attributes: true,
+                                attributeFilter: ['style', 'class'],
+                            })
+                        "
+                        class="filament-ai-assistant-message-row flex w-full items-start justify-start"
+                    >
+                        <div class="filament-ai-assistant-message filament-ai-assistant-message--assistant rounded-xl bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-gray-950/10 dark:bg-gray-800 dark:text-gray-100 dark:ring-white/10">
+                            <div class="mb-1 flex items-center justify-between gap-3">
+                                <div class="filament-ai-assistant-message-label mb-0">
                                     {{ __('filament-ai::ai.chat.assistant') }}
                                 </div>
-                                <div wire:stream="streamingReply" class="filament-ai-assistant-markdown leading-relaxed">
-                                    {!! \BeegoodIT\FilamentAi\Support\ChatMarkdown::toHtml($streamingReply) !!}
+                                <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                    <span>
+                                        {{ __('filament-ai::ai.chat.working') }}
+                                        <span aria-hidden="true"> · </span>
+                                        <span x-text="elapsed"></span>
+                                    </span>
+                                    <x-filament::button type="button" size="xs" color="danger" wire:click="stopGeneration">
+                                        {{ __('filament-ai::ai.chat.stop') }}
+                                    </x-filament::button>
                                 </div>
                             </div>
+
+                            <div
+                                x-show="! hasReply"
+                                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+                            >
+                                <x-filament::loading-indicator class="h-4 w-4" />
+                                <span>{{ __('filament-ai::ai.chat.thinking') }}</span>
+                            </div>
+
+                            <div
+                                x-ref="replyStream"
+                                wire:stream="streamingReply"
+                                class="filament-ai-assistant-markdown fi-prose leading-relaxed empty:hidden"
+                            >{!! \BeegoodIT\FilamentAi\Support\ChatMarkdown::toHtml($streamingReply) !!}</div>
                         </div>
-                    @endif
+                    </div>
                 </div>
 
                 <form
@@ -165,7 +231,7 @@
         </div>
 
         <aside class="filament-ai-assistant-sidebar">
-            <x-filament::section>
+            <x-filament::section :heading="$this->chatHeading()" heading-tag="h1">
                 @include('filament-ai::pages.partials.chat-sidebar', [
                     'conversationCreatedAt' => $conversationCreatedAt,
                     'conversationUpdatedAt' => $conversationUpdatedAt,

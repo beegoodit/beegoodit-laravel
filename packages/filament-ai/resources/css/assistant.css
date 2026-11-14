@@ -92,6 +92,8 @@
     flex: 1 1 0%;
     min-height: 0;
     overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding-inline-end: 0.75rem;
 }
 
 .filament-ai-assistant-messages > .filament-ai-assistant-message-row {
@@ -103,12 +105,20 @@
 
 .filament-ai-assistant-message {
     display: block;
-    width: fit-content;
     max-width: 85%;
     height: auto;
     min-height: 0;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     align-self: flex-start;
+}
+
+.filament-ai-assistant-empty {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
 }
 
 .filament-ai-assistant-message-label {
@@ -121,12 +131,14 @@
 }
 
 .filament-ai-assistant-message--user {
-    margin-inline-start: auto;
     padding: 0;
     background: none;
     box-shadow: none;
-    text-align: end;
     color: inherit;
+}
+
+.filament-ai-assistant-chat .fi-prose {
+    max-width: none;
 }
 
 .filament-ai-assistant-message--user .filament-ai-assistant-message-body {
@@ -138,6 +150,17 @@
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+/* One line at rest. Filament writes an inline height while typing; the cap keeps a long paste inside the field. */
+.filament-ai-composer-prompt .fi-fo-textarea,
+.filament-ai-composer-prompt .fi-fo-textarea > div {
+    max-height: 8rem;
+}
+
+.filament-ai-composer-prompt .fi-fo-textarea textarea {
+    max-height: 8rem;
+    overflow-y: auto;
 }
 
 /* Model trigger + panel: full model ids on one line. */
@@ -180,9 +203,7 @@
     }
 }
 
-.filament-ai-assistant-sidebar > .fi-section,
-.filament-ai-assistant-sidebar > .fi-section > .fi-section-content-ctn,
-.filament-ai-assistant-sidebar > .fi-section .fi-section-content {
+.filament-ai-assistant-sidebar > .fi-section {
     display: flex;
     flex-direction: column;
     flex: 1 1 0%;
@@ -191,8 +212,27 @@
     overflow: hidden;
 }
 
+.filament-ai-assistant-sidebar > .fi-section > .fi-section-header {
+    flex: 0 0 auto;
+}
+
+.filament-ai-assistant-sidebar > .fi-section > .fi-section-content-ctn,
+.filament-ai-assistant-sidebar > .fi-section .fi-section-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .filament-ai-assistant-sidebar .fi-section-content {
     overflow-y: auto;
+}
+
+.filament-ai-assistant-sidebar .fi-section-header-heading {
+    font-size: 0.875rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
 }
 
 .filament-ai-file-upload-browse {
