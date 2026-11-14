@@ -484,10 +484,23 @@ trait InteractsWithChat
     }
 
     /**
+     * Filament only moves Livewire temp uploads onto disk during form dehydrate.
+     * Call that explicitly so Send can pass real storage paths to the agent.
+     *
+     * Composer fields bind directly on this Livewire page (no form statePath), so
+     * read `$this->attachments` after save — do not call getRawState() (empty state
+     * path → data_get($this, '') → ActionNotResolvableException).
+     *
      * @return list<string>
      */
     protected function persistAndCollectAttachmentPaths(): array
     {
+        foreach ($this->form->getFlatComponents(withHidden: true) as $component) {
+            if ($component instanceof FileUpload) {
+                $component->saveUploadedFiles();
+            }
+        }
+
         $paths = array_values(array_filter(
             Arr::wrap($this->attachments),
             fn (mixed $path): bool => is_string($path) && $path !== '',

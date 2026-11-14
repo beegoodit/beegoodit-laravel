@@ -151,7 +151,32 @@
                 <form
                     wire:submit="sendMessage"
                     class="filament-ai-assistant-composer fi-fixed-positioning-context space-y-4 [&_.fi-fo-field-wrp]:mb-0"
+                    x-on:submit.capture="if (! uploadsReady()) { $event.preventDefault(); $event.stopImmediatePropagation() }"
                     x-data="{
+                        uploadsReady() {
+                            const items = this.$el.querySelectorAll('.filament-ai-composer-attachments .filepond--item')
+
+                            return [...items].every((item) => (item.getAttribute('data-filepond-item-state') || '').includes('processing-complete'))
+                        },
+                        syncSend() {
+                            const ready = this.uploadsReady()
+                            this.$el.classList.toggle('filament-ai-composer-uploading', ! ready)
+                            this.$el.querySelectorAll('.filament-ai-composer-send button[type=submit]').forEach((button) => {
+                                button.disabled = ! ready
+                            })
+                        },
+                        openAttachments() {
+                            const upload = this.$el.querySelector('.filament-ai-composer-attachments .fi-fo-file-upload')
+                            const pond = upload && window.Alpine?.$data(upload)?.pond
+
+                            if (pond && typeof pond.browse === 'function') {
+                                pond.browse()
+
+                                return
+                            }
+
+                            this.$el.querySelector('.filament-ai-composer-attachments input[type=file]')?.click()
+                        },
                         placeAttach() {
                             const row = this.$el.querySelector('.filament-ai-composer-input-row')
                             const textarea = row?.querySelector('textarea')
@@ -167,7 +192,7 @@
                                 button.addEventListener('click', (event) => {
                                     event.preventDefault()
                                     event.stopPropagation()
-                                    this.$el.querySelector('.filament-ai-composer-attachments .filepond--browser')?.click()
+                                    this.openAttachments()
                                 })
                                 row.appendChild(button)
                             }
@@ -224,13 +249,14 @@
                     x-init="
                         const place = () => requestAnimationFrame(() => {
                             placeAttach()
+                            syncSend()
                             placeSelectDropdowns()
                         })
                         new MutationObserver(place).observe($el, {
                             childList: true,
                             subtree: true,
                             attributes: true,
-                            attributeFilter: ['style', 'class', 'aria-expanded'],
+                            attributeFilter: ['style', 'class', 'aria-expanded', 'data-filepond-item-state'],
                         })
                         window.addEventListener('scroll', place, true)
                         window.addEventListener('resize', place)

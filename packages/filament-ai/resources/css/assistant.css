@@ -227,6 +227,11 @@
     display: none;
 }
 
+.filament-ai-composer-uploading .filament-ai-composer-send button[type='submit'] {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 .filament-ai-assistant-sidebar {
     width: 100%;
     flex-shrink: 0;
@@ -295,17 +300,15 @@
 
 .filament-ai-composer-input-row > div:has(.filament-ai-composer-attachments) {
     order: -1;
-}
-
-/* The bordered field grows. Thumbnails sit in the space above the text line. */
-.filament-ai-composer-input-row:has(.filepond--item) .filament-ai-composer-prompt .fi-input-wrp {
-    padding-top: 5.35rem;
-}
-
-.filament-ai-composer-input-row > div:has(.filament-ai-composer-attachments) {
     height: 0;
     min-height: 0;
     overflow: visible;
+}
+
+.filament-ai-composer-input-row:has(.filepond--item) > div:has(.filament-ai-composer-attachments) {
+    height: auto;
+    min-height: 4.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .filament-ai-composer-attachments {
@@ -316,20 +319,33 @@
 .filament-ai-composer-attachments .fi-fo-field-content-col,
 .filament-ai-composer-attachments .fi-fo-field-content,
 .filament-ai-composer-attachments .fi-fo-file-upload,
-.filament-ai-composer-attachments .fi-fo-file-upload-input-ctn,
-.filament-ai-composer-attachments .filepond--root {
+.filament-ai-composer-attachments .fi-fo-file-upload-input-ctn {
     position: static !important;
     contain: none !important;
-    transform: none !important;
 }
 
 .filament-ai-composer-attachments .filepond--root {
-    height: 0 !important;
-    min-height: 0 !important;
+    position: relative !important;
+    contain: none !important;
+    width: 100% !important;
+    height: 1px !important;
+    min-height: 1px !important;
     margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     background: transparent !important;
     box-shadow: none !important;
-    overflow: visible !important;
+}
+
+.filament-ai-composer-attachments .filepond--root:has(.filepond--item) {
+    width: auto !important;
+    max-width: 100%;
+    height: 4.5rem !important;
+    min-height: 4.5rem !important;
+    max-height: 4.5rem !important;
+    overflow: hidden !important;
+    pointer-events: auto;
 }
 
 .filament-ai-composer-attachments .filepond--root > .filepond--panel,
@@ -337,61 +353,69 @@
     display: none !important;
 }
 
-.filament-ai-composer-attachments .filepond--browser {
-    pointer-events: none !important;
-    width: 1px !important;
-    height: 1px !important;
-}
-
 .filament-ai-composer-attachments .filepond--list-scroller,
 .filament-ai-composer-attachments .filepond--list {
     position: relative !important;
-    top: 0 !important;
+    top: auto !important;
     left: auto !important;
     display: flex !important;
-    flex-wrap: wrap;
     align-items: flex-start;
     gap: 0.5rem;
-    height: auto !important;
-    min-height: 0 !important;
-    transform: none !important;
-}
-
-.filament-ai-composer-attachments .filepond--root:has(.filepond--item) .filepond--list-scroller {
-    position: absolute !important;
-    z-index: 2;
-    top: 0.45rem !important;
-    right: 0.65rem !important;
-    left: 0.65rem !important;
     width: auto !important;
     height: 4.5rem !important;
-    min-height: 4.5rem !important;
-    pointer-events: none;
+    margin: 0 !important;
+    transform: none !important;
 }
 
 .filament-ai-composer-attachments .filepond--item {
     position: relative !important;
     top: auto !important;
     left: auto !important;
-    transform: none !important;
     width: 4.5rem !important;
     height: 4.5rem !important;
     margin: 0 !important;
     overflow: hidden;
     border-radius: 0.75rem;
-    pointer-events: auto;
+    transform: none !important;
 }
 
 .filament-ai-composer-attachments .filepond--file,
-.filament-ai-composer-attachments .filepond--file-wrapper {
-    height: 100%;
-    overflow: hidden;
+.filament-ai-composer-attachments .filepond--file-wrapper,
+.filament-ai-composer-attachments .filepond--image-preview-wrapper,
+.filament-ai-composer-attachments .filepond--image-preview {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .filament-ai-composer-attachments .filepond--image-preview-wrapper,
 .filament-ai-composer-attachments .filepond--image-preview {
-    width: 100%;
-    height: 100%;
+    position: absolute !important;
+    inset: 0 !important;
+    transform: none !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.filament-ai-composer-attachments .filepond--image-preview img,
+.filament-ai-composer-attachments .filepond--image-preview canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    transform: none !important;
+}
+
+.filament-ai-composer-attachments .filepond--file-info,
+.filament-ai-composer-attachments .filepond--file-status {
+    display: none !important;
+}
+
+.filament-ai-composer-attachments .filepond--file-action-button {
+    position: absolute !important;
+    z-index: 3;
+    top: 0.25rem !important;
+    right: 0.25rem !important;
+    left: auto !important;
+    transform: none !important;
 }
 
 .filament-ai-composer-input-row .filament-ai-composer-attach {
