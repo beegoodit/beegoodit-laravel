@@ -152,21 +152,38 @@
                     wire:submit="sendMessage"
                     class="filament-ai-assistant-composer fi-fixed-positioning-context space-y-4 [&_.fi-fo-field-wrp]:mb-0"
                     x-data="{
-                        syncAttachmentHeight() {
-                            const prompt = this.$el.querySelector('.filament-ai-composer-prompt textarea')
-                            const pond = this.$el.querySelector('.filament-ai-composer-attachments .filepond--root')
+                        placeAttach() {
+                            const row = this.$el.querySelector('.filament-ai-composer-input-row')
+                            const textarea = row?.querySelector('textarea')
 
-                            if (! prompt || ! pond) {
+                            if (! row || ! textarea || ! this.$refs.attachTemplate) {
                                 return
                             }
 
-                            const height = `${prompt.offsetHeight}px`
-                            pond.style.setProperty('height', height, 'important')
-                            pond.style.setProperty('min-height', height, 'important')
+                            let button = row.querySelector('.filament-ai-composer-attach')
 
-                            pond.querySelectorAll('.filepond--drop-label, .filepond--drop-label label').forEach((el) => {
-                                el.style.setProperty('transform', 'none', 'important')
-                            })
+                            if (! button) {
+                                button = this.$refs.attachTemplate.content.firstElementChild.cloneNode(true)
+                                button.addEventListener('click', (event) => {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                    this.$el.querySelector('.filament-ai-composer-attachments .filepond--browser')?.click()
+                                })
+                                row.appendChild(button)
+                            }
+
+                            const rowRect = row.getBoundingClientRect()
+                            const textRect = textarea.getBoundingClientRect()
+                            const textStyle = window.getComputedStyle(textarea)
+                            const lineHeight = Number.parseFloat(textStyle.lineHeight) || textRect.height
+                            const paddingTop = Number.parseFloat(textStyle.paddingTop) || 0
+                            const size = button.offsetHeight || lineHeight
+                            const top = (textRect.top - rowRect.top) + paddingTop + ((lineHeight - size) / 2)
+                            const next = `${top}px`
+
+                            if (button.style.top !== next) {
+                                button.style.top = next
+                            }
                         },
                         placeSelectDropdowns() {
                             this.$el.querySelectorAll('.filament-ai-composer-controls .fi-select-input-ctn').forEach((ctn) => {
@@ -205,16 +222,10 @@
                         },
                     }"
                     x-init="
-                        const run = () => $nextTick(() => syncAttachmentHeight())
-                        run()
-                        const prompt = $el.querySelector('.filament-ai-composer-prompt textarea')
-                        if (prompt) {
-                            new ResizeObserver(run).observe(prompt)
-                        }
-                        new MutationObserver(run).observe($el, { childList: true, subtree: true })
-                        $wire && $wire.$watch && $wire.$watch('attachments', run)
-
-                        const place = () => requestAnimationFrame(() => placeSelectDropdowns())
+                        const place = () => requestAnimationFrame(() => {
+                            placeAttach()
+                            placeSelectDropdowns()
+                        })
                         new MutationObserver(place).observe($el, {
                             childList: true,
                             subtree: true,
@@ -225,6 +236,19 @@
                         window.addEventListener('resize', place)
                     "
                 >
+                    <template x-ref="attachTemplate">
+                        <button
+                            type="button"
+                            class="filament-ai-composer-attach"
+                            aria-label="{{ __('filament-ai::ai.chat.attachments_browse') }}"
+                            title="{{ __('filament-ai::ai.chat.attachments_browse') }}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </template>
+
                     {{ $this->form }}
                 </form>
             </x-filament::section>
