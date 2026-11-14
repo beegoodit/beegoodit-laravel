@@ -50,6 +50,40 @@ class LegacySubjectColumnTest extends TestCase
     }
 
     #[Test]
+    public function it_drops_a_unique_legacy_site_id_like_tallcms_settings(): void
+    {
+        Schema::dropIfExists('filament_ai_legacy_unique_settings');
+
+        Schema::create('filament_ai_legacy_unique_settings', function (Blueprint $table): void {
+            $table->id();
+            $table->unsignedBigInteger('site_id')->nullable()->unique();
+            $table->index('site_id');
+            $table->boolean('enabled')->default(false);
+        });
+
+        DB::table('filament_ai_legacy_unique_settings')->insert([
+            ['id' => 1, 'site_id' => 7, 'enabled' => true],
+            ['id' => 2, 'site_id' => null, 'enabled' => false],
+        ]);
+
+        config([
+            'filament-ai.tenant_column' => 'site_id',
+            'filament-ai.subject_model' => SubjectOwner::class,
+        ]);
+
+        LegacySubjectColumn::convert('filament_ai_legacy_unique_settings', singleNullSubject: true, uniquePair: true);
+
+        $this->assertFalse(Schema::hasColumn('filament_ai_legacy_unique_settings', 'site_id'));
+        $this->assertTrue(Schema::hasColumn('filament_ai_legacy_unique_settings', 'subject_type'));
+        $this->assertTrue($this->subjectPairIsIndexed('filament_ai_legacy_unique_settings'));
+
+        $copied = DB::table('filament_ai_legacy_unique_settings')->where('id', 1)->first();
+
+        $this->assertSame((new SubjectOwner)->getMorphClass(), $copied->subject_type);
+        $this->assertSame('7', $copied->subject_id);
+    }
+
+    #[Test]
     public function it_refuses_to_copy_ids_without_a_subject_model(): void
     {
         Schema::dropIfExists('filament_ai_legacy_tokens');

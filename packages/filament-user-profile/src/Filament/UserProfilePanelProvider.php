@@ -18,8 +18,8 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationItem;
 use Filament\Panel;
+use Filament\View\PanelsRenderHook;
 use Filament\PanelProvider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -83,13 +83,9 @@ class UserProfilePanelProvider extends PanelProvider
             ])
             ->brandName(fn () => __('filament-user-profile::messages.User Settings'))
             ->pages($this->getPages())
-            ->navigationItems([
-                NavigationItem::make()
-                    ->label(fn () => __('filament-user-profile::messages.Back to Team Dashboard'))
-                    ->icon('heroicon-o-arrow-left')
-                    ->url(fn (): string => $this->getTenantPanelUrl())
-                    ->sort(-1), // Show at the top
-            ])
+            ->renderHook(PanelsRenderHook::SIDEBAR_FOOTER, fn (): string => view('filament-user-profile::components.back-to-dashboard', [
+                'url' => $this->getTenantPanelUrl(),
+            ])->render())
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

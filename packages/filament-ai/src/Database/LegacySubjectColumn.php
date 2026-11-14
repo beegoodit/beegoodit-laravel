@@ -133,6 +133,7 @@ final class LegacySubjectColumn
     private static function dropLegacy(string $table, string $legacy): void
     {
         // SQLite refuses dropColumn while an index still references the column.
+        // Postgres unique() creates a constraint — dropUnique, not dropIndex (SQLSTATE 2BP01).
         foreach (Schema::getIndexes($table) as $index) {
             $columns = $index['columns'] ?? [];
             $name = $index['name'] ?? null;
@@ -141,8 +142,18 @@ final class LegacySubjectColumn
                 continue;
             }
 
-            Schema::table($table, function (Blueprint $blueprint) use ($name): void {
-                $blueprint->dropIndex($name);
+            if (($index['primary'] ?? false) === true) {
+                continue;
+            }
+
+            $unique = (bool) ($index['unique'] ?? false);
+
+            Schema::table($table, function (Blueprint $blueprint) use ($name, $unique): void {
+                if ($unique) {
+                    $blueprint->dropUnique($name);
+                } else {
+                    $blueprint->dropIndex($name);
+                }
             });
         }
 

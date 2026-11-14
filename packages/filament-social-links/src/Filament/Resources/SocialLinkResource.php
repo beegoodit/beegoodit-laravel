@@ -100,52 +100,39 @@ class SocialLinkResource extends Resource
             ]);
     }
 
+    /**
+     * @return array<int, TextColumn>
+     */
+    public static function linkColumns(): array
+    {
+        return [
+            TextColumn::make('platform.name')
+                ->label(__('filament-social-links::social.platform'))
+                ->icon(fn (SocialLink $record): string => $record->platform?->icon ?? 'heroicon-o-share')
+                ->iconPosition('before')
+                ->sortable()
+                ->searchable(),
+            TextColumn::make('handle')
+                ->label(__('filament-social-links::social.handle'))
+                ->searchable(),
+            TextColumn::make('url')
+                ->label(__('filament-social-links::social.url'))
+                ->icon('heroicon-o-arrow-top-right-on-square')
+                ->iconColor('primary')
+                ->formatStateUsing(fn (): string => '')
+                ->url(fn (SocialLink $record): string => $record->url, shouldOpenInNewTab: true),
+        ];
+    }
+
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                TextColumn::make('platform.name')
-                    ->label(__('filament-social-links::social.platform'))
-                    ->icon(fn (SocialLink $record): string => $record->platform?->icon ?? 'heroicon-o-share')
-                    ->iconPosition('before')
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('handle')
-                    ->label(__('filament-social-links::social.handle'))
-                    ->searchable(),
-
-                TextColumn::make('url')
-                    ->label(__('filament-social-links::social.url'))
-                    ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->iconColor('primary')
-                    ->formatStateUsing(fn (): string => '')
-                    ->url(fn (SocialLink $record): string => $record->url, shouldOpenInNewTab: true),
-
-                TextColumn::make('linkable')
-                    ->label(__('filament-social-links::social.entity'))
-                    ->formatStateUsing(function (SocialLink $record): string {
-                        $type = class_basename($record->linkable_type);
-                        $name = $record->linkable?->name ?? $record->linkable_id;
-
-                        return "{$type}: {$name}";
-                    }),
-            ])
+            ->columns(static::linkColumns())
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('social_platform_id')
                     ->label(__('filament-social-links::social.platform'))
                     ->options(SocialPlatform::query()->pluck('name', 'id')),
-
-                SelectFilter::make('linkable_type')
-                    ->label(__('filament-social-links::social.entity_type'))
-                    ->options(fn () => SocialLink::query()
-                        ->distinct()
-                        ->pluck('linkable_type')
-                        ->mapWithKeys(fn (string $type): array => [
-                            $type => class_basename($type),
-                        ])
-                        ->all()),
             ])
             ->recordActions([
                 EditAction::make(),
