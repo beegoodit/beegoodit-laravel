@@ -184,7 +184,8 @@ trait InteractsWithChat
                             ]),
                         Select::make('chatModel')
                             ->hiddenLabel()
-                            ->options(fn (): array => ChatModels::options($this->chatModel))
+                            ->options(fn (): array => ChatModels::selectOptions($this->chatModel))
+                            ->allowHtml()
                             ->searchable()
                             ->selectablePlaceholder(false)
                             ->native(false)
@@ -197,7 +198,6 @@ trait InteractsWithChat
                             ->grow(false)
                             ->extraFieldWrapperAttributes([
                                 'class' => 'filament-ai-composer-model',
-                                'style' => 'width: 18rem; min-width: 18rem;',
                             ]),
                     ])
                         ->verticalAlignment(VerticalAlignment::Center)

@@ -1,11 +1,19 @@
-<div class="flex flex-wrap items-center justify-end gap-2">
+<div class="filament-ai-composer-send">
     <div wire:loading wire:target="sendMessage">
-        <x-filament::button type="button" color="gray" wire:click="stopGeneration">
-            {{ __('filament-ai::ai.chat.stop') }}
-        </x-filament::button>
+        <x-filament::button
+            type="button"
+            color="gray"
+            icon="heroicon-m-stop"
+            wire:click="stopGeneration"
+            aria-label="{{ __('filament-ai::ai.chat.stop') }}"
+        />
     </div>
 
-    <x-filament::button type="submit" wire:loading.attr="disabled" wire:target="sendMessage">
-        {{ __('filament-ai::ai.chat.send') }}
-    </x-filament::button>
+    <div wire:loading.remove wire:target="sendMessage">
+        <x-filament::button
+            type="submit"
+            icon="heroicon-m-arrow-up"
+            aria-label="{{ __('filament-ai::ai.chat.send') }}"
+        />
+    </div>
 </div>

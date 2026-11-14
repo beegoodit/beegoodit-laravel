@@ -164,22 +164,68 @@
     padding-inline-start: 2.35rem;
 }
 
-/* Model trigger + panel: full model ids on one line. */
-.filament-ai-assistant-composer .filament-ai-composer-model {
-    width: 18rem;
-    min-width: 18rem;
+.filament-ai-assistant-composer.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.5rem;
 }
 
-.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-ctn,
-.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-btn {
-    width: 100%;
-    min-width: 18rem;
+.filament-ai-assistant-composer .filament-ai-composer-controls .fi-fo-field {
+    gap: 0;
+}
+
+.filament-ai-assistant-composer .filament-ai-composer-controls .fi-input-wrp,
+.filament-ai-assistant-composer .filament-ai-composer-controls .fi-select-input-ctn,
+.filament-ai-assistant-composer .filament-ai-composer-controls .fi-select-input-btn {
+    width: auto;
+    min-width: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.filament-ai-assistant-composer .filament-ai-composer-controls .fi-select-input-btn {
+    min-height: 0;
+    gap: 0.25rem;
+    padding: 0.3rem 0.45rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    color: var(--gray-400, #9ca3af);
+}
+
+.filament-ai-assistant-composer .filament-ai-composer-controls .fi-select-input-btn:hover {
+    background: rgb(128 128 128 / 0.14) !important;
+    color: var(--gray-200, #e5e7eb);
+}
+
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-value-label .filament-ai-model-option-full,
+.filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-option .filament-ai-model-option-short {
+    display: none;
 }
 
 .filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-option,
 .filament-ai-assistant-composer .filament-ai-composer-model .fi-select-input-option-label,
 .filament-ai-assistant-composer .filament-ai-composer-model .fi-dropdown-list-item-label {
     white-space: nowrap;
+}
+
+.filament-ai-composer-send {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.filament-ai-composer-send .fi-btn {
+    width: 2rem;
+    height: 2rem;
+    min-height: 0;
+    padding: 0;
+    border-radius: 9999px;
+    justify-content: center;
+    gap: 0;
+}
+
+.filament-ai-composer-send .fi-btn-label:empty {
+    display: none;
 }
 
 .filament-ai-assistant-sidebar {
