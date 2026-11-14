@@ -75,6 +75,10 @@ class AuthenticateMcpToken
 
         $hook = config('filament-ai.mcp.after_authenticate');
 
+        if (is_string($hook) && $hook !== '' && (class_exists($hook) || app()->bound($hook))) {
+            $hook = app($hook);
+        }
+
         if (is_callable($hook)) {
             $hook($request, $token, $settings, $user);
         }

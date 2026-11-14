@@ -156,8 +156,9 @@ return [
             'tools_call_per_minute' => 60,
         ],
         /*
-         * Optional callable($request, McpToken $token, Setting $settings, Authenticatable $user): void
-         * Hosts (e.g. TallCMS Multisite) may pin extra request context here.
+         * Optional invokable class-string or callable:
+         * ($request, McpToken $token, Setting $settings, Authenticatable $user): void
+         * Use a class-string for config:cache (Closures are not serializable).
          */
         'after_authenticate' => null,
     ],
