@@ -149,7 +149,6 @@
     flex-shrink: 0;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(128, 128, 128, 0.2);
 }
 
 /* One line at rest. Filament writes an inline height while typing; the cap keeps a long paste inside the field. */

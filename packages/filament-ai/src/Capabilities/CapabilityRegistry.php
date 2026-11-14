@@ -121,8 +121,17 @@ class CapabilityRegistry
             return $stored;
         }
 
-        // Flat bool map with a single registered provider → nest under that provider.
-        if (count($this->providers) === 1 && $this->looksFlat($stored)) {
+        if (! $this->looksFlat($stored)) {
+            return $stored;
+        }
+
+        // TallCMS soft-dep: flat 113 keys always belong to the core `tallcms` provider.
+        if (isset($this->providers['tallcms'])) {
+            return ['tallcms' => $stored];
+        }
+
+        // Single-provider hosts: nest under that provider.
+        if (count($this->providers) === 1) {
             $providerId = array_key_first($this->providers);
 
             return [$providerId => $stored];

@@ -59,4 +59,35 @@ final class McpTokenTest extends TestCase
         $this->assertFalse($issued['token']->fresh()->isCurrentlyValid());
         $this->assertNull(McpToken::findByPlainToken('fa_mcp_not-a-real-token'));
     }
+
+    #[Test]
+    public function for_site_scopes_via_configured_subject_model(): void
+    {
+        $user = $this->actingAsUser();
+        $owner = $this->subject('7');
+        $other = $this->subject('99');
+
+        McpToken::issue(label: 'mine', subject: $owner, createdByUserId: $user->id);
+        McpToken::issue(label: 'theirs', subject: $other, createdByUserId: $user->id);
+        McpToken::issue(label: 'global', subject: null, createdByUserId: $user->id);
+
+        $scoped = McpToken::query()->forSite('7')->pluck('label')->all();
+
+        $this->assertSame(['mine'], $scoped);
+    }
+
+    #[Test]
+    public function issue_accepts_site_id_soft_dep_via_subject_model(): void
+    {
+        $user = $this->actingAsUser();
+
+        $issued = McpToken::issue(
+            label: 'soft-dep',
+            createdByUserId: $user->id,
+            siteId: '42',
+        );
+
+        $this->assertSame('42', $issued['token']->subjectKey());
+        $this->assertSame((new \BeegoodIT\FilamentAi\Tests\Fixtures\SubjectOwner)->getMorphClass(), $issued['token']->subject_type);
+    }
 }

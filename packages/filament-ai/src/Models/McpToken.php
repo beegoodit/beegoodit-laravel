@@ -67,7 +67,10 @@ class McpToken extends Model
         string $scope = self::SCOPE_READ,
         ?\DateTimeInterface $activeFrom = null,
         ?\DateTimeInterface $activeTo = null,
+        int|string|null $tenantId = null,
+        int|string|null $siteId = null,
     ): array {
+        $subject ??= SubjectScope::fromConfiguredKey($tenantId ?? $siteId);
         $prefix = (string) config('filament-ai.mcp.token_prefix', 'fa_mcp_');
         $plain = $prefix.Str::random(48);
 
@@ -189,13 +192,14 @@ class McpToken extends Model
 
     /**
      * TallCMS / soft-dep alias of {@see scopeForTenant()}.
+     * Resolves the subject via `filament-ai.subject_model` (any tenant model class).
      *
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
     public function scopeForSite(Builder $query, int|string|null $siteId): Builder
     {
-        return $this->scopeForTenant($query, $siteId);
+        return $this->scopeForTenant($query, SubjectScope::fromConfiguredKey($siteId));
     }
 
     /**

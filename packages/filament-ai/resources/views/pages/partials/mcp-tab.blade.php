@@ -20,18 +20,6 @@
             <pre class="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-gray-100">{{ $this->mcpConnectionSnippet() }}</pre>
         </x-filament::section>
 
-        @if (filled($this->plainMcpToken))
-            <x-filament::section>
-                <x-slot name="heading">
-                    {{ __('filament-ai::ai.mcp.token_created_title') }}
-                </x-slot>
-                <p class="mb-2 text-sm text-amber-700 dark:text-amber-300">
-                    {{ __('filament-ai::ai.mcp.token_created_body') }}
-                </p>
-                <pre class="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-gray-100">{{ $this->plainMcpToken }}</pre>
-            </x-filament::section>
-        @endif
-
         <x-filament::section>
             <x-slot name="heading">
                 {{ __('filament-ai::ai.mcp.tokens_heading') }}
@@ -63,6 +51,20 @@
             <p class="mb-4 text-sm text-amber-700 dark:text-amber-300">
                 {{ __('filament-ai::ai.mcp.token_write_help') }}
             </p>
+
+            @if (filled($this->plainMcpToken))
+                <x-filament::callout
+                    color="warning"
+                    icon="heroicon-o-key"
+                    :heading="__('filament-ai::ai.mcp.token_created_title')"
+                    :description="__('filament-ai::ai.mcp.token_created_body')"
+                    class="mb-4"
+                >
+                    <x-slot name="footer">
+                        <pre class="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-gray-100">{{ $this->plainMcpToken }}</pre>
+                    </x-slot>
+                </x-filament::callout>
+            @endif
 
             <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
                 <table class="w-full text-left text-sm">
