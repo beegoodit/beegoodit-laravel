@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace BeegoodIT\FilamentTenancyPlugins\Console;
 
-use BeegoodIT\FilamentTenancyPlugins\Console\Concerns\ResolvesConfiguredTenant;
+use BeegoodIT\FilamentTenancyPlugins\Console\Concerns\ResolvesConfiguredSubject;
 use BeegoodIT\FilamentTenancyPlugins\Tenant;
 use Illuminate\Console\Command;
 
 class AssignCommand extends Command
 {
-    use ResolvesConfiguredTenant;
+    use ResolvesConfiguredSubject;
 
-    protected $signature = 'tenancy-plugins:assign {plugin : Catalog plugin id} {--tenant= : Tenant slug or key}';
+    protected $signature = 'tenancy-plugins:assign {plugin : Catalog plugin id} {--tenant= : Tenant slug or key} {--user= : User email or key}';
 
-    protected $description = 'Assign a registered plugin to a tenant';
+    protected $description = 'Assign a registered plugin to a tenant or user';
 
     public function handle(): int
     {
@@ -28,13 +28,13 @@ class AssignCommand extends Command
             $this->failCommand("Unknown plugin [{$plugin}].");
         }
 
-        $tenant = $this->resolveTenant();
-        $label = $this->tenantLabel($tenant);
+        [$subject, $kind] = $this->resolveSubject();
+        $label = $this->subjectLabel($subject, $kind);
 
-        if ($tenant->assignPlugin($plugin)) {
-            $this->info("Plugin [{$plugin}] assigned to tenant [{$label}].");
+        if ($subject->assignPlugin($plugin)) {
+            $this->info("Plugin [{$plugin}] assigned to {$kind} [{$label}].");
         } else {
-            $this->info("Plugin [{$plugin}] is already assigned to tenant [{$label}].");
+            $this->info("Plugin [{$plugin}] is already assigned to {$kind} [{$label}].");
         }
 
         return self::SUCCESS;

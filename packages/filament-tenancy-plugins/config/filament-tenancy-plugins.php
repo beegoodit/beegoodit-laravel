@@ -10,7 +10,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Class-string of the tenant model. Required for Artisan assign
-    | and revoke, and for resolving slugs in tenancy-plugins:list.
+    | and revoke with --tenant, and for resolving slugs in tenancy-plugins:list.
     |
     */
 
@@ -27,5 +27,29 @@ return [
     */
 
     'slug_attribute' => env('FILAMENT_TENANCY_PLUGINS_SLUG_ATTRIBUTE', 'slug'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | User model
+    |--------------------------------------------------------------------------
+    |
+    | Class-string of the user model. Required for Artisan assign and revoke
+    | with --user, and for resolving emails in tenancy-plugins:list.
+    |
+    */
+
+    'user_model' => env('FILAMENT_TENANCY_PLUGINS_USER_MODEL'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | User lookup attribute
+    |--------------------------------------------------------------------------
+    |
+    | Attribute used to resolve --user= on Artisan commands (case-insensitive),
+    | falling back to the model's primary key.
+    |
+    */
+
+    'user_lookup_attribute' => env('FILAMENT_TENANCY_PLUGINS_USER_LOOKUP_ATTRIBUTE', 'email'),
 
 ];

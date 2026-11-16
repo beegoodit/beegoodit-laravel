@@ -133,12 +133,125 @@ it('fails when assigning to an unknown tenant', function (): void {
         ->assertFailed();
 });
 
-it('fails when the tenant option is missing', function (): void {
+it('fails when neither tenant nor user is provided', function (): void {
     Tenant::register('billing', 'Billing');
 
     $this->artisan('tenancy-plugins:assign', [
         'plugin' => 'billing',
     ])
-        ->expectsOutputToContain('The --tenant option is required.')
+        ->expectsOutputToContain('Provide exactly one of --tenant or --user.')
         ->assertFailed();
+});
+
+it('fails when both tenant and user are provided', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $this->uuidTenant();
+    $this->user();
+
+    $this->artisan('tenancy-plugins:assign', [
+        'plugin' => 'billing',
+        '--tenant' => 'acme',
+        '--user' => 'rva@beegoodit.de',
+    ])
+        ->expectsOutputToContain('Provide exactly one of --tenant or --user.')
+        ->assertFailed();
+});
+
+it('assigns a plugin by user email', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $user = $this->user();
+
+    $this->artisan('tenancy-plugins:assign', [
+        'plugin' => 'billing',
+        '--user' => 'RVA@beegoodit.de',
+    ])
+        ->expectsOutputToContain('Plugin [billing] assigned to user [rva@beegoodit.de].')
+        ->assertSuccessful();
+
+    expect($user->fresh()->hasPlugin('billing'))->toBeTrue();
+});
+
+it('assigns a plugin by user key', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $user = $this->user();
+
+    $this->artisan('tenancy-plugins:assign', [
+        'plugin' => 'billing',
+        '--user' => (string) $user->getKey(),
+    ])
+        ->expectsOutputToContain('Plugin [billing] assigned to user [rva@beegoodit.de].')
+        ->assertSuccessful();
+
+    expect($user->fresh()->hasPlugin('billing'))->toBeTrue();
+});
+
+it('treats a second user assign as a successful no-op', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $user = $this->user();
+    $user->assignPlugin('billing');
+
+    $this->artisan('tenancy-plugins:assign', [
+        'plugin' => 'billing',
+        '--user' => 'rva@beegoodit.de',
+    ])
+        ->expectsOutputToContain('Plugin [billing] is already assigned to user [rva@beegoodit.de].')
+        ->assertSuccessful();
+
+    expect(PluginAssignment::query()->count())->toBe(1);
+});
+
+it('revokes a plugin from a user', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $user = $this->user();
+    $user->assignPlugin('billing');
+
+    $this->artisan('tenancy-plugins:revoke', [
+        'plugin' => 'billing',
+        '--user' => 'rva@beegoodit.de',
+    ])
+        ->expectsOutputToContain('Plugin [billing] revoked from user [rva@beegoodit.de].')
+        ->assertSuccessful();
+
+    expect($user->fresh()->hasPlugin('billing'))->toBeFalse();
+});
+
+it('fails when assigning to an unknown user', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $this->artisan('tenancy-plugins:assign', [
+        'plugin' => 'billing',
+        '--user' => 'missing@example.test',
+    ])
+        ->expectsOutputToContain('Unknown user [missing@example.test].')
+        ->assertFailed();
+});
+
+it('fails when user model is not configured', function (): void {
+    config()->set('filament-tenancy-plugins.user_model', null);
+
+    Tenant::register('billing', 'Billing');
+
+    $this->artisan('tenancy-plugins:assign', [
+        'plugin' => 'billing',
+        '--user' => 'rva@beegoodit.de',
+    ])
+        ->expectsOutputToContain('Set filament-tenancy-plugins.user_model')
+        ->assertFailed();
+});
+
+it('lists user emails when the user model is configured', function (): void {
+    Tenant::register('billing', 'Billing');
+
+    $user = $this->user();
+    $user->assignPlugin('billing');
+
+    $this->artisan('tenancy-plugins:list')
+        ->expectsOutputToContain('rva@beegoodit.de')
+        ->expectsOutputToContain('billing')
+        ->assertSuccessful();
 });

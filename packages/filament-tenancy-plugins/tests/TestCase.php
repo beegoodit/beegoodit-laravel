@@ -6,6 +6,7 @@ namespace BeegoodIT\FilamentTenancyPlugins\Tests;
 
 use BeegoodIT\FilamentTenancyPlugins\FilamentTenancyPluginsServiceProvider;
 use BeegoodIT\FilamentTenancyPlugins\Tests\Fixtures\IncrementingTenant;
+use BeegoodIT\FilamentTenancyPlugins\Tests\Fixtures\User;
 use BeegoodIT\FilamentTenancyPlugins\Tests\Fixtures\UuidTenant;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -43,6 +44,8 @@ abstract class TestCase extends Orchestra
         ]);
         $app['config']->set('filament-tenancy-plugins.tenant_model', UuidTenant::class);
         $app['config']->set('filament-tenancy-plugins.slug_attribute', 'slug');
+        $app['config']->set('filament-tenancy-plugins.user_model', User::class);
+        $app['config']->set('filament-tenancy-plugins.user_lookup_attribute', 'email');
     }
 
     protected function setUpTenantTables(): void
@@ -60,6 +63,13 @@ abstract class TestCase extends Orchestra
             $table->string('slug');
             $table->timestamps();
         });
+
+        Schema::create('users', function (Blueprint $table): void {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamps();
+        });
     }
 
     protected function uuidTenant(string $slug = 'acme'): UuidTenant
@@ -75,6 +85,14 @@ abstract class TestCase extends Orchestra
         return IncrementingTenant::query()->create([
             'name' => 'Globex',
             'slug' => $slug,
+        ]);
+    }
+
+    protected function user(string $email = 'rva@beegoodit.de'): User
+    {
+        return User::query()->create([
+            'name' => 'Roberto',
+            'email' => $email,
         ]);
     }
 }

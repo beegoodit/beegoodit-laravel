@@ -46,8 +46,8 @@ class ListCommand extends Command
         }
 
         foreach ($assignments as $assignment) {
-            $slug = $this->slugFor($assignment);
-            $suffix = $slug !== null ? "  {$slug}" : '';
+            $label = $this->labelFor($assignment);
+            $suffix = $label !== null ? "  {$label}" : '';
 
             $this->line("  {$assignment->pluginable_type}  {$assignment->pluginable_id}  {$assignment->plugin}{$suffix}");
         }
@@ -55,21 +55,36 @@ class ListCommand extends Command
         return self::SUCCESS;
     }
 
-    private function slugFor(PluginAssignment $assignment): ?string
+    private function labelFor(PluginAssignment $assignment): ?string
     {
-        $class = config('filament-tenancy-plugins.tenant_model');
+        return $this->attributeFor(
+            $assignment,
+            config('filament-tenancy-plugins.tenant_model'),
+            config('filament-tenancy-plugins.slug_attribute', 'slug'),
+        ) ?? $this->attributeFor(
+            $assignment,
+            config('filament-tenancy-plugins.user_model'),
+            config('filament-tenancy-plugins.user_lookup_attribute', 'email'),
+        );
+    }
 
+    private function attributeFor(PluginAssignment $assignment, mixed $class, mixed $attribute): ?string
+    {
         if (! is_string($class) || $class === '' || ! class_exists($class)) {
             return null;
         }
 
-        $tenant = new $class;
-
-        if (! $tenant instanceof Model) {
+        if (! is_string($attribute) || $attribute === '') {
             return null;
         }
 
-        if ($assignment->pluginable_type !== $tenant->getMorphClass()) {
+        $model = new $class;
+
+        if (! $model instanceof Model) {
+            return null;
+        }
+
+        if ($assignment->pluginable_type !== $model->getMorphClass()) {
             return null;
         }
 
@@ -83,8 +98,8 @@ class ListCommand extends Command
             return null;
         }
 
-        $slug = $record->getAttribute(config('filament-tenancy-plugins.slug_attribute', 'slug'));
+        $value = $record->getAttribute($attribute);
 
-        return is_string($slug) && $slug !== '' ? $slug : null;
+        return is_string($value) && $value !== '' ? $value : null;
     }
 }

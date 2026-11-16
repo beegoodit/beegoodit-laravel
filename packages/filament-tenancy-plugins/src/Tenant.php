@@ -95,6 +95,34 @@ final class Tenant
         return $tenant instanceof Model ? $tenant : null;
     }
 
+    public static function findUser(string $id): ?Model
+    {
+        $class = config('filament-tenancy-plugins.user_model');
+
+        if (! is_string($class) || $class === '' || ! class_exists($class)) {
+            return null;
+        }
+
+        $lookupAttribute = config('filament-tenancy-plugins.user_lookup_attribute', 'email');
+        $column = (new $class)->qualifyColumn($lookupAttribute);
+
+        $user = $class::query()
+            ->whereRaw('lower('.$column.') = ?', [Str::lower($id)])
+            ->first();
+
+        if ($user instanceof Model) {
+            return $user;
+        }
+
+        if (! self::looksLikeKey($class, $id)) {
+            return null;
+        }
+
+        $user = $class::query()->find($id);
+
+        return $user instanceof Model ? $user : null;
+    }
+
     /**
      * @param  class-string<Model>  $class
      */
