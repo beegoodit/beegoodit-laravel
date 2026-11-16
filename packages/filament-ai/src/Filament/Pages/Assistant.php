@@ -22,6 +22,8 @@ class Assistant extends Page implements HasForms
 
     protected static bool $shouldRegisterNavigation = false;
 
+    protected static ?string $slug = 'ai/assistant';
+
     protected string $view = 'filament-ai::pages.assistant';
 
     protected Width|string|null $maxContentWidth = Width::Full;

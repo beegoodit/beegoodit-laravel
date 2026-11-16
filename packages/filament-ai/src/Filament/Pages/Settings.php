@@ -40,6 +40,8 @@ class Settings extends Page implements HasForms
 
     protected static ?int $navigationSort = 30;
 
+    protected static ?string $slug = 'ai/settings';
+
     protected string $view = 'filament-ai::pages.settings';
 
     /** @var array<string, mixed>|null */

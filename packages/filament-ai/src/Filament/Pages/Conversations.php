@@ -26,6 +26,8 @@ class Conversations extends Page implements HasTable
 
     protected static ?int $navigationSort = 20;
 
+    protected static ?string $slug = 'ai/conversations';
+
     protected string $view = 'filament-ai::pages.conversations';
 
     public static function getNavigationIcon(): string|\BackedEnum|null

@@ -11,6 +11,8 @@ class Overview extends Page
 {
     protected static bool $shouldRegisterNavigation = false;
 
+    protected static ?string $slug = 'ai/overview';
+
     protected string $view = 'filament-ai::pages.overview';
 
     public function getTitle(): string|Htmlable

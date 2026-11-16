@@ -35,7 +35,7 @@ class ChatConversation extends Page implements HasForms
 
     public static function getSlug(?Panel $panel = null): string
     {
-        return 'ai-conversations/{conversation}';
+        return 'ai/conversations/{conversation}';
     }
 
     public static function canAccess(): bool
