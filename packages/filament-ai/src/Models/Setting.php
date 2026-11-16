@@ -15,8 +15,10 @@ use Laravel\Ai\Enums\Lab;
 
 /**
  * @property int|null $id
- * @property bool $enabled
- * @property bool $mcp_enabled
+ * @property bool $is_enabled
+ * @property bool $is_mcp_enabled
+ * @property bool $enabled  Public alias via {@see enabled()}
+ * @property bool $mcp_enabled  Public alias via {@see mcpEnabled()}
  * @property Lab|null $provider
  * @property string|null $model
  * @property string|null $api_key
@@ -34,22 +36,13 @@ class Setting extends Model
      */
     protected function casts(): array
     {
-        $enabledColumn = $this->enabledColumn();
-
-        $casts = [
-            'mcp_enabled' => 'boolean',
+        return [
+            $this->enabledColumn() => 'boolean',
+            $this->mcpEnabledColumn() => 'boolean',
             'provider' => Lab::class,
             'api_key' => 'encrypted',
             'capabilities' => 'array',
         ];
-
-        if ($enabledColumn === 'enabled') {
-            $casts['enabled'] = 'boolean';
-        } else {
-            $casts[$enabledColumn] = 'boolean';
-        }
-
-        return $casts;
     }
 
     public function getTable(): string
@@ -65,8 +58,10 @@ class Setting extends Model
         return [
             'subject_type',
             'subject_id',
-            $this->enabledColumn(),
+            'enabled',
             'mcp_enabled',
+            $this->enabledColumn(),
+            $this->mcpEnabledColumn(),
             'provider',
             'model',
             'api_key',
@@ -76,32 +71,45 @@ class Setting extends Model
     }
 
     /**
-     * Public API is always `$settings->enabled`. Hosts may override {@see enabledColumn()}.
+     * Public API is `$settings->enabled`. DB column via {@see enabledColumn()}.
      */
     protected function enabled(): Attribute
     {
         $column = $this->enabledColumn();
 
         return Attribute::make(
-            get: function (mixed $value) use ($column): bool {
-                if ($column === 'enabled') {
-                    return (bool) $value;
-                }
-
-                return (bool) ($this->attributes[$column] ?? false);
-            },
-            set: function (mixed $value) use ($column): array {
-                return [$column => (bool) $value];
-            },
+            get: fn (): bool => (bool) ($this->attributes[$column] ?? false),
+            set: fn (mixed $value): array => [$column => (bool) $value],
         );
     }
 
     /**
-     * DB column for the enabled flag. Override in host subclasses (e.g. TallCMS `is_enabled`).
+     * Public API is `$settings->mcp_enabled`. DB column via {@see mcpEnabledColumn()}.
+     */
+    protected function mcpEnabled(): Attribute
+    {
+        $column = $this->mcpEnabledColumn();
+
+        return Attribute::make(
+            get: fn (): bool => (bool) ($this->attributes[$column] ?? false),
+            set: fn (mixed $value): array => [$column => (bool) $value],
+        );
+    }
+
+    /**
+     * DB column for the AI-enabled flag.
      */
     protected function enabledColumn(): string
     {
-        return 'enabled';
+        return 'is_enabled';
+    }
+
+    /**
+     * DB column for remote MCP enabled.
+     */
+    protected function mcpEnabledColumn(): string
+    {
+        return 'is_mcp_enabled';
     }
 
     public static function forCurrentTenant(): ?static

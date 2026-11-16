@@ -13,6 +13,7 @@ Chamaleon iteration: `128-split-ai-plugin`.
 | 003 | Chat + conversations + attachments (disk) |
 | **004** | TallCMS pack-sync → `src/FilamentAi/` (package NS; host `SiteAiSetting` extends `Setting`) |
 | **005** | Remote MCP (`laravel/mcp` soft peer) |
+| **007** | TallCMS greenfield on package settings/MCP tables (`subject_*`, `is_enabled` / `is_mcp_enabled`); media default stays host `SiteSetting` |
 | 006 | First non-TallCMS host + capability providers (see below) |
 
 ## Requirements
@@ -56,7 +57,7 @@ config([
 
 The package adds `subject_type` and `subject_id` on settings, MCP tokens, and `agent_conversations`. A later migration copies an existing `site_id` or `tenant_id` into that pair and drops the old column. Publish `laravel/ai` migrations in the same migrate so `agent_conversations` exists first.
 
-Settings table / `enabled` column are package constants (`Setting::TABLE`, column `enabled`). Hosts with a different schema subclass `Setting` (override `getTable()` / `enabledColumn()`) and register it:
+Settings table / `enabled` column are package constants (`Setting::TABLE`, column `is_enabled`). Hosts with a different schema subclass `Setting` (override `getTable()` / `enabledColumn()`) and register it:
 
 ```php
 use BeegoodIT\FilamentAi\Support\FilamentAi;

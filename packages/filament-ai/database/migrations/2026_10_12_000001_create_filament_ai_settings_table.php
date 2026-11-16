@@ -19,8 +19,8 @@ return new class extends Migration
 
             LegacySubjectColumn::add($blueprint, unique: true);
 
-            $blueprint->boolean('enabled')->default(false);
-            $blueprint->boolean('mcp_enabled')->default(false);
+            $blueprint->boolean('is_enabled')->default(false);
+            $blueprint->boolean('is_mcp_enabled')->default(false);
             $blueprint->string('provider')->nullable();
             $blueprint->string('model')->nullable();
             $blueprint->text('api_key')->nullable();

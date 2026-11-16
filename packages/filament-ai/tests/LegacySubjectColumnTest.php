@@ -21,12 +21,12 @@ class LegacySubjectColumnTest extends TestCase
         Schema::create('filament_ai_legacy_settings', function (Blueprint $table): void {
             $table->id();
             $table->unsignedBigInteger('tenant_id')->nullable();
-            $table->boolean('enabled')->default(false);
+            $table->boolean('is_enabled')->default(false);
         });
 
         DB::table('filament_ai_legacy_settings')->insert([
-            ['id' => 1, 'tenant_id' => 12, 'enabled' => true],
-            ['id' => 2, 'tenant_id' => null, 'enabled' => false],
+            ['id' => 1, 'tenant_id' => 12, 'is_enabled' => true],
+            ['id' => 2, 'tenant_id' => null, 'is_enabled' => false],
         ]);
 
         config([
@@ -58,12 +58,12 @@ class LegacySubjectColumnTest extends TestCase
             $table->id();
             $table->unsignedBigInteger('site_id')->nullable()->unique();
             $table->index('site_id');
-            $table->boolean('enabled')->default(false);
+            $table->boolean('is_enabled')->default(false);
         });
 
         DB::table('filament_ai_legacy_unique_settings')->insert([
-            ['id' => 1, 'site_id' => 7, 'enabled' => true],
-            ['id' => 2, 'site_id' => null, 'enabled' => false],
+            ['id' => 1, 'site_id' => 7, 'is_enabled' => true],
+            ['id' => 2, 'site_id' => null, 'is_enabled' => false],
         ]);
 
         config([
