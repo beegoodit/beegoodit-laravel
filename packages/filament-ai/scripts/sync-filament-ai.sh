@@ -25,6 +25,55 @@ if [[ ! -f "${DEST}/plugin.json" ]] && [[ ! -f "${DEST}/src/Providers/AiServiceP
   exit 1
 fi
 
+# Refuse to copy into a plugin that asks for an older laravel/ai than this package.
+# The plugin never runs Composer against the package, so nothing else enforces it.
+python3 - "${SRC}/composer.json" "${DEST}/composer.json" "${DEST}/plugin.json" <<'PY'
+import json, pathlib, re, sys
+
+PACKAGE = "laravel/ai"
+
+
+def lower_bound(constraint):
+    """Lowest version any alternative of a Composer constraint allows."""
+    bounds = []
+    for alternative in re.split(r"\s*\|\|?\s*", constraint.strip()):
+        match = re.search(r"\d+(?:\.\d+)*", alternative)
+        if match:
+            bounds.append(tuple(int(part) for part in match.group(0).split(".")))
+    if not bounds:
+        raise SystemExit(f"Cannot read a version from constraint [{constraint}].")
+    return min(bounds, key=lambda bound: bound + (0,) * (4 - len(bound)))
+
+
+def padded(bound):
+    return bound + (0,) * (4 - len(bound))
+
+
+source = json.loads(pathlib.Path(sys.argv[1]).read_text())
+required = source.get("require", {}).get(PACKAGE)
+if required is None:
+    raise SystemExit(f"{sys.argv[1]} does not require {PACKAGE}.")
+minimum = lower_bound(required)
+
+failures = []
+for path, section in ((sys.argv[2], "require"), (sys.argv[3], "requires_packages")):
+    file = pathlib.Path(path)
+    if not file.is_file():
+        continue
+    packages = json.loads(file.read_text()).get(section)
+    stated = packages.get(PACKAGE) if isinstance(packages, dict) else None
+    if stated is None:
+        failures.append(f"  {path}: {section} has no {PACKAGE} entry (need {required})")
+    elif padded(lower_bound(stated)) < padded(minimum):
+        failures.append(f"  {path}: {section} allows {PACKAGE} {stated} (need {required})")
+
+if failures:
+    print(f"Refusing to sync: filament-ai requires {PACKAGE} {required}.", file=sys.stderr)
+    print("\n".join(failures), file=sys.stderr)
+    print("Raise the plugin's requirement first, then sync again.", file=sys.stderr)
+    raise SystemExit(1)
+PY
+
 OUT="${DEST}/src/FilamentAi"
 PIN="$(git -C "${SRC}" describe --tags --always --dirty 2>/dev/null || echo unknown)"
 
